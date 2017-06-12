@@ -1,0 +1,46 @@
+{
+    "version": "0.1.0",
+    "command": "go",
+    "isShellCommand": true,
+    "echoCommand": true,
+    "showOutput": "always",
+    // "showOutput": "silent",
+    "options": {
+        //  "env": {
+        //      "GOPATH": "/Users/lukeh/dd/go"
+        //  }
+    },
+    "tasks": [
+        {
+            "taskName": "install",
+            "args": [
+                "-v",
+                "./..."
+            ],
+            "osx": {
+                "options": {
+                    "env": {
+                        //"GOPATH": "${env.HOME}/Dropbox/go"
+                    }
+                }
+            },
+            "windows": {
+                "options": {
+                    "env": {
+                        //"GOPATH": "${env.USERPROFILE}\\Dropbox\\go"
+                    }
+                }
+            },
+            "isBuildCommand": true,
+            "problemMatcher": "$go"
+        },
+        {
+            "taskName": "test",
+            "args": [
+                "-v",
+                "./..."
+            ],
+            "isTestCommand": true
+        }
+    ]
+}

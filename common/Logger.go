@@ -1,4 +1,4 @@
-package vnc
+package common
 
 type Logger interface {
 	Debug(v ...interface{})

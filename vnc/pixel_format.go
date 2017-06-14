@@ -4,9 +4,10 @@ import (
 	"bytes"
 	"encoding/binary"
 	"io"
+	"vncproxy/common"
 )
 
-func readPixelFormat(r io.Reader, result *PixelFormat) error {
+func readPixelFormat(r io.Reader, result *common.PixelFormat) error {
 	var rawPixelFormat [16]byte
 	if _, err := io.ReadFull(r, rawPixelFormat[:]); err != nil {
 		return err
@@ -67,7 +68,7 @@ func readPixelFormat(r io.Reader, result *PixelFormat) error {
 	return nil
 }
 
-func writePixelFormat(format *PixelFormat) ([]byte, error) {
+func writePixelFormat(format *common.PixelFormat) ([]byte, error) {
 	var buf bytes.Buffer
 
 	// Byte 1

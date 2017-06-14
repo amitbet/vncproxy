@@ -2,15 +2,16 @@ package vnc
 
 import (
 	"os"
+	"vncproxy/common"
 )
 
 type Recorder struct {
 	RBSFileName string
 	fileHandle  *os.File
-	logger      Logger
+	logger      common.Logger
 }
 
-func NewRecorder(saveFilePath string, logger Logger) *Recorder {
+func NewRecorder(saveFilePath string, logger common.Logger) *Recorder {
 	rec := Recorder{RBSFileName: saveFilePath}
 	var err error
 	rec.fileHandle, err = os.OpenFile(saveFilePath, os.O_RDWR|os.O_CREATE, 0755)

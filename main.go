@@ -5,11 +5,13 @@ import (
 	"net"
 	"os"
 	"time"
+	"vncproxy/common"
+	"vncproxy/encodings"
 	"vncproxy/vnc"
 )
 
 func main() {
-	fmt.Println("")
+	//fmt.Println("")
 	//nc, err := net.Dial("tcp", "192.168.1.101:5903")
 	nc, err := net.Dial("tcp", "localhost:5903")
 
@@ -29,17 +31,18 @@ func main() {
 	// 	fmt.Printf("error requesting fb update: %s\n", err)
 	// }
 
-	tight := vnc.TightEncoding{}
-	//rre := vnc.RREEncoding{}
-	//zlib := vnc.ZLibEncoding{}
-	//zrle := vnc.ZRLEEncoding{}
-	cpyRect := vnc.CopyRectEncoding{}
-	//hextile := vnc.HextileEncoding{}
+	tight := encodings.TightEncoding{}
+	//rre := encodings.RREEncoding{}
+	//zlib := encodings.ZLibEncoding{}
+	//zrle := encodings.ZRLEEncoding{}
+	cpyRect := encodings.CopyRectEncoding{}
+	//coRRE := encodings.CoRREEncoding{}
+	//hextile := encodings.HextileEncoding{}
 	file, _ := os.OpenFile("stam.bin", os.O_CREATE|os.O_RDWR, 0755)
 	defer file.Close()
 
 	tight.SetOutput(file)
-	clientConn.SetEncodings([]vnc.Encoding{&cpyRect, &tight})
+	clientConn.SetEncodings([]common.Encoding{&cpyRect, &tight})
 
 	go func() {
 		for {

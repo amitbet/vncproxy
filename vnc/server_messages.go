@@ -5,18 +5,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"vncproxy/common"
+	"vncproxy/encodings"
 )
-
 
 // FramebufferUpdateMessage consists of a sequence of rectangles of
 // pixel data that the client should put into its framebuffer.
 type FramebufferUpdateMessage struct {
-	Rectangles []Rectangle
-}
-
-
-func (r *Rectangle) String() string {
-	return fmt.Sprintf("(%d,%d) (width: %d, height: %d), Enc= %d", r.X, r.Y, r.Width, r.Height, r.Enc.Type())
+	Rectangles []common.Rectangle
 }
 
 func (m *FramebufferUpdateMessage) String() string {
@@ -44,17 +40,17 @@ func (*FramebufferUpdateMessage) Read(c *ClientConn, r io.Reader) (ServerMessage
 	}
 
 	// Build the map of encodings supported
-	encMap := make(map[int32]Encoding)
+	encMap := make(map[int32]common.Encoding)
 	for _, enc := range c.Encs {
 		encMap[enc.Type()] = enc
 	}
 
 	// We must always support the raw encoding
-	rawEnc := new(RawEncoding)
+	rawEnc := new(encodings.RawEncoding)
 	encMap[rawEnc.Type()] = rawEnc
 	fmt.Printf("numrects= %d\n", numRects)
 
-	rects := make([]Rectangle, numRects)
+	rects := make([]common.Rectangle, numRects)
 	for i := uint16(0); i < numRects; i++ {
 		fmt.Printf("###############rect################: %d\n", i)
 		var encodingType int32
@@ -84,7 +80,7 @@ func (*FramebufferUpdateMessage) Read(c *ClientConn, r io.Reader) (ServerMessage
 		}
 
 		var err error
-		rect.Enc, err = enc.Read(c, rect, r)
+		rect.Enc, err = enc.Read(&c.PixelFormat, rect, r)
 		if err != nil {
 			return nil, err
 		}
@@ -184,7 +180,7 @@ func (*ServerCutTextMessage) Type() uint8 {
 	return 3
 }
 
-func (*ServerCutTextMessage) Read(c *ClientConn, r io.Reader) (ServerMessage, error) {
+func (*ServerCutTextMessage) Read(conn *ClientConn, r io.Reader) (ServerMessage, error) {
 	// Read off the padding
 	var padding [1]byte
 	if _, err := io.ReadFull(r, padding[:]); err != nil {

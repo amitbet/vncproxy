@@ -7,6 +7,7 @@ import (
 	"io"
 	"net"
 	"unicode"
+	"vncproxy/common"
 )
 
 // A ServerMessage implements a message sent from the server to the client.
@@ -32,9 +33,7 @@ type ClientAuth interface {
 }
 
 type ClientConn struct {
-	conn        net.Conn
-	output      io.Writer
-	passThrough bool
+	conn net.Conn
 
 	//c      net.Conn
 	config *ClientConfig
@@ -46,7 +45,7 @@ type ClientConn struct {
 
 	// Encodings supported by the client. This should not be modified
 	// directly. Instead, SetEncodings should be used.
-	Encs []Encoding
+	Encs []common.Encoding
 
 	// Width of the frame buffer in pixels, sent from the server.
 	FrameBufferWidth uint16
@@ -60,7 +59,7 @@ type ClientConn struct {
 	// The pixel format associated with the connection. This shouldn't
 	// be modified. If you wish to set a new pixel format, use the
 	// SetPixelFormat method.
-	PixelFormat PixelFormat
+	PixelFormat common.PixelFormat
 }
 
 // A ClientConfig structure is used to configure a ClientConn. After
@@ -246,7 +245,7 @@ func (c *ClientConn) PointerEvent(mask ButtonMask, x, y uint16) error {
 // given should not be modified.
 //
 // See RFC 6143 Section 7.5.2
-func (c *ClientConn) SetEncodings(encs []Encoding) error {
+func (c *ClientConn) SetEncodings(encs []common.Encoding) error {
 	data := make([]interface{}, 3+len(encs))
 	data[0] = uint8(2)
 	data[1] = uint8(0)
@@ -277,7 +276,7 @@ func (c *ClientConn) SetEncodings(encs []Encoding) error {
 // in FramebufferUpdate messages from the server.
 //
 // See RFC 6143 Section 7.5.1
-func (c *ClientConn) SetPixelFormat(format *PixelFormat) error {
+func (c *ClientConn) SetPixelFormat(format *common.PixelFormat) error {
 	var keyEvent [20]byte
 	keyEvent[0] = 0
 

@@ -1,24 +1,25 @@
-package vnc
+package encodings
 
-import "io"
+import (
+	"io"
+	"vncproxy/common"
+)
 
 // RawEncoding is raw pixel data sent by the server.
 //
 // See RFC 6143 Section 7.7.1
 type RawEncoding struct {
-	Colors []Color
+	//Colors []Color
 }
 
 func (*RawEncoding) Type() int32 {
 	return 0
 }
 
-
-
-func (*RawEncoding) Read(conn *ClientConn, rect *Rectangle, r io.Reader) (Encoding, error) {
+func (*RawEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r io.Reader) (common.Encoding, error) {
 	//conn := &DataSource{conn: conn.c, PixelFormat: conn.PixelFormat}
-
-	bytesPerPixel := int(conn.PixelFormat.BPP / 8)
+	conn := common.RfbReadHelper{r}
+	bytesPerPixel := int(pixelFmt.BPP / 8)
 	//pixelBytes := make([]uint8, bytesPerPixel)
 
 	// var byteOrder binary.ByteOrder = binary.LittleEndian
@@ -26,11 +27,11 @@ func (*RawEncoding) Read(conn *ClientConn, rect *Rectangle, r io.Reader) (Encodi
 	// 	byteOrder = binary.BigEndian
 	// }
 
-	colors := make([]Color, int(rect.Height)*int(rect.Width))
+	//colors := make([]vnc.Color, int(rect.Height)*int(rect.Width))
 
 	for y := uint16(0); y < rect.Height; y++ {
 		for x := uint16(0); x < rect.Width; x++ {
-			if _, err := conn.readBytes(bytesPerPixel); err != nil {
+			if _, err := conn.ReadBytes(bytesPerPixel); err != nil {
 				return nil, err
 			}
 
@@ -54,5 +55,5 @@ func (*RawEncoding) Read(conn *ClientConn, rect *Rectangle, r io.Reader) (Encodi
 		}
 	}
 
-	return &RawEncoding{colors}, nil
+	return &RawEncoding{}, nil
 }

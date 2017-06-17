@@ -16,7 +16,7 @@ func main() {
 	nc, err := net.Dial("tcp", "localhost:5903")
 
 	if err != nil {
-		fmt.Printf(";error connecting to vnc server: %s", err)
+		fmt.Printf("error connecting to vnc server: %s", err)
 	}
 	var noauth vnc.ClientAuthNone
 	authArr := []vnc.ClientAuth{&vnc.PasswordAuth{Password: "Ch_#!T@8"}, &noauth}

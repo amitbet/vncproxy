@@ -1,9 +1,6 @@
 package encodings
 
-import (
-	"io"
-	"vncproxy/common"
-)
+import "vncproxy/common"
 
 type CopyRectEncoding struct {
 	//Colors       []Color
@@ -14,12 +11,9 @@ type CopyRectEncoding struct {
 func (z *CopyRectEncoding) Type() int32 {
 	return 1
 }
-func (z *CopyRectEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r io.Reader) (common.Encoding, error) {
-	conn := common.RfbReadHelper{r}
-	//conn := &DataSource{conn: conn.c, PixelFormat: conn.PixelFormat}
-	//bytesPerPixel := c.PixelFormat.BPP / 8
-	z.copyRectSrcX, _ = conn.ReadUint16()
-	z.copyRectSrcY, _ = conn.ReadUint16()
+func (z *CopyRectEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.Encoding, error) {
+	z.copyRectSrcX, _ = r.ReadUint16()
+	z.copyRectSrcY, _ = r.ReadUint16()
 	return z, nil
 }
 

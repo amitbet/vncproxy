@@ -1,6 +1,5 @@
 package encodings
 
-import "io"
 import "vncproxy/common"
 
 type ZLibEncoding struct {
@@ -10,12 +9,12 @@ type ZLibEncoding struct {
 func (z *ZLibEncoding) Type() int32 {
 	return 6
 }
-func (z *ZLibEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r io.Reader) (common.Encoding, error) {
-	conn := common.RfbReadHelper{r}
+func (z *ZLibEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.Encoding, error) {
+	//conn := common.RfbReadHelper{Reader:r}
 	//conn := &DataSource{conn: conn.c, PixelFormat: conn.PixelFormat}
 	//bytesPerPixel := c.PixelFormat.BPP / 8
-	len, _ := conn.ReadUint32()
-	_, err := conn.ReadBytes(int(len))
+	len, _ := r.ReadUint32()
+	_, err := r.ReadBytes(int(len))
 
 	if err != nil {
 		return nil, err

@@ -69,13 +69,13 @@ func calcTightBytePerPixel(pf *common.PixelFormat) int {
 	return bytesPerPixelTight
 }
 
-func (t *TightEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, reader io.Reader) (common.Encoding, error) {
+func (t *TightEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.Encoding, error) {
 	bytesPixel := calcTightBytePerPixel(pixelFmt)
-	conn := common.RfbReadHelper{reader}
+	//conn := common.RfbReadHelper{Reader:reader}
 	//conn := &DataSource{conn: conn.c, PixelFormat: conn.PixelFormat}
 
 	//var subencoding uint8
-	subencoding, err := conn.ReadUint8()
+	subencoding, err := r.ReadUint8()
 	if err != nil {
 		fmt.Printf("error in handling tight encoding: %v\n", err)
 		return nil, err
@@ -99,19 +99,19 @@ func (t *TightEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangl
 	case TightFill:
 		fmt.Printf("reading fill size=%d\n", bytesPixel)
 		//read color
-		conn.ReadBytes(int(bytesPixel))
+		r.ReadBytes(int(bytesPixel))
 		return t, nil
 	case TightJpeg:
 		if pixelFmt.BPP == 8 {
 			return nil, errors.New("Tight encoding: JPEG is not supported in 8 bpp mode")
 		}
 
-		len, err := conn.ReadCompactLen()
+		len, err := r.ReadCompactLen()
 		if err != nil {
 			return nil, err
 		}
 		fmt.Printf("reading jpeg size=%d\n", len)
-		conn.ReadBytes(len)
+		r.ReadBytes(len)
 		return t, nil
 	default:
 
@@ -119,13 +119,13 @@ func (t *TightEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangl
 			fmt.Println("Compression control byte is incorrect!")
 		}
 
-		handleTightFilters(subencoding, pixelFmt, rect, reader)
+		handleTightFilters(subencoding, pixelFmt, rect, r)
 		return t, nil
 	}
 }
 
-func handleTightFilters(subencoding uint8, pixelFmt *common.PixelFormat, rect *common.Rectangle, reader io.Reader) {
-	conn := common.RfbReadHelper{reader}
+func handleTightFilters(subencoding uint8, pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) {
+	//conn := common.RfbReadHelper{Reader:reader}
 	var FILTER_ID_MASK uint8 = 0x40
 	//var STREAM_ID_MASK uint8 = 0x30
 
@@ -134,7 +134,7 @@ func handleTightFilters(subencoding uint8, pixelFmt *common.PixelFormat, rect *c
 	var err error
 
 	if (subencoding & FILTER_ID_MASK) > 0 { // filter byte presence
-		filterid, err = conn.ReadUint8()
+		filterid, err = r.ReadUint8()
 		if err != nil {
 			fmt.Printf("error in handling tight encoding, reading filterid: %v\n", err)
 			return
@@ -154,11 +154,11 @@ func handleTightFilters(subencoding uint8, pixelFmt *common.PixelFormat, rect *c
 	switch filterid {
 	case TightFilterPalette: //PALETTE_FILTER
 
-		colorCount, err := conn.ReadUint8()
+		colorCount, err := r.ReadUint8()
 		paletteSize := colorCount + 1 // add one more
 		fmt.Printf("----PALETTE_FILTER: paletteSize=%d bytesPixel=%d\n", paletteSize, bytesPixel)
 		//complete palette
-		conn.ReadBytes(int(paletteSize) * bytesPixel)
+		r.ReadBytes(int(paletteSize) * bytesPixel)
 
 		var dataLength int
 		if paletteSize == 2 {
@@ -166,7 +166,7 @@ func handleTightFilters(subencoding uint8, pixelFmt *common.PixelFormat, rect *c
 		} else {
 			dataLength = int(rect.Width * rect.Height)
 		}
-		_, err = conn.ReadTightData(dataLength)
+		_, err = r.ReadTightData(dataLength)
 		if err != nil {
 			fmt.Printf("error in handling tight encoding, Reading Palette: %v\n", err)
 			return
@@ -175,10 +175,10 @@ func handleTightFilters(subencoding uint8, pixelFmt *common.PixelFormat, rect *c
 		fmt.Printf("----GRADIENT_FILTER: bytesPixel=%d\n", bytesPixel)
 		//useGradient = true
 		fmt.Printf("usegrad: %d\n", filterid)
-		conn.ReadTightData(lengthCurrentbpp)
+		r.ReadTightData(lengthCurrentbpp)
 	case TightFilterCopy: //BASIC_FILTER
 		fmt.Printf("----BASIC_FILTER: bytesPixel=%d\n", bytesPixel)
-		conn.ReadTightData(lengthCurrentbpp)
+		r.ReadTightData(lengthCurrentbpp)
 	default:
 		fmt.Printf("Bad tight filter id: %d\n", filterid)
 		return

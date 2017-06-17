@@ -1,7 +1,6 @@
 package encodings
 
 import (
-	"io"
 	"vncproxy/common"
 )
 
@@ -16,9 +15,9 @@ func (*RawEncoding) Type() int32 {
 	return 0
 }
 
-func (*RawEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r io.Reader) (common.Encoding, error) {
+func (*RawEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.Encoding, error) {
 	//conn := &DataSource{conn: conn.c, PixelFormat: conn.PixelFormat}
-	conn := common.RfbReadHelper{r}
+	//conn := common.RfbReadHelper{Reader:r}
 	bytesPerPixel := int(pixelFmt.BPP / 8)
 	//pixelBytes := make([]uint8, bytesPerPixel)
 
@@ -31,7 +30,7 @@ func (*RawEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r
 
 	for y := uint16(0); y < rect.Height; y++ {
 		for x := uint16(0); x < rect.Width; x++ {
-			if _, err := conn.ReadBytes(bytesPerPixel); err != nil {
+			if _, err := r.ReadBytes(bytesPerPixel); err != nil {
 				return nil, err
 			}
 

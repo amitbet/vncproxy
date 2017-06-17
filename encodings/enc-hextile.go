@@ -1,9 +1,6 @@
 package encodings
 
-import (
-	"io"
-	"vncproxy/common"
-)
+import "vncproxy/common"
 
 const (
 	HextileRaw                 = 1
@@ -20,11 +17,9 @@ type HextileEncoding struct {
 func (z *HextileEncoding) Type() int32 {
 	return 5
 }
-func (z *HextileEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r io.Reader) (common.Encoding, error) {
-	conn := common.RfbReadHelper{r}
-	//conn := &DataSource{conn: conn.c, PixelFormat: conn.PixelFormat}
+func (z *HextileEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.Encoding, error) {
 	bytesPerPixel := int(pixelFmt.BPP) / 8
-	//buf := make([]byte, bytesPerPixel)
+
 	for ty := rect.Y; ty < rect.Y+rect.Height; ty += 16 {
 		th := 16
 		if rect.Y+rect.Height-ty < 16 {
@@ -38,7 +33,7 @@ func (z *HextileEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectan
 			}
 
 			//handle Hextile Subrect(tx, ty, tw, th):
-			subencoding, err := conn.ReadUint8()
+			subencoding, err := r.ReadUint8()
 			//fmt.Printf("hextile reader tile: (%d,%d) subenc=%d\n", ty, tx, subencoding)
 			if err != nil {
 				//fmt.Printf("error in hextile reader: %v\n", err)
@@ -47,22 +42,22 @@ func (z *HextileEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectan
 
 			if (subencoding & HextileRaw) != 0 {
 				//ReadRawRect(c, rect, r)
-				conn.ReadBytes(tw * th * bytesPerPixel)
+				r.ReadBytes(tw * th * bytesPerPixel)
 				//fmt.Printf("hextile reader: HextileRaw\n")
 				continue
 			}
 			if (subencoding & HextileBackgroundSpecified) != 0 {
-				conn.ReadBytes(int(bytesPerPixel))
+				r.ReadBytes(int(bytesPerPixel))
 			}
 			if (subencoding & HextileForegroundSpecified) != 0 {
-				conn.ReadBytes(int(bytesPerPixel))
+				r.ReadBytes(int(bytesPerPixel))
 			}
 			if (subencoding & HextileAnySubrects) == 0 {
 				//fmt.Printf("hextile reader: no Subrects\n")
 				continue
 			}
 			//fmt.Printf("hextile reader: handling Subrects\n")
-			nSubrects, err := conn.ReadUint8()
+			nSubrects, err := r.ReadUint8()
 			if err != nil {
 				return nil, err
 			}
@@ -71,7 +66,7 @@ func (z *HextileEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectan
 				bufsize += int(nSubrects) * int(bytesPerPixel)
 			}
 			//byte[] buf = new byte[bufsize];
-			conn.ReadBytes(bufsize)
+			r.ReadBytes(bufsize)
 		}
 	}
 

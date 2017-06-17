@@ -1,6 +1,5 @@
 package encodings
 
-import "io"
 import "vncproxy/common"
 
 type RREEncoding struct {
@@ -10,16 +9,16 @@ type RREEncoding struct {
 func (z *RREEncoding) Type() int32 {
 	return 2
 }
-func (z *RREEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r io.Reader) (common.Encoding, error) {
-	conn := common.RfbReadHelper{r}
+func (z *RREEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.Encoding, error) {
+	//conn := common.RfbReadHelper{Reader:r}
 	bytesPerPixel := int(pixelFmt.BPP / 8)
-	numOfSubrectangles, _ := conn.ReadUint32()
+	numOfSubrectangles, _ := r.ReadUint32()
 
 	//read whole rect background color
-	conn.ReadBytes(bytesPerPixel)
+	r.ReadBytes(bytesPerPixel)
 
 	//read all individual rects (color=BPP + x=16b + y=16b + w=16b + h=16b)
-	_, err := conn.ReadBytes(int(numOfSubrectangles) * (bytesPerPixel + 8))
+	_, err := r.ReadBytes(int(numOfSubrectangles) * (bytesPerPixel + 8))
 
 	if err != nil {
 		return nil, err

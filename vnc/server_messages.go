@@ -27,7 +27,8 @@ func (*FramebufferUpdateMessage) Type() uint8 {
 	return 0
 }
 
-func (*FramebufferUpdateMessage) Read(c *ClientConn, r io.Reader) (ServerMessage, error) {
+func (fbm *FramebufferUpdateMessage) Read(c *ClientConn, r *common.RfbReadHelper) (ServerMessage, error) {
+
 	// Read off the padding
 	var padding [1]byte
 	if _, err := io.ReadFull(r, padding[:]); err != nil {
@@ -53,8 +54,9 @@ func (*FramebufferUpdateMessage) Read(c *ClientConn, r io.Reader) (ServerMessage
 	rects := make([]common.Rectangle, numRects)
 	for i := uint16(0); i < numRects; i++ {
 		fmt.Printf("###############rect################: %d\n", i)
-		var encodingType int32
 
+		var encodingType int32
+		r.SendRectSeparator(-1)
 		rect := &rects[i]
 		data := []interface{}{
 			&rect.X,
@@ -108,7 +110,7 @@ func (*SetColorMapEntriesMessage) Type() uint8 {
 	return 1
 }
 
-func (*SetColorMapEntriesMessage) Read(c *ClientConn, r io.Reader) (ServerMessage, error) {
+func (*SetColorMapEntriesMessage) Read(c *ClientConn, r *common.RfbReadHelper) (ServerMessage, error) {
 	// Read off the padding
 	var padding [1]byte
 	if _, err := io.ReadFull(r, padding[:]); err != nil {
@@ -161,7 +163,7 @@ func (*BellMessage) Type() uint8 {
 	return 2
 }
 
-func (*BellMessage) Read(*ClientConn, io.Reader) (ServerMessage, error) {
+func (*BellMessage) Read(*ClientConn, *common.RfbReadHelper) (ServerMessage, error) {
 	return new(BellMessage), nil
 }
 
@@ -180,22 +182,31 @@ func (*ServerCutTextMessage) Type() uint8 {
 	return 3
 }
 
-func (*ServerCutTextMessage) Read(conn *ClientConn, r io.Reader) (ServerMessage, error) {
+func (*ServerCutTextMessage) Read(conn *ClientConn, r *common.RfbReadHelper) (ServerMessage, error) {
+	//reader := common.RfbReadHelper{Reader: r}
+
 	// Read off the padding
-	var padding [1]byte
+	var padding [3]byte
 	if _, err := io.ReadFull(r, padding[:]); err != nil {
 		return nil, err
 	}
-
-	var textLength uint32
-	if err := binary.Read(r, binary.BigEndian, &textLength); err != nil {
+	textLength, err := r.ReadUint32()
+	if err != nil {
 		return nil, err
 	}
-
-	textBytes := make([]uint8, textLength)
-	if err := binary.Read(r, binary.BigEndian, &textBytes); err != nil {
+	textBytes, err := r.ReadBytes(int(textLength))
+	if err != nil {
 		return nil, err
 	}
+	//var textLength uint32
+	// if err := binary.Read(r, binary.BigEndian, &textLength); err != nil {
+	// 	return nil, err
+	// }
+
+	// textBytes := make([]uint8, textLength)
+	// if err := binary.Read(r, binary.BigEndian, &textBytes); err != nil {
+	// 	return nil, err
+	// }
 
 	return &ServerCutTextMessage{string(textBytes)}, nil
 }

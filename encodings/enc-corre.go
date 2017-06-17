@@ -1,7 +1,6 @@
 package encodings
 
 import (
-	"io"
 	"vncproxy/common"
 )
 
@@ -13,16 +12,15 @@ func (z *CoRREEncoding) Type() int32 {
 	return 4
 }
 
-func (z *CoRREEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r io.Reader) (common.Encoding, error) {
-	conn := common.RfbReadHelper{r}
+func (z *CoRREEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.Encoding, error) {
 	bytesPerPixel := int(pixelFmt.BPP / 8)
-	numOfSubrectangles, _ := conn.ReadUint32()
+	numOfSubrectangles, _ := r.ReadUint32()
 
 	//read whole rect background color
-	conn.ReadBytes(bytesPerPixel)
+	r.ReadBytes(bytesPerPixel)
 
 	//read all individual rects (color=BPP + x=16b + y=16b + w=16b + h=16b)
-	_, err := conn.ReadBytes(int(numOfSubrectangles) * (bytesPerPixel + 4))
+	_, err := r.ReadBytes(int(numOfSubrectangles) * (bytesPerPixel + 4))
 
 	if err != nil {
 		return nil, err

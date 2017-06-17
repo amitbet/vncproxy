@@ -8,6 +8,7 @@ import (
 	"net"
 	"unicode"
 	"vncproxy/common"
+	"vncproxy/listeners"
 )
 
 // A ServerMessage implements a message sent from the server to the client.
@@ -18,7 +19,7 @@ type ServerMessage interface {
 	// Read reads the contents of the message from the reader. At the point
 	// this is called, the message type has already been read from the reader.
 	// This should return a new ServerMessage that is the appropriate type.
-	Read(*ClientConn, io.Reader) (ServerMessage, error)
+	Read(*ClientConn, *common.RfbReadHelper) (ServerMessage, error)
 }
 
 // A ClientAuth implements a method of authenticating with a remote server.
@@ -442,7 +443,9 @@ FindAuth:
 // proper channels for users of the client to read.
 func (c *ClientConn) mainLoop() {
 	defer c.Close()
+	rec := listeners.NewRecorder("/Users/amitbet/recording.rbs", c.DesktopName, c.FrameBufferWidth, c.FrameBufferHeight)
 
+	reader := &common.RfbReadHelper{Reader: c.conn, Listener: rec}
 	// Build the map of available server messages
 	typeMap := make(map[uint8]ServerMessage)
 
@@ -474,8 +477,10 @@ func (c *ClientConn) mainLoop() {
 			// Unsupported message type! Bad!
 			break
 		}
+		reader.SendMessageSeparator(int(messageType))
+		reader.PublishBytes([]byte{byte(messageType)})
 
-		parsedMsg, err := msg.Read(c, c.conn)
+		parsedMsg, err := msg.Read(c, reader)
 		if err != nil {
 			break
 		}

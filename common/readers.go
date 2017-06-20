@@ -43,8 +43,8 @@ func (r *RfbReadHelper) SendRectSeparator(upcomingRectType int) error {
 
 }
 
-func (r *RfbReadHelper) SendMessageSeparator(upcomingMessageType int) error {
-	seg := &RfbSegment{SegmentType: SegmentMessageSeparator, UpcomingObjectType: upcomingMessageType}
+func (r *RfbReadHelper) SendMessageSeparator(upcomingMessageType ServerMessageType) error {
+	seg := &RfbSegment{SegmentType: SegmentMessageSeparator, UpcomingObjectType: int(upcomingMessageType)}
 	if r.Listener == nil {
 		return nil
 	}
@@ -67,7 +67,7 @@ func (r *RfbReadHelper) Read(p []byte) (n int, err error) {
 	//write the bytes to the Listener for further processing
 	seg := &RfbSegment{Bytes: p, SegmentType: SegmentBytes}
 	if r.Listener == nil {
-		return 0,nil
+		return 0, nil
 	}
 	r.Listener.Consume(seg)
 	if err != nil {

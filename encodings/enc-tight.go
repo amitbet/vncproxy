@@ -3,7 +3,6 @@ package encodings
 import (
 	"errors"
 	"fmt"
-	"io"
 	"vncproxy/common"
 )
 
@@ -20,13 +19,13 @@ const (
 )
 
 type TightEncoding struct {
-	output io.Writer
+	//output io.Writer
 	logger common.Logger
 }
 
-func (t *TightEncoding) SetOutput(output io.Writer) {
-	t.output = output
-}
+// func (t *TightEncoding) SetOutput(output io.Writer) {
+// 	t.output = output
+// }
 
 func (*TightEncoding) Type() int32 {
 	return 7
@@ -100,6 +99,8 @@ func (t *TightEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangl
 		fmt.Printf("reading fill size=%d\n", bytesPixel)
 		//read color
 		r.ReadBytes(int(bytesPixel))
+		//byt, _ := r.ReadBytes(3)
+		//fmt.Printf(">>>>>>>>>TightFillBytes=%v", byt)
 		return t, nil
 	case TightJpeg:
 		if pixelFmt.BPP == 8 {

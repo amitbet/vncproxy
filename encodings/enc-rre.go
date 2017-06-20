@@ -17,8 +17,8 @@ func (z *RREEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle,
 	//read whole rect background color
 	r.ReadBytes(bytesPerPixel)
 
-	//read all individual rects (color=BPP + x=16b + y=16b + w=16b + h=16b)
-	_, err := r.ReadBytes(int(numOfSubrectangles) * (bytesPerPixel + 8))
+	//read all individual rects (color=bytesPerPixel + x=16b + y=16b + w=16b + h=16b)
+	_, err := r.ReadBytes(int(numOfSubrectangles) * (bytesPerPixel + 8)) // x+y+w+h=8 bytes
 
 	if err != nil {
 		return nil, err

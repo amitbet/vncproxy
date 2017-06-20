@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"net"
-	"os"
 	"time"
 	"vncproxy/common"
 	"vncproxy/encodings"
@@ -21,8 +20,14 @@ func main() {
 	var noauth vnc.ClientAuthNone
 	authArr := []vnc.ClientAuth{&vnc.PasswordAuth{Password: "Ch_#!T@8"}, &noauth}
 
-	vncSrvMessagesChan := make(chan vnc.ServerMessage)
-	clientConn, err := vnc.Client(nc, &vnc.ClientConfig{Auth: authArr, ServerMessageCh: vncSrvMessagesChan, Exclusive: true})
+	vncSrvMessagesChan := make(chan common.ServerMessage)
+	clientConn, err := vnc.Client(nc,
+		&vnc.ClientConfig{
+			Auth:            authArr,
+			ServerMessageCh: vncSrvMessagesChan,
+			Exclusive:       true,
+		})
+
 	if err != nil {
 		fmt.Printf("error creating client: %s", err)
 	}
@@ -38,10 +43,10 @@ func main() {
 	cpyRect := encodings.CopyRectEncoding{}
 	//coRRE := encodings.CoRREEncoding{}
 	//hextile := encodings.HextileEncoding{}
-	file, _ := os.OpenFile("stam.bin", os.O_CREATE|os.O_RDWR, 0755)
-	defer file.Close()
+	// file, _ := os.OpenFile("stam.bin", os.O_CREATE|os.O_RDWR, 0755)
+	// defer file.Close()
 
-	tight.SetOutput(file)
+	//tight.SetOutput(file)
 	clientConn.SetEncodings([]common.Encoding{&cpyRect, &tight})
 
 	go func() {
@@ -50,7 +55,7 @@ func main() {
 			if err != nil {
 				fmt.Printf("error requesting fb update: %s\n", err)
 			}
-			time.Sleep(2 * time.Second)
+			time.Sleep(500 * time.Millisecond)
 		}
 	}()
 

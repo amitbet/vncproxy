@@ -20,15 +20,15 @@ func (r *Rectangle) String() string {
 // PixelFormat describes the way a pixel is formatted for a VNC connection.
 //
 // See RFC 6143 Section 7.4 for information on each of the fields.
-type PixelFormat struct {
-	BPP        uint8
-	Depth      uint8
-	BigEndian  bool
-	TrueColor  bool
-	RedMax     uint16
-	GreenMax   uint16
-	BlueMax    uint16
-	RedShift   uint8
-	GreenShift uint8
-	BlueShift  uint8
-}
+// type PixelFormat struct {
+// 	BPP        uint8
+// 	Depth      uint8
+// 	BigEndian  bool
+// 	TrueColor  bool
+// 	RedMax     uint16
+// 	GreenMax   uint16
+// 	BlueMax    uint16
+// 	RedShift   uint8
+// 	GreenShift uint8
+// 	BlueShift  uint8
+// }

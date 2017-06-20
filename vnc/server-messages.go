@@ -27,7 +27,7 @@ func (*FramebufferUpdateMessage) Type() uint8 {
 	return 0
 }
 
-func (fbm *FramebufferUpdateMessage) Read(c *ClientConn, r *common.RfbReadHelper) (ServerMessage, error) {
+func (fbm *FramebufferUpdateMessage) Read(c common.IClientConn, r *common.RfbReadHelper) (common.ServerMessage, error) {
 
 	// Read off the padding
 	var padding [1]byte
@@ -42,7 +42,7 @@ func (fbm *FramebufferUpdateMessage) Read(c *ClientConn, r *common.RfbReadHelper
 
 	// Build the map of encodings supported
 	encMap := make(map[int32]common.Encoding)
-	for _, enc := range c.Encs {
+	for _, enc := range c.Encodings() {
 		encMap[enc.Type()] = enc
 	}
 
@@ -82,7 +82,7 @@ func (fbm *FramebufferUpdateMessage) Read(c *ClientConn, r *common.RfbReadHelper
 		}
 
 		var err error
-		rect.Enc, err = enc.Read(&c.PixelFormat, rect, r)
+		rect.Enc, err = enc.Read(c.CurrentPixelFormat(), rect, r)
 		if err != nil {
 			return nil, err
 		}
@@ -99,7 +99,7 @@ func (fbm *FramebufferUpdateMessage) Read(c *ClientConn, r *common.RfbReadHelper
 // See RFC 6143 Section 7.6.2
 type SetColorMapEntriesMessage struct {
 	FirstColor uint16
-	Colors     []Color
+	Colors     []common.Color
 }
 
 func (m *SetColorMapEntriesMessage) String() string {
@@ -110,7 +110,7 @@ func (*SetColorMapEntriesMessage) Type() uint8 {
 	return 1
 }
 
-func (*SetColorMapEntriesMessage) Read(c *ClientConn, r *common.RfbReadHelper) (ServerMessage, error) {
+func (*SetColorMapEntriesMessage) Read(c common.IClientConn, r *common.RfbReadHelper) (common.ServerMessage, error) {
 	// Read off the padding
 	var padding [1]byte
 	if _, err := io.ReadFull(r, padding[:]); err != nil {
@@ -127,7 +127,7 @@ func (*SetColorMapEntriesMessage) Read(c *ClientConn, r *common.RfbReadHelper) (
 		return nil, err
 	}
 
-	result.Colors = make([]Color, numColors)
+	result.Colors = make([]common.Color, numColors)
 	for i := uint16(0); i < numColors; i++ {
 
 		color := &result.Colors[i]
@@ -142,9 +142,9 @@ func (*SetColorMapEntriesMessage) Read(c *ClientConn, r *common.RfbReadHelper) (
 				return nil, err
 			}
 		}
-
+		cmap := c.CurrentColorMap()
 		// Update the connection's color map
-		c.ColorMap[result.FirstColor+i] = *color
+		cmap[result.FirstColor+i] = *color
 	}
 
 	return &result, nil
@@ -163,7 +163,7 @@ func (*BellMessage) Type() uint8 {
 	return 2
 }
 
-func (*BellMessage) Read(*ClientConn, *common.RfbReadHelper) (ServerMessage, error) {
+func (*BellMessage) Read(common.IClientConn, *common.RfbReadHelper) (common.ServerMessage, error) {
 	return new(BellMessage), nil
 }
 
@@ -182,7 +182,7 @@ func (*ServerCutTextMessage) Type() uint8 {
 	return 3
 }
 
-func (*ServerCutTextMessage) Read(conn *ClientConn, r *common.RfbReadHelper) (ServerMessage, error) {
+func (*ServerCutTextMessage) Read(conn common.IClientConn, r *common.RfbReadHelper) (common.ServerMessage, error) {
 	//reader := common.RfbReadHelper{Reader: r}
 
 	// Read off the padding

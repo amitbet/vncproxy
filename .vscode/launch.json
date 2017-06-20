@@ -8,36 +8,13 @@
             "mode": "test",
             "remotePath": "",
             "port": 2345,
-            "program": "${workspaceRoot}/reader",
+            "program": "${workspaceRoot}/server",
             "args": [
                 "-test.v"
             ],
             "osx": {
                 "env": {
                     //"GOPATH": "/Users/amitbet/Dropbox/go"
-                }
-            },
-            "windows": {
-                "env": {
-                    //"GOPATH": "${env.USERPROFILE}\\Dropbox\\go"
-                }
-            },
-            "showLog": true
-        },
-           {
-            "name": "Launch Grouper Tests",
-            "type": "go",
-            "request": "launch",
-            "mode": "test",
-            "remotePath": "",
-            "port": 2345,
-            "program": "${workspaceRoot}/consumer",
-            "args": [
-                "-test.v"
-            ],
-            "osx": {
-                "env": {
-                    //"GOPATH": "${env.HOME}/Dropbox/go"
                 }
             },
             "windows": {

@@ -43,12 +43,6 @@ func NewRecorder(saveFilePath string, desktopName string, fbWidth uint16, fbHeig
 	return &rec
 }
 
-const (
-	FramebufferUpdate   = 0
-	SetColourMapEntries = 1
-	Bell                = 2
-	ServerCutText       = 3
-)
 const versionMsg_3_3 = "RFB 003.003\n"
 const versionMsg_3_7 = "RFB 003.007\n"
 const versionMsg_3_8 = "RFB 003.008\n"
@@ -96,12 +90,12 @@ func (r *Recorder) writeStartSession(desktopName string, framebufferWidth uint16
 func (r *Recorder) Consume(data *common.RfbSegment) error {
 	switch data.SegmentType {
 	case common.SegmentMessageSeparator:
-		switch data.UpcomingObjectType {
-		case FramebufferUpdate:
+		switch common.ServerMessageType(data.UpcomingObjectType) {
+		case common.FramebufferUpdate:
 			r.writeToDisk()
-		case SetColourMapEntries:
-		case Bell:
-		case ServerCutText:
+		case common.SetColourMapEntries:
+		case common.Bell:
+		case common.ServerCutText:
 		default:
 			return errors.New("unknown message type:" + string(data.UpcomingObjectType))
 		}

@@ -12,15 +12,6 @@ import (
 )
 
 // A ServerMessage implements a message sent from the server to the client.
-type ServerMessage interface {
-	// The type of the message that is sent down on the wire.
-	Type() uint8
-	String() string
-	// Read reads the contents of the message from the reader. At the point
-	// this is called, the message type has already been read from the reader.
-	// This should return a new ServerMessage that is the appropriate type.
-	Read(*ClientConn, *common.RfbReadHelper) (ServerMessage, error)
-}
 
 // A ClientAuth implements a method of authenticating with a remote server.
 type ClientAuth interface {
@@ -42,7 +33,7 @@ type ClientConn struct {
 	// If the pixel format uses a color map, then this is the color
 	// map that is used. This should not be modified directly, since
 	// the data comes from the server.
-	ColorMap [256]Color
+	ColorMap common.ColorMap
 
 	// Encodings supported by the client. This should not be modified
 	// directly. Instead, SetEncodings should be used.
@@ -80,12 +71,12 @@ type ClientConfig struct {
 	// from the VNC server may block indefinitely. It is up to the user
 	// of the library to ensure that this channel is properly read.
 	// If this is not set, then all messages will be discarded.
-	ServerMessageCh chan<- ServerMessage
+	ServerMessageCh chan<- common.ServerMessage
 
 	// A slice of supported messages that can be read from the server.
 	// This only needs to contain NEW server messages, and doesn't
 	// need to explicitly contain the RFC-required messages.
-	ServerMessages []ServerMessage
+	ServerMessages []common.ServerMessage
 }
 
 func Client(c net.Conn, cfg *ClientConfig) (*ClientConn, error) {
@@ -106,6 +97,18 @@ func Client(c net.Conn, cfg *ClientConfig) (*ClientConn, error) {
 
 func (c *ClientConn) Close() error {
 	return c.conn.Close()
+}
+
+func (c *ClientConn) Encodings() []common.Encoding {
+	return c.Encs
+}
+
+func (c *ClientConn) CurrentPixelFormat() *common.PixelFormat {
+	return &c.PixelFormat
+}
+
+func (c *ClientConn) CurrentColorMap() *common.ColorMap {
+	return &c.ColorMap
 }
 
 // CutText tells the server that the client has new text in its cut buffer.
@@ -295,7 +298,7 @@ func (c *ClientConn) SetPixelFormat(format *common.PixelFormat) error {
 	}
 
 	// Reset the color map as according to RFC.
-	var newColorMap [256]Color
+	var newColorMap common.ColorMap
 	c.ColorMap = newColorMap
 
 	return nil
@@ -447,9 +450,9 @@ func (c *ClientConn) mainLoop() {
 
 	reader := &common.RfbReadHelper{Reader: c.conn, Listener: rec}
 	// Build the map of available server messages
-	typeMap := make(map[uint8]ServerMessage)
+	typeMap := make(map[uint8]common.ServerMessage)
 
-	defaultMessages := []ServerMessage{
+	defaultMessages := []common.ServerMessage{
 		new(FramebufferUpdateMessage),
 		new(SetColorMapEntriesMessage),
 		new(BellMessage),
@@ -477,7 +480,7 @@ func (c *ClientConn) mainLoop() {
 			// Unsupported message type! Bad!
 			break
 		}
-		reader.SendMessageSeparator(int(messageType))
+		reader.SendMessageSeparator(common.ServerMessageType(messageType))
 		reader.PublishBytes([]byte{byte(messageType)})
 
 		parsedMsg, err := msg.Read(c, reader)

@@ -39,7 +39,7 @@ func (msg *SetPixelFormat) Write(c common.Conn) error {
 		c.SetColorMap(&common.ColorMap{})
 	}
 
-	return c.Flush()
+	return nil
 }
 
 func (*SetPixelFormat) Read(c common.Conn) (common.ClientMessage, error) {
@@ -103,7 +103,7 @@ func (msg *SetEncodings) Write(c common.Conn) error {
 			return err
 		}
 	}
-	return c.Flush()
+	return nil
 }
 
 // FramebufferUpdateRequest holds the wire format message.
@@ -132,7 +132,7 @@ func (msg *FramebufferUpdateRequest) Write(c common.Conn) error {
 	if err := binary.Write(c, binary.BigEndian, msg); err != nil {
 		return err
 	}
-	return c.Flush()
+	return nil
 }
 
 // KeyEvent holds the wire format message.
@@ -161,7 +161,7 @@ func (msg *KeyEvent) Write(c common.Conn) error {
 	if err := binary.Write(c, binary.BigEndian, msg); err != nil {
 		return err
 	}
-	return c.Flush()
+	return nil
 }
 
 // PointerEventMessage holds the wire format message.
@@ -189,7 +189,7 @@ func (msg *PointerEvent) Write(c common.Conn) error {
 	if err := binary.Write(c, binary.BigEndian, msg); err != nil {
 		return err
 	}
-	return c.Flush()
+	return nil
 }
 
 // ClientCutText holds the wire format message, sans the text field.
@@ -243,5 +243,5 @@ func (msg *ClientCutText) Write(c common.Conn) error {
 		return err
 	}
 
-	return c.Flush()
+	return nil
 }

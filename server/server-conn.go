@@ -1,17 +1,16 @@
 package server
 
 import (
-	"bufio"
-	"net"
+	"io"
 	"sync"
 	"vncproxy/common"
 )
 
 type ServerConn struct {
-	c        net.Conn
-	cfg      *ServerConfig
-	br       *bufio.Reader
-	bw       *bufio.Writer
+	c   io.ReadWriter
+	cfg *ServerConfig
+	//br       *bufio.Reader
+	//bw       *bufio.Writer
 	protocol string
 	m        sync.Mutex
 	// If the pixel format uses a color map, then this is the color
@@ -41,11 +40,11 @@ type ServerConn struct {
 	quit chan struct{}
 }
 
-func (c *ServerConn) UnreadByte() error {
-	return c.br.UnreadByte()
-}
+// func (c *ServerConn) UnreadByte() error {
+// 	return c.br.UnreadByte()
+// }
 
-func (c *ServerConn) Conn() net.Conn {
+func (c *ServerConn) Conn() io.ReadWriter {
 	return c.c
 }
 
@@ -66,14 +65,14 @@ func (c *ServerConn) SetProtoVersion(pv string) {
 	c.protocol = pv
 }
 
-func (c *ServerConn) Flush() error {
-	//	c.m.Lock()
-	//	defer c.m.Unlock()
-	return c.bw.Flush()
-}
+// func (c *ServerConn) Flush() error {
+// 	//	c.m.Lock()
+// 	//	defer c.m.Unlock()
+// 	return c.bw.Flush()
+// }
 
 func (c *ServerConn) Close() error {
-	return c.c.Close()
+ 	return c.c.(io.ReadWriteCloser).Close()
 }
 
 /*
@@ -86,13 +85,13 @@ func (c *ServerConn) Output() chan *ClientMessage {
 }
 */
 func (c *ServerConn) Read(buf []byte) (int, error) {
-	return c.br.Read(buf)
+	return c.c.Read(buf)
 }
 
 func (c *ServerConn) Write(buf []byte) (int, error) {
 	//	c.m.Lock()
 	//	defer c.m.Unlock()
-	return c.bw.Write(buf)
+	return c.c.Write(buf)
 }
 
 func (c *ServerConn) ColorMap() *common.ColorMap {

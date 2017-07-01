@@ -6,7 +6,7 @@ import (
 	"time"
 	"vncproxy/common"
 	"vncproxy/encodings"
-	"vncproxy/vnc"
+	"vncproxy/client"
 )
 
 func main() {
@@ -17,12 +17,12 @@ func main() {
 	if err != nil {
 		fmt.Printf("error connecting to vnc server: %s", err)
 	}
-	var noauth vnc.ClientAuthNone
-	authArr := []vnc.ClientAuth{&vnc.PasswordAuth{Password: "Ch_#!T@8"}, &noauth}
+	var noauth client.ClientAuthNone
+	authArr := []client.ClientAuth{&client.PasswordAuth{Password: "Ch_#!T@8"}, &noauth}
 
 	vncSrvMessagesChan := make(chan common.ServerMessage)
-	clientConn, err := vnc.Client(nc,
-		&vnc.ClientConfig{
+	clientConn, err := client.Client(nc,
+		&client.ClientConfig{
 			Auth:            authArr,
 			ServerMessageCh: vncSrvMessagesChan,
 			Exclusive:       true,

@@ -184,7 +184,9 @@ func (*ServerAuthNone) SubType() SecuritySubType {
 // }
 
 // ServerAuthVNC is the standard password authentication. See 7.2.2.
-type ServerAuthVNC struct{}
+type ServerAuthVNC struct {
+	pass string
+}
 
 func (*ServerAuthVNC) Type() SecurityType {
 	return SecTypeVNC
@@ -208,14 +210,14 @@ func (auth *ServerAuthVNC) Auth(c common.Conn) error {
 		log.Printf("The full 16 byte challenge was not sent!\n")
 		return errors.New("The full 16 byte challenge was not sent")
 	}
-	c.Flush()
+	//c.Flush()
 	buf2 := make([]byte, 16)
 	_, err = c.Read(buf2)
 	if err != nil {
 		log.Printf("The authentication result was not read: %s\n", err.Error())
 		return errors.New("The authentication result was not read" + err.Error())
 	}
-	AuthText := "1234"
+	AuthText := auth.pass
 	bk, err := des.NewCipher([]byte(fixDesKey(AuthText)))
 	if err != nil {
 		log.Printf("Error generating authentication cipher: %s\n", err.Error())
@@ -229,7 +231,7 @@ func (auth *ServerAuthVNC) Auth(c common.Conn) error {
 		SetUint32(buf, 4, uint32(len([]byte(AUTH_FAIL))))
 		copy(buf[8:], []byte(AUTH_FAIL))
 		c.Write(buf)
-		c.Flush()
+		//c.Flush()
 		return errors.New("Authentication failed")
 	}
 	return nil

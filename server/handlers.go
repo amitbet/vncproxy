@@ -7,20 +7,6 @@ import (
 	"io"
 )
 
-// // ClientMessage is the interface
-// type ClientMessage interface {
-// 	Type() ClientMessageType
-// 	Read(Conn) (ClientMessage, error)
-// 	Write(Conn) error
-// }
-
-// // ServerMessage is the interface
-// type ServerMessage interface {
-// 	Type() ServerMessageType
-// 	Read(Conn) (ServerMessage, error)
-// 	Write(Conn) error
-// }
-
 const ProtoVersionLength = 12
 
 const (
@@ -47,45 +33,14 @@ func ParseProtoVersion(pv []byte) (uint, uint, error) {
 	return major, minor, nil
 }
 
-// func ClientVersionHandler(cfg *ClientConfig, c ServerConn) error {
-// 	var version [ProtoVersionLength]byte
-
-// 	if err := binary.Read(c, binary.BigEndian, &version); err != nil {
-// 		return err
-// 	}
-
-// 	major, minor, err := ParseProtoVersion(version[:])
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	pv := ProtoVersionUnknown
-// 	if major == 3 {
-// 		if minor >= 8 {
-// 			pv = ProtoVersion38
-// 		} else if minor >= 3 {
-// 			pv = ProtoVersion38
-// 		}
-// 	}
-// 	if pv == ProtoVersionUnknown {
-// 		return fmt.Errorf("ProtocolVersion handshake failed; unsupported version '%v'", string(version[:]))
-// 	}
-// 	c.SetProtoVersion(string(version[:]))
-
-// 	if err := binary.Write(c, binary.BigEndian, []byte(pv)); err != nil {
-// 		return err
-// 	}
-// 	return c.Flush()
-// }
-
 func ServerVersionHandler(cfg *ServerConfig, c *ServerConn) error {
 	var version [ProtoVersionLength]byte
 	if err := binary.Write(c, binary.BigEndian, []byte(ProtoVersion38)); err != nil {
 		return err
 	}
-	if err := c.Flush(); err != nil {
-		return err
-	}
+	// if err := c.Flush(); err != nil {
+	// 	return err
+	// }
 	if err := binary.Read(c, binary.BigEndian, &version); err != nil {
 		return err
 	}
@@ -111,58 +66,6 @@ func ServerVersionHandler(cfg *ServerConfig, c *ServerConn) error {
 	return nil
 }
 
-// func ClientSecurityHandler(cfg *ClientConfig, c Conn) error {
-// 	var numSecurityTypes uint8
-// 	if err := binary.Read(c, binary.BigEndian, &numSecurityTypes); err != nil {
-// 		return err
-// 	}
-// 	secTypes := make([]SecurityType, numSecurityTypes)
-// 	if err := binary.Read(c, binary.BigEndian, &secTypes); err != nil {
-// 		return err
-// 	}
-
-// 	var secType SecurityHandler
-// 	for _, st := range cfg.SecurityHandlers {
-// 		for _, sc := range secTypes {
-// 			if st.Type() == sc {
-// 				secType = st
-// 			}
-// 		}
-// 	}
-
-// 	if err := binary.Write(c, binary.BigEndian, cfg.SecurityHandlers[0].Type()); err != nil {
-// 		return err
-// 	}
-
-// 	if err := c.Flush(); err != nil {
-// 		return err
-// 	}
-
-// 	err := secType.Auth(c)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	var authCode uint32
-// 	if err := binary.Read(c, binary.BigEndian, &authCode); err != nil {
-// 		return err
-// 	}
-
-// 	if authCode == 1 {
-// 		var reasonLength uint32
-// 		if err := binary.Read(c, binary.BigEndian, &reasonLength); err != nil {
-// 			return err
-// 		}
-// 		reasonText := make([]byte, reasonLength)
-// 		if err := binary.Read(c, binary.BigEndian, &reasonText); err != nil {
-// 			return err
-// 		}
-// 		return fmt.Errorf("%s", reasonText)
-// 	}
-
-// 	return nil
-// }
-
 func ServerSecurityHandler(cfg *ServerConfig, c *ServerConn) error {
 	if err := binary.Write(c, binary.BigEndian, uint8(len(cfg.SecurityHandlers))); err != nil {
 		return err
@@ -174,9 +77,9 @@ func ServerSecurityHandler(cfg *ServerConfig, c *ServerConn) error {
 		}
 	}
 
-	if err := c.Flush(); err != nil {
-		return err
-	}
+	// if err := c.Flush(); err != nil {
+	// 	return err
+	// }
 
 	var secType SecurityType
 	if err := binary.Read(c, binary.BigEndian, &secType); err != nil {
@@ -202,9 +105,9 @@ func ServerSecurityHandler(cfg *ServerConfig, c *ServerConn) error {
 	if err := binary.Write(c, binary.BigEndian, authCode); err != nil {
 		return err
 	}
-	if err := c.Flush(); err != nil {
-		return err
-	}
+	// if err := c.Flush(); err != nil {
+	// 	return err
+	// }
 
 	if authErr != nil {
 		if err := binary.Write(c, binary.BigEndian, len(authErr.Error())); err != nil {
@@ -213,43 +116,14 @@ func ServerSecurityHandler(cfg *ServerConfig, c *ServerConn) error {
 		if err := binary.Write(c, binary.BigEndian, []byte(authErr.Error())); err != nil {
 			return err
 		}
-		if err := c.Flush(); err != nil {
-			return err
-		}
+		// if err := c.Flush(); err != nil {
+		// 	return err
+		// }
 		return authErr
 	}
 
 	return nil
 }
-
-// func ClientServerInitHandler(cfg *ClientConfig, c *ServerConn) error {
-// 	srvInit := &ServerInit{}
-
-// 	if err := binary.Read(c, binary.BigEndian, &srvInit.FBWidth); err != nil {
-// 		return err
-// 	}
-// 	if err := binary.Read(c, binary.BigEndian, &srvInit.FBHeight); err != nil {
-// 		return err
-// 	}
-// 	if err := binary.Read(c, binary.BigEndian, &srvInit.PixelFormat); err != nil {
-// 		return err
-// 	}
-// 	if err := binary.Read(c, binary.BigEndian, &srvInit.NameLength); err != nil {
-// 		return err
-// 	}
-
-// 	nameText := make([]byte, srvInit.NameLength)
-// 	if err := binary.Read(c, binary.BigEndian, nameText); err != nil {
-// 		return err
-// 	}
-
-// 	srvInit.NameText = nameText
-// 	c.SetDesktopName(string(srvInit.NameText))
-// 	c.SetWidth(srvInit.FBWidth)
-// 	c.SetHeight(srvInit.FBHeight)
-// 	c.SetPixelFormat(&srvInit.PixelFormat)
-// 	return nil
-// }
 
 func ServerServerInitHandler(cfg *ServerConfig, c *ServerConn) error {
 	srvInit := &ServerInit{
@@ -293,7 +167,7 @@ func ServerServerInitHandler(cfg *ServerConfig, c *ServerConn) error {
 	//}
 	//tightInit.WriteTo(c)
 
-	return c.Flush()
+	return nil
 }
 
 const (
@@ -464,19 +338,6 @@ func (t *TightCapability) ReadFrom(r io.Reader) error {
 	}
 	return nil
 }
-
-// func ClientClientInitHandler(cfg *ClientConfig, c *ServerConn) error {
-// 	var shared uint8
-// 	if cfg.Exclusive {
-// 		shared = 0
-// 	} else {
-// 		shared = 1
-// 	}
-// 	if err := binary.Write(c, binary.BigEndian, shared); err != nil {
-// 		return err
-// 	}
-// 	return c.Flush()
-// }
 
 func ServerClientInitHandler(cfg *ServerConfig, c *ServerConn) error {
 	var shared uint8

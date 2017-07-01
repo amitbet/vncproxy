@@ -1,9 +1,6 @@
 package common
 
-import (
-	"io"
-	"net"
-)
+import "io"
 
 type ClientMessageType uint8
 
@@ -31,8 +28,8 @@ type Color struct {
 type ColorMap [256]Color
 
 type Conn interface {
-	io.ReadWriteCloser
-	Conn() net.Conn
+	io.ReadWriter
+	Conn() io.ReadWriter
 	Protocol() string
 	PixelFormat() *PixelFormat
 	SetPixelFormat(*PixelFormat) error
@@ -46,7 +43,7 @@ type Conn interface {
 	SetHeight(uint16)
 	DesktopName() string
 	SetDesktopName(string)
-	Flush() error
+	//Flush() error
 	SetProtoVersion(string)
 }
 

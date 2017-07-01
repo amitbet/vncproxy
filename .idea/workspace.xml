@@ -2,27 +2,30 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a5d84862-9821-4d30-9a77-6235b55d6727" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/.name" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/vncproxy.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vnc/pixel_format.go" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vnc/server_messages.go" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vncproxy.iml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/server/security.go" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/listeners/multiListener.go" afterPath="$PROJECT_DIR$/tee-listeners/multiListener.go" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/listeners/pass-to.go" afterPath="$PROJECT_DIR$/tee-listeners/pass-to.go" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/listeners/recorder.go" afterPath="$PROJECT_DIR$/tee-listeners/recorder.go" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/vnc/README.md" afterPath="$PROJECT_DIR$/client/README.md" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/vnc/client-conn.go" afterPath="$PROJECT_DIR$/client/client-conn.go" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/vnc/client_auth.go" afterPath="$PROJECT_DIR$/client/client_auth.go" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/vnc/client_auth_test.go" afterPath="$PROJECT_DIR$/client/client_auth_test.go" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/vnc/client_test.go" afterPath="$PROJECT_DIR$/client/client_test.go" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/vnc/color.go" afterPath="$PROJECT_DIR$/client/color.go" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/vnc/pixel-format.go" afterPath="$PROJECT_DIR$/client/pixel-format.go" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/vnc/pointer.go" afterPath="$PROJECT_DIR$/client/pointer.go" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/vnc/server-messages.go" afterPath="$PROJECT_DIR$/client/server-messages.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/debug.test" afterPath="$PROJECT_DIR$/server/debug.test" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/GOPATH__vncproxy_.xml" afterPath="$PROJECT_DIR$/.idea/libraries/GOPATH__vncproxy_.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.vscode/launch.json" afterPath="$PROJECT_DIR$/.vscode/launch.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/encoding.go" afterPath="$PROJECT_DIR$/common/encoding.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/readers.go" afterPath="$PROJECT_DIR$/common/readers.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/rectangle.go" afterPath="$PROJECT_DIR$/common/rectangle.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/encodings/enc-rre.go" afterPath="$PROJECT_DIR$/encodings/enc-rre.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/encodings/enc-tight.go" afterPath="$PROJECT_DIR$/encodings/enc-tight.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/listeners/pass-to.go" afterPath="$PROJECT_DIR$/listeners/pass-to.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/listeners/recorder.go" afterPath="$PROJECT_DIR$/listeners/recorder.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/client-message.go" afterPath="$PROJECT_DIR$/common/client-message.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.go" afterPath="$PROJECT_DIR$/main.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vnc/client-conn.go" afterPath="$PROJECT_DIR$/vnc/client-conn.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/client-messages.go" afterPath="$PROJECT_DIR$/server/client-messages.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/handlers.go" afterPath="$PROJECT_DIR$/server/handlers.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/server-conn.go" afterPath="$PROJECT_DIR$/server/server-conn.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/server.go" afterPath="$PROJECT_DIR$/server/server.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/server_test.go" afterPath="$PROJECT_DIR$/server/server_test.go" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -33,36 +36,60 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/vncproxy$test_server_.coverage" NAME="test server  Coverage Results" MODIFIED="1497968383165" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/vncproxy$test_server_.coverage" NAME="test server  Coverage Results" MODIFIED="1498056094294" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_TABLE_DETAILS" value="true" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="vncproxy" />
+  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="main.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main.go">
+      <file leaf-file-name="server_test.go" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/server/server_test.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="23" column="26" lean-forward="false" selection-start-line="23" selection-start-column="26" selection-end-line="23" selection-end-column="26" />
+            <state relative-caret-position="120">
+              <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ws-server-go.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/ws-server-go.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="555">
+              <caret line="39" column="19" lean-forward="false" selection-start-line="39" selection-start-column="19" selection-end-line="39" selection-end-column="19" />
+              <folding>
+                <element signature="e#16#93#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ws-server-gorilla.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/ws-server-gorilla.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1320">
+              <caret line="98" column="0" lean-forward="false" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="server.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server/server.go">
+        <entry file="file://$PROJECT_DIR$/../github.com/gorilla/websocket/server.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2040">
-              <caret line="144" column="0" lean-forward="true" selection-start-line="144" selection-start-column="0" selection-end-line="144" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="server-message.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/common/server-message.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="20" column="21" lean-forward="false" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="21" />
+            <state relative-caret-position="298">
+              <caret line="68" column="39" lean-forward="false" selection-start-line="68" selection-start-column="39" selection-end-line="68" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -71,49 +98,32 @@
       <file leaf-file-name="client-message.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/common/client-message.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="20">
-              <caret line="28" column="1" lean-forward="true" selection-start-line="28" selection-start-column="1" selection-end-line="28" selection-end-column="1" />
+            <state relative-caret-position="390">
+              <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="enc-copy-rect.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/encodings/enc-copy-rect.go">
+      <file leaf-file-name="handlers.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/handlers.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="570">
+              <caret line="43" column="32" lean-forward="false" selection-start-line="43" selection-start-column="32" selection-end-line="43" selection-end-column="32" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="enc-raw.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/encodings/enc-raw.go">
+      <file leaf-file-name="server.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/server.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="server_test.go" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/server/server_test.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="24" column="37" lean-forward="false" selection-start-line="24" selection-start-column="37" selection-end-line="24" selection-end-column="37" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="client_test.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/vnc/client_test.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="29" column="1" lean-forward="true" selection-start-line="29" selection-start-column="1" selection-end-line="29" selection-end-column="1" />
-              <folding />
+            <state relative-caret-position="2385">
+              <caret line="166" column="15" lean-forward="false" selection-start-line="166" selection-start-column="15" selection-end-line="166" selection-end-column="15" />
+              <folding>
+                <marker date="1498939071000" expanded="false" signature="23:84" ph="..." />
+                <marker date="1498939071000" expanded="true" signature="4931:4943" ph="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -121,8 +131,32 @@
       <file leaf-file-name="server-conn.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server/server-conn.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="18" column="38" lean-forward="true" selection-start-line="18" selection-start-column="38" selection-end-line="18" selection-end-column="38" />
+            <state relative-caret-position="1260">
+              <caret line="88" column="1" lean-forward="false" selection-start-line="88" selection-start-column="1" selection-end-line="88" selection-end-column="1" />
+              <folding>
+                <element signature="e#16#59#0" expanded="true" />
+                <marker date="1498913812000" expanded="true" signature="1758:1803" ph="{...}" />
+                <marker date="1498913812000" expanded="true" signature="2109:2173" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ws_test.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/ws_test.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="495">
+              <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="security.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/security.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2985">
+              <caret line="206" column="20" lean-forward="false" selection-start-line="206" selection-start-column="20" selection-end-line="206" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -130,21 +164,15 @@
       </file>
     </leaf>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>PixelFormat</find>
-      <find>setpixrl</find>
-      <find>writePixelFormat</find>
-      <find>nil,</find>
-      <find>binary.Write</find>
-      <find>WaitGroup</find>
-      <find>SetPixelFormat</find>
-      <find>authtext</find>
-      <find>ServerConfig</find>
-      <find>serverinit</find>
-      <find>uint16</find>
-      <find>writeto</find>
-      <find>ServerServerInitHandler</find>
       <find>r</find>
       <find>rfhc</find>
       <find>rfh</find>
@@ -162,6 +190,19 @@
       <find>mainLoop</find>
       <find>NewServerConn</find>
       <find>Serve</find>
+      <find>uint16</find>
+      <find>l</find>
+      <find>client</find>
+      <find>tcp</find>
+      <find>ln</find>
+      <find>client.</find>
+      <find>se</find>
+      <find>secur</find>
+      <find>securi</find>
+      <find>auth</find>
+      <find>c.</find>
+      <find>upgrade</find>
+      <find>read</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -179,10 +220,16 @@
         <option value="$PROJECT_DIR$/server/client-messages.go" />
         <option value="$PROJECT_DIR$/vnc/pixel-format.go" />
         <option value="$PROJECT_DIR$/common/encoding.go" />
-        <option value="$PROJECT_DIR$/server/security.go" />
-        <option value="$PROJECT_DIR$/server/server-conn.go" />
+        <option value="$PROJECT_DIR$/client/client-conn.go" />
         <option value="$PROJECT_DIR$/server/handlers.go" />
+        <option value="$PROJECT_DIR$/server/server-conn.go" />
+        <option value="$PROJECT_DIR$/server/ws-test.go" />
+        <option value="$PROJECT_DIR$/client/pixel-format.go" />
+        <option value="$PROJECT_DIR$/server/ws-server.go" />
+        <option value="$PROJECT_DIR$/server/ws_test.go" />
+        <option value="$PROJECT_DIR$/server/security.go" />
         <option value="$PROJECT_DIR$/server/server_test.go" />
+        <option value="$PROJECT_DIR$/server/ws-server-go.go" />
         <option value="$PROJECT_DIR$/server/server.go" />
       </list>
     </option>
@@ -196,6 +243,22 @@
   <component name="ProjectFrameBounds">
     <option name="width" value="1280" />
     <option name="height" value="800" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>Android</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -212,6 +275,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -220,7 +286,29 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="GOPATH &lt;vncproxy&gt;" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
               <option name="myItemId" value="vncproxy" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="GOPATH &lt;vncproxy&gt;" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="github.com" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -230,11 +318,57 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="vncproxy" />
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="GOPATH &lt;vncproxy&gt;" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="github.com" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="vnc" />
+              <option name="myItemId" value="websocket" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vncproxy" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="GOPATH &lt;vncproxy&gt;" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="github.com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vncproxy" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vncproxy" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vncproxy" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -262,7 +396,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="encodings" />
+              <option name="myItemId" value="common" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -276,21 +410,21 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="common" />
+              <option name="myItemId" value="client" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/vnc" />
+    <property name="settings.editor.selected.configurable" value="preferences.intentionPowerPack" />
+    <property name="DefaultGoTemplateProperty" value="Go File" />
+    <property name="SearchEverywhereHistoryKey" value="generate&#9;ACTION&#9;Maven.GenerateGroup&#10;implement&#9;ACTION&#9;GotoImplementation" />
     <property name="FullScreen" value="true" />
   </component>
   <component name="RunDashboard">
@@ -774,46 +908,60 @@
       <updated>1497962309959</updated>
       <workItem from="1497962311486" duration="10262000" />
       <workItem from="1497992075962" duration="2116000" />
+      <workItem from="1497995371284" duration="219000" />
+      <workItem from="1498747570661" duration="600000" />
+      <workItem from="1498799293547" duration="54000" />
+      <workItem from="1498912842004" duration="900000" />
+      <workItem from="1498938338650" duration="581000" />
     </task>
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="test_server_ - 2017.06.20 at 17h 34m 07s.xml">
+    <history-entry file="test_server_ - 2017.06.21 at 17h 38m 50s.xml">
       <configuration name="test server " configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="test_server_ - 2017.06.20 at 17h 34m 57s.xml">
+    <history-entry file="test_server_ - 2017.06.21 at 17h 39m 25s.xml">
       <configuration name="test server " configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="test_server_ - 2017.06.21 at 00h 07m 31s.xml">
+    <history-entry file="test_server_ - 2017.06.21 at 17h 41m 31s.xml">
       <configuration name="test server " configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="test_server_ - 2017.06.21 at 00h 07m 36s.xml">
+    <history-entry file="test_server_ - 2017.06.21 at 17h 41m 44s.xml">
       <configuration name="test server " configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="test_server_ - 2017.06.21 at 00h 08m 55s.xml">
+    <history-entry file="test_server_ - 2017.06.21 at 17h 42m 03s.xml">
       <configuration name="test server " configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="test_server_ - 2017.06.21 at 00h 11m 19s.xml">
+    <history-entry file="test_server_ - 2017.06.21 at 17h 42m 04s.xml">
       <configuration name="test server " configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="test_server_ - 2017.06.21 at 00h 17m 38s.xml">
+    <history-entry file="test_server_ - 2017.06.21 at 17h 43m 01s.xml">
       <configuration name="test server " configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="test_server_ - 2017.06.21 at 00h 21m 39s.xml">
+    <history-entry file="test_server_ - 2017.06.21 at 17h 43m 30s.xml">
       <configuration name="test server " configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="test_server_ - 2017.06.21 at 00h 21m 43s.xml">
+    <history-entry file="test_server_ - 2017.06.25 at 10h 48m 33s.xml">
       <configuration name="test server " configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="test_server_ - 2017.06.21 at 00h 24m 16s.xml">
+    <history-entry file="test_server_ - 2017.07.01 at 15h 56m 12s.xml">
       <configuration name="test server " configurationId="GoTestRunConfiguration" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="12378000" />
+    <option name="totallyTimeSpent" value="27237000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1280" height="800" extended-state="6" />
+    <frame x="0" y="0" width="1280" height="800" extended-state="0" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -829,9 +977,8 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27948305" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30129242" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32981783" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -842,9 +989,11 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Dynamic Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32981783" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -872,58 +1021,23 @@
         </line-breakpoint>
         <line-breakpoint type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/server/server_test.go</url>
-          <line>39</line>
+          <line>30</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
         <line-breakpoint type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/server/server_test.go</url>
-          <line>41</line>
+          <line>31</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/server/server.go</url>
-          <line>156</line>
+          <line>222</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/server/server.go</url>
-          <line>166</line>
+          <line>226</line>
           <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/server/server.go</url>
-          <line>169</line>
-          <option name="timeStamp" value="10" />
-        </line-breakpoint>
-        <line-breakpoint type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/server/server.go</url>
-          <line>175</line>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-        <line-breakpoint type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/server/server.go</url>
-          <line>180</line>
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
-        <line-breakpoint type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/server/server.go</url>
-          <line>140</line>
-          <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/server/server.go</url>
-          <line>141</line>
-          <option name="timeStamp" value="17" />
-        </line-breakpoint>
-        <line-breakpoint type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/server/server.go</url>
-          <line>139</line>
-          <option name="timeStamp" value="18" />
-        </line-breakpoint>
-        <line-breakpoint type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/server/security.go</url>
-          <line>199</line>
-          <option name="timeStamp" value="26" />
         </line-breakpoint>
         <line-breakpoint type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/common/encoding.go</url>
@@ -932,104 +1046,167 @@
         </line-breakpoint>
         <line-breakpoint type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/server/server.go</url>
-          <line>124</line>
+          <line>169</line>
           <option name="timeStamp" value="32" />
         </line-breakpoint>
         <line-breakpoint type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/server/server.go</url>
-          <line>163</line>
-          <option name="timeStamp" value="36" />
-        </line-breakpoint>
-        <line-breakpoint type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/server/security.go</url>
-          <line>213</line>
-          <option name="timeStamp" value="37" />
-        </line-breakpoint>
-        <line-breakpoint type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/server/security.go</url>
-          <line>216</line>
-          <option name="timeStamp" value="38" />
-        </line-breakpoint>
-        <line-breakpoint type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/server/security.go</url>
-          <line>218</line>
-          <option name="timeStamp" value="41" />
-        </line-breakpoint>
-        <line-breakpoint type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/server/security.go</url>
-          <line>217</line>
-          <option name="timeStamp" value="42" />
-        </line-breakpoint>
-        <line-breakpoint type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/server/security.go</url>
-          <line>210</line>
-          <option name="timeStamp" value="43" />
-        </line-breakpoint>
-        <line-breakpoint type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/server/server.go</url>
-          <line>136</line>
+          <line>202</line>
           <option name="timeStamp" value="44" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/server/server.go</url>
-          <line>134</line>
+          <line>200</line>
           <option name="timeStamp" value="45" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/server/server.go</url>
-          <line>151</line>
+          <line>213</line>
           <option name="timeStamp" value="46" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/server/server.go</url>
-          <line>170</line>
-          <option name="timeStamp" value="47" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/server/server.go</url>
           <line>173</line>
-          <option name="timeStamp" value="48" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/server/server.go</url>
-          <line>147</line>
-          <option name="timeStamp" value="50" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/server/server.go</url>
-          <line>171</line>
-          <option name="timeStamp" value="51" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/server/server.go</url>
-          <line>128</line>
-          <properties />
           <option name="timeStamp" value="52" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/server/ws-server-gorilla.go</url>
+          <line>98</line>
+          <option name="timeStamp" value="56" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/../github.com/gorilla/websocket/server.go</url>
+          <line>219</line>
+          <option name="timeStamp" value="61" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/server/ws-server-go.go</url>
+          <line>35</line>
+          <option name="timeStamp" value="62" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/server/ws-server-go.go</url>
+          <line>23</line>
+          <option name="timeStamp" value="63" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/server/server.go</url>
-          <line>178</line>
-          <properties />
-          <option name="timeStamp" value="54" />
+          <line>113</line>
+          <option name="timeStamp" value="64" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/server/server.go</url>
+          <line>207</line>
+          <option name="timeStamp" value="67" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/server/server.go</url>
+          <line>205</line>
+          <option name="timeStamp" value="68" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/server/server.go</url>
+          <line>185</line>
+          <option name="timeStamp" value="69" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/server/server.go</url>
+          <line>190</line>
+          <option name="timeStamp" value="70" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/server/server.go</url>
+          <line>209</line>
+          <option name="timeStamp" value="71" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/server/server.go</url>
+          <line>211</line>
+          <option name="timeStamp" value="73" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="55" />
+      <option name="time" value="77" />
     </breakpoint-manager>
-    <watches-manager />
+    <watches-manager>
+      <configuration name="GoTestRunConfiguration">
+        <watch expression="p" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/server/server.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2160">
+          <caret line="144" column="0" lean-forward="true" selection-start-line="144" selection-start-column="0" selection-end-line="144" selection-end-column="0" />
+          <folding>
+            <marker date="1498939071000" expanded="false" signature="23:84" ph="..." />
+            <marker date="1498939071000" expanded="true" signature="4931:4943" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/server-message.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="20" column="21" lean-forward="false" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/client-message.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="28" column="1" lean-forward="true" selection-start-line="28" selection-start-column="1" selection-end-line="28" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/encodings/enc-copy-rect.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/encodings/enc-raw.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/client_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="29" column="1" lean-forward="true" selection-start-line="29" selection-start-column="1" selection-end-line="29" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/server-conn.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="18" column="38" lean-forward="true" selection-start-line="18" selection-start-column="38" selection-end-line="18" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/server_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="24" column="37" lean-forward="false" selection-start-line="24" selection-start-column="37" selection-end-line="24" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/server/handlers.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1045,7 +1222,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1725">
           <caret line="123" column="38" lean-forward="false" selection-start-line="123" selection-start-column="38" selection-end-line="123" selection-end-column="38" />
-          <folding />
+          <folding>
+            <marker date="1498939071000" expanded="false" signature="23:84" ph="..." />
+            <marker date="1498939071000" expanded="true" signature="4931:4943" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1053,25 +1233,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1380">
           <caret line="96" column="1" lean-forward="true" selection-start-line="96" selection-start-column="1" selection-end-line="96" selection-end-column="1" />
-          <folding>
-            <marker date="1497991618000" expanded="true" signature="1507:1513" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="1507:1597" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="1554:1574" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="1660:1854" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="1739:1834" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="1907:2069" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="1992:2012" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="2123:2286" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="2209:2229" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="2340:2503" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="2426:2446" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="2558:2970" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="2672:2862" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="2774:2859" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="3040:3350" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="3081:3121" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="3221:3243" ph="{...}" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1083,11 +1244,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/vnc/client_test.go">
+    <entry file="file://$PROJECT_DIR$/client/client_test.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
           <caret line="28" column="29" lean-forward="true" selection-start-line="28" selection-start-column="29" selection-end-line="28" selection-end-column="29" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1095,34 +1255,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1497903119000" expanded="false" signature="26:47" ph="..." />
-            <marker date="1497903119000" expanded="true" signature="462:463" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="500:513" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="1306:1511" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="1406:1435" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="1441:1482" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="1646:3175" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="1886:1968" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="2509:3173" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="2527:2719" ph="..." />
-            <marker date="1497903119000" expanded="true" signature="2736:3000" ph="..." />
-            <marker date="1497903119000" expanded="true" signature="2760:2846" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="2897:2921" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="3010:3170" ph="..." />
-            <marker date="1497903119000" expanded="true" signature="3038:3100" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="3299:10234" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="3544:3759" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="3618:3712" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="4027:5051" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="4054:4632" ph="..." />
-            <marker date="1497903119000" expanded="true" signature="4358:4426" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="4432:4483" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="4539:4632" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="4659:4841" ph="..." />
-            <marker date="1497903119000" expanded="true" signature="4864:4977" ph="..." />
-            <marker date="1497903119000" expanded="true" signature="4987:5048" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1141,36 +1273,103 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/vnc/client_auth_test.go">
+    <entry file="file://$PROJECT_DIR$/client/client_auth_test.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="11" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="11" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/vnc/client_auth.go">
+    <entry file="file://$PROJECT_DIR$/client/client_auth.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="408">
           <caret line="29" column="0" lean-forward="true" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/vnc/pixel-format.go" />
-    <entry file="file://C:/Go/src/runtime/panic.go" />
-    <entry file="file://$PROJECT_DIR$/server/security.go">
+    <entry file="file://$PROJECT_DIR$/common/readers.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="217" column="21" lean-forward="false" selection-start-line="217" selection-start-column="17" selection-end-line="217" selection-end-column="21" />
-          <folding>
-            <element signature="e#16#100#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="0">
+          <caret line="96" column="1" lean-forward="false" selection-start-line="96" selection-start-column="1" selection-end-line="96" selection-end-column="1" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/client-messages.go">
+    <entry file="file://$PROJECT_DIR$/server/demo.go1" />
+    <entry file="file://$PROJECT_DIR$/client/client_test.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="34" column="0" lean-forward="true" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+        <state relative-caret-position="0">
+          <caret line="28" column="29" lean-forward="false" selection-start-line="28" selection-start-column="29" selection-end-line="28" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tee-listeners/recorder.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="20" column="0" lean-forward="true" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tee-listeners/multiListener.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="17" column="22" lean-forward="true" selection-start-line="17" selection-start-column="22" selection-end-line="17" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tee-listeners/pass-to.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="16" column="28" lean-forward="false" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/encodings/enc-corre.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/encodings/enc-raw.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/encodings/enc-copy-rect.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="24" column="9" lean-forward="false" selection-start-line="24" selection-start-column="9" selection-end-line="24" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/client-conn.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="14" lean-forward="true" selection-start-line="0" selection-start-column="14" selection-end-line="0" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/server-message.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="16" column="1" lean-forward="true" selection-start-line="16" selection-start-column="1" selection-end-line="16" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/encoding.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="26" column="24" lean-forward="true" selection-start-line="26" selection-start-column="24" selection-end-line="26" selection-end-column="24" />
           <folding />
         </state>
       </provider>
@@ -1179,163 +1378,114 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1497903119000" expanded="false" signature="26:47" ph="..." />
-            <marker date="1497903119000" expanded="true" signature="462:463" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="500:513" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="1306:1511" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="1406:1435" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="1441:1482" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="1646:3175" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="1886:1968" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="2509:3173" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="2527:2719" ph="..." />
-            <marker date="1497903119000" expanded="true" signature="2736:3000" ph="..." />
-            <marker date="1497903119000" expanded="true" signature="2760:2846" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="2897:2921" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="3010:3170" ph="..." />
-            <marker date="1497903119000" expanded="true" signature="3038:3100" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="3299:10234" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="3544:3759" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="3618:3712" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="4027:5051" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="4054:4632" ph="..." />
-            <marker date="1497903119000" expanded="true" signature="4358:4426" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="4432:4483" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="4539:4632" ph="{...}" />
-            <marker date="1497903119000" expanded="true" signature="4659:4841" ph="..." />
-            <marker date="1497903119000" expanded="true" signature="4864:4977" ph="..." />
-            <marker date="1497903119000" expanded="true" signature="4987:5048" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/common/encoding.go">
+    <entry file="file://$PROJECT_DIR$/server/client-messages.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" column="5" lean-forward="false" selection-start-line="10" selection-start-column="5" selection-end-line="10" selection-end-column="5" />
-          <folding />
+        <state relative-caret-position="119">
+          <caret line="34" column="0" lean-forward="true" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/common/readers.go">
+    <entry file="file://C:/Go/src/net/http/server.go" />
+    <entry file="file://C:/Go/src/bufio/bufio.go" />
+    <entry file="file://C:/Go/src/net/dial.go" />
+    <entry file="file://C:/Go/src/net/net.go" />
+    <entry file="file://$PROJECT_DIR$/client/pixel-format.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1380">
-          <caret line="96" column="1" lean-forward="false" selection-start-line="96" selection-start-column="1" selection-end-line="96" selection-end-column="1" />
-          <folding>
-            <marker date="1497991618000" expanded="true" signature="1507:1513" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="1507:1597" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="1554:1574" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="1660:1854" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="1739:1834" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="1907:2069" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="1992:2012" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="2123:2286" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="2209:2229" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="2340:2503" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="2426:2446" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="2558:2970" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="2672:2862" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="2774:2859" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="3040:3350" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="3081:3121" ph="{...}" />
-            <marker date="1497991618000" expanded="true" signature="3221:3243" ph="{...}" />
-          </folding>
+        <state relative-caret-position="108">
+          <caret line="6" column="21" lean-forward="false" selection-start-line="6" selection-start-column="21" selection-end-line="6" selection-end-column="21" />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/server/ws-server.go" />
     <entry file="file://$PROJECT_DIR$/server/handlers.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="143">
-          <caret line="253" column="54" lean-forward="true" selection-start-line="253" selection-start-column="54" selection-end-line="253" selection-end-column="54" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vnc/client-conn.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="450" column="22" lean-forward="false" selection-start-line="450" selection-start-column="22" selection-end-line="450" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/encodings/enc-copy-rect.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/demo.go1">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="53" column="16" lean-forward="false" selection-start-line="53" selection-start-column="16" selection-end-line="53" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="23" column="26" lean-forward="false" selection-start-line="23" selection-start-column="26" selection-end-line="23" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vnc/client_test.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="29" column="1" lean-forward="true" selection-start-line="29" selection-start-column="1" selection-end-line="29" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/server-message.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="21" lean-forward="false" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/encodings/enc-raw.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="570">
+          <caret line="43" column="32" lean-forward="false" selection-start-line="43" selection-start-column="32" selection-end-line="43" selection-end-column="32" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/common/client-message.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="20">
-          <caret line="28" column="1" lean-forward="true" selection-start-line="28" selection-start-column="1" selection-end-line="28" selection-end-column="1" />
+        <state relative-caret-position="390">
+          <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/server-conn.go">
+    <entry file="file://C:/Go/src/runtime/panic.go" />
+    <entry file="file://$PROJECT_DIR$/server/ws_test.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="18" column="38" lean-forward="true" selection-start-line="18" selection-start-column="38" selection-end-line="18" selection-end-column="38" />
+        <state relative-caret-position="495">
+          <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/server/server.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2040">
-          <caret line="144" column="0" lean-forward="true" selection-start-line="144" selection-start-column="0" selection-end-line="144" selection-end-column="0" />
+        <state relative-caret-position="2385">
+          <caret line="166" column="15" lean-forward="false" selection-start-line="166" selection-start-column="15" selection-end-line="166" selection-end-column="15" />
+          <folding>
+            <marker date="1498939071000" expanded="false" signature="23:84" ph="..." />
+            <marker date="1498939071000" expanded="true" signature="4931:4943" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/server-conn.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1260">
+          <caret line="88" column="1" lean-forward="false" selection-start-line="88" selection-start-column="1" selection-end-line="88" selection-end-column="1" />
+          <folding>
+            <element signature="e#16#59#0" expanded="true" />
+            <marker date="1498913812000" expanded="true" signature="1758:1803" ph="{...}" />
+            <marker date="1498913812000" expanded="true" signature="2109:2173" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/ws-server-gorilla.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1320">
+          <caret line="98" column="0" lean-forward="false" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/security.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2985">
+          <caret line="206" column="20" lean-forward="false" selection-start-line="206" selection-start-column="20" selection-end-line="206" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../github.com/gorilla/websocket/server.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="298">
+          <caret line="68" column="39" lean-forward="false" selection-start-line="68" selection-start-column="39" selection-end-line="68" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/ws-server-go.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="555">
+          <caret line="39" column="19" lean-forward="false" selection-start-line="39" selection-start-column="19" selection-end-line="39" selection-end-column="19" />
+          <folding>
+            <element signature="e#16#93#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/server/server_test.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="24" column="37" lean-forward="false" selection-start-line="24" selection-start-column="37" selection-end-line="24" selection-end-column="37" />
+        <state relative-caret-position="120">
+          <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
           <folding />
         </state>
       </provider>

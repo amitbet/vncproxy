@@ -1,8 +1,8 @@
 package common
 
 import (
-	"encoding/binary"
 	"bytes"
+	"encoding/binary"
 	"io"
 )
 
@@ -18,21 +18,8 @@ type Encoding interface {
 	Read(*PixelFormat, *Rectangle, *RfbReadHelper) (Encoding, error)
 }
 
-const (
-	EncodingRaw      = 0
-	EncodingCopyRect = 1
-	EncodingRRE      = 2
-	EncodingCoRRE    = 4
-	EncodingHextile  = 5
-	EncodingZlib     = 6
-	EncodingTight    = 7
-	EncodingZRLE     = 16
-)
-
 // EncodingType represents a known VNC encoding type.
 type EncodingType int32
-
-//go:generate stringer -type=EncodingType
 
 const (
 	EncRaw                           EncodingType = 0
@@ -80,6 +67,17 @@ const (
 	EncFencePseudo                   EncodingType = -312
 	EncContinuousUpdatesPseudo       EncodingType = -313
 	EncClientRedirect                EncodingType = -311
+	EncTightPNGBase64                EncodingType = 21 + 0x574d5600
+	EncTightDiffComp                 EncodingType = 22 + 0x574d5600
+	EncVMWDefineCursor               EncodingType = 100 + 0x574d5600
+	EncVMWCursorState                EncodingType = 101 + 0x574d5600
+	EncVMWCursorPosition             EncodingType = 102 + 0x574d5600
+	EncVMWTypematicInfo              EncodingType = 103 + 0x574d5600
+	EncVMWLEDState                   EncodingType = 104 + 0x574d5600
+	EncVMWServerPush2                EncodingType = 123 + 0x574d5600
+	EncVMWServerCaps                 EncodingType = 122 + 0x574d5600
+	EncVMWFrameStamp                 EncodingType = 124 + 0x574d5600
+	EncOffscreenCopyRect             EncodingType = 126 + 0x574d5600
 )
 
 // PixelFormat describes the way a pixel is formatted for a VNC connection.
@@ -98,17 +96,17 @@ type PixelFormat struct {
 	BlueShift  uint8
 }
 
-func (format *PixelFormat) WriteTo(w io.Writer) ( error) {
+func (format *PixelFormat) WriteTo(w io.Writer) error {
 	var buf bytes.Buffer
 
 	// Byte 1
 	if err := binary.Write(&buf, binary.BigEndian, format.BPP); err != nil {
-		return  err
+		return err
 	}
 
 	// Byte 2
 	if err := binary.Write(&buf, binary.BigEndian, format.Depth); err != nil {
-		return  err
+		return err
 	}
 
 	var boolByte byte
@@ -120,7 +118,7 @@ func (format *PixelFormat) WriteTo(w io.Writer) ( error) {
 
 	// Byte 3 (BigEndian)
 	if err := binary.Write(&buf, binary.BigEndian, boolByte); err != nil {
-		return  err
+		return err
 	}
 
 	if format.TrueColor {
@@ -131,39 +129,39 @@ func (format *PixelFormat) WriteTo(w io.Writer) ( error) {
 
 	// Byte 4 (TrueColor)
 	if err := binary.Write(&buf, binary.BigEndian, boolByte); err != nil {
-		return  err
+		return err
 	}
 
 	// If we have true color enabled then we have to fill in the rest of the
 	// structure with the color values.
 	if format.TrueColor {
 		if err := binary.Write(&buf, binary.BigEndian, format.RedMax); err != nil {
-			return  err
+			return err
 		}
 
 		if err := binary.Write(&buf, binary.BigEndian, format.GreenMax); err != nil {
-			return  err
+			return err
 		}
 
 		if err := binary.Write(&buf, binary.BigEndian, format.BlueMax); err != nil {
-			return  err
+			return err
 		}
 
 		if err := binary.Write(&buf, binary.BigEndian, format.RedShift); err != nil {
-			return  err
+			return err
 		}
 
 		if err := binary.Write(&buf, binary.BigEndian, format.GreenShift); err != nil {
-			return  err
+			return err
 		}
 
 		if err := binary.Write(&buf, binary.BigEndian, format.BlueShift); err != nil {
-			return  err
+			return err
 		}
 	}
 
 	w.Write(buf.Bytes()[0:16])
-	return  nil
+	return nil
 }
 
 func NewPixelFormat(bpp uint8) *PixelFormat {

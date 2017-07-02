@@ -12,7 +12,8 @@ const (
 	TightExplicitFilter = 0x04
 	TightFill           = 0x08
 	TightJpeg           = 0x09
-	TightMaxSubencoding = 0x09
+	TightPNG            = 0x10
+
 	TightFilterCopy     = 0x00
 	TightFilterPalette  = 0x01
 	TightFilterGradient = 0x02
@@ -74,24 +75,15 @@ func (t *TightEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangl
 	//conn := &DataSource{conn: conn.c, PixelFormat: conn.PixelFormat}
 
 	//var subencoding uint8
-	subencoding, err := r.ReadUint8()
+	compctl, err := r.ReadUint8()
 	if err != nil {
 		fmt.Printf("error in handling tight encoding: %v\n", err)
 		return nil, err
 	}
-	fmt.Printf("bytesPixel= %d, subencoding= %d\n", bytesPixel, subencoding)
-	// if err := binary.Read(conn.c, binary.BigEndian, &subencoding); err != nil {
-	// 	return t, err
-	// }
+	fmt.Printf("bytesPixel= %d, subencoding= %d\n", bytesPixel, compctl)
 
 	//move it to position (remove zlib flush commands)
-	compType := subencoding >> 4 & 0x0F
-	// for stream_id := 0; stream_id < 4; stream_id++ {
-	// 	//   if ((comp_ctl & 1) != 0 && tightInflaters[stream_id] != null) {
-	// 	//     tightInflaters[stream_id] = null;
-	// 	//   }
-	// 	subencoding >>= 1
-	// }
+	compType := compctl >> 4 & 0x0F
 
 	fmt.Printf("afterSHL:%d\n", compType)
 	switch compType {
@@ -120,7 +112,7 @@ func (t *TightEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangl
 			fmt.Println("Compression control byte is incorrect!")
 		}
 
-		handleTightFilters(subencoding, pixelFmt, rect, r)
+		handleTightFilters(compctl, pixelFmt, rect, r)
 		return t, nil
 	}
 }

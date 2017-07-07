@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"net"
 	"time"
+	"vncproxy/client"
 	"vncproxy/common"
 	"vncproxy/encodings"
-	"vncproxy/client"
+	listeners "vncproxy/tee-listeners"
 )
 
 func main() {
@@ -21,11 +22,18 @@ func main() {
 	authArr := []client.ClientAuth{&client.PasswordAuth{Password: "Ch_#!T@8"}, &noauth}
 
 	vncSrvMessagesChan := make(chan common.ServerMessage)
+
+	rec := listeners.NewRecorder("c:/Users/betzalel/recording.rbs")
+
+	split := &listeners.MultiListener{}
+	split.AddListener(rec)
+
 	clientConn, err := client.Client(nc,
 		&client.ClientConfig{
 			Auth:            authArr,
 			ServerMessageCh: vncSrvMessagesChan,
 			Exclusive:       true,
+			Listener:        split,
 		})
 
 	if err != nil {
@@ -37,6 +45,7 @@ func main() {
 	// }
 
 	tight := encodings.TightEncoding{}
+	tightPng := encodings.TightPngEncoding{}
 	//rre := encodings.RREEncoding{}
 	//zlib := encodings.ZLibEncoding{}
 	//zrle := encodings.ZRLEEncoding{}
@@ -47,7 +56,7 @@ func main() {
 	// defer file.Close()
 
 	//tight.SetOutput(file)
-	clientConn.SetEncodings([]common.Encoding{&cpyRect, &tight})
+	clientConn.SetEncodings([]common.Encoding{&cpyRect, &tightPng, &tight})
 
 	go func() {
 		for {

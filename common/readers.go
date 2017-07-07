@@ -12,6 +12,9 @@ const (
 	SegmentBytes SegmentType = iota
 	SegmentMessageSeparator
 	SegmentRectSeparator
+	SegmentFullyParsedClientMessage
+	SegmentFullyParsedServerMessage
+	SegmentServerInitMessage
 )
 
 type SegmentType int
@@ -20,7 +23,9 @@ type RfbSegment struct {
 	Bytes              []byte
 	SegmentType        SegmentType
 	UpcomingObjectType int
+	Message            interface{}
 }
+
 type SegmentConsumer interface {
 	Consume(*RfbSegment) error
 }

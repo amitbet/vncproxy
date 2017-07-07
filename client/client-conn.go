@@ -8,7 +8,6 @@ import (
 	"net"
 	"unicode"
 	"vncproxy/common"
-	"vncproxy/tee-listeners"
 )
 
 // A ServerMessage implements a message sent from the server to the client.
@@ -21,11 +20,11 @@ type ClientAuth interface {
 
 	// Handshake is called when the authentication handshake should be
 	// performed, as part of the general RFB handshake. (see 7.2.1)
-	Handshake(net.Conn) error
+	Handshake(io.ReadWriteCloser) error
 }
 
 type ClientConn struct {
-	conn net.Conn
+	conn io.ReadWriteCloser
 
 	//c      net.Conn
 	config *ClientConfig
@@ -77,6 +76,7 @@ type ClientConfig struct {
 	// This only needs to contain NEW server messages, and doesn't
 	// need to explicitly contain the RFC-required messages.
 	ServerMessages []common.ServerMessage
+	Listener       common.SegmentConsumer
 }
 
 func Client(c net.Conn, cfg *ClientConfig) (*ClientConn, error) {
@@ -438,6 +438,15 @@ FindAuth:
 	}
 
 	c.DesktopName = string(nameBytes)
+	srvInit := common.ServerInit{
+		NameLength:  nameLength,
+		NameText:    nameBytes,
+		FBHeight:    c.FrameBufferHeight,
+		FBWidth:     c.FrameBufferWidth,
+		PixelFormat: c.PixelFormat,
+	}
+	rfbSeg := &common.RfbSegment{SegmentType: common.SegmentServerInitMessage, Message: &srvInit}
+	c.config.Listener.Consume(rfbSeg)
 
 	return nil
 }
@@ -446,9 +455,8 @@ FindAuth:
 // proper channels for users of the client to read.
 func (c *ClientConn) mainLoop() {
 	defer c.Close()
-	rec := listeners.NewRecorder("/Users/amitbet/recording.rbs", c.DesktopName, c.FrameBufferWidth, c.FrameBufferHeight)
 
-	reader := &common.RfbReadHelper{Reader: c.conn, Listener: rec}
+	reader := &common.RfbReadHelper{Reader: c.conn, Listener: c.config.Listener}
 	// Build the map of available server messages
 	typeMap := make(map[uint8]common.ServerMessage)
 

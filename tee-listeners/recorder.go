@@ -8,22 +8,25 @@ import (
 	"os"
 	"time"
 	"vncproxy/common"
+	"vncproxy/server"
 )
 
 type Recorder struct {
 	//common.BytesListener
-	RBSFileName string
-	writer      *os.File
-	logger      common.Logger
-	startTime   int
-	buffer      bytes.Buffer
+	RBSFileName         string
+	writer              *os.File
+	logger              common.Logger
+	startTime           int
+	buffer              bytes.Buffer
+	serverInitMessage   *common.ServerInit
+	sessionStartWritten bool
 }
 
 func getNowMillisec() int {
 	return int(time.Now().UnixNano() / int64(time.Millisecond))
 }
 
-func NewRecorder(saveFilePath string, desktopName string, fbWidth uint16, fbHeight uint16) *Recorder {
+func NewRecorder(saveFilePath string) *Recorder {
 	//delete file if it exists
 	if _, err := os.Stat(saveFilePath); err == nil {
 		os.Remove(saveFilePath)
@@ -33,15 +36,24 @@ func NewRecorder(saveFilePath string, desktopName string, fbWidth uint16, fbHeig
 	var err error
 
 	rec.writer, err = os.OpenFile(saveFilePath, os.O_RDWR|os.O_CREATE, 0755)
-	rec.writeStartSession(desktopName, fbWidth, fbHeight)
-
 	if err != nil {
 		fmt.Printf("unable to open file: %s, error: %v", saveFilePath, err)
 		return nil
 	}
-
 	return &rec
 }
+
+// func (rec *Recorder) startSession(desktopName string, fbWidth uint16, fbHeight uint16) error {
+
+// 	err := rec.writeStartSession(desktopName, fbWidth, fbHeight)
+
+// 	if err != nil {
+// 		fmt.Printf("Recorder was unable to write StartSession to file error: %v", err)
+// 		return nil
+// 	}
+
+// 	return nil
+// }
 
 const versionMsg_3_3 = "RFB 003.003\n"
 const versionMsg_3_7 = "RFB 003.007\n"
@@ -61,7 +73,11 @@ const (
 // 	// df.write("FBS 001.000\n".getBytes());
 // }
 
-func (r *Recorder) writeStartSession(desktopName string, framebufferWidth uint16, framebufferHeight uint16) error {
+func (r *Recorder) writeStartSession(initMsg *common.ServerInit) error {
+
+	desktopName := string(initMsg.NameText)
+	framebufferWidth := initMsg.FBWidth
+	framebufferHeight := initMsg.FBHeight
 
 	//write rfb header information (the only part done without the [size|data|timestamp] block wrapper)
 	r.buffer.WriteString("FBS 001.000\n")
@@ -90,6 +106,9 @@ func (r *Recorder) writeStartSession(desktopName string, framebufferWidth uint16
 func (r *Recorder) Consume(data *common.RfbSegment) error {
 	switch data.SegmentType {
 	case common.SegmentMessageSeparator:
+		if !r.sessionStartWritten {
+			r.writeStartSession(r.serverInitMessage)
+		}
 		switch common.ServerMessageType(data.UpcomingObjectType) {
 		case common.FramebufferUpdate:
 			r.writeToDisk()
@@ -105,6 +124,18 @@ func (r *Recorder) Consume(data *common.RfbSegment) error {
 	case common.SegmentBytes:
 		_, err := r.buffer.Write(data.Bytes)
 		return err
+	case common.SegmentServerInitMessage:
+		r.serverInitMessage = data.Message.(*common.ServerInit)
+	case common.SegmentFullyParsedClientMessage:
+		clientMsg := data.Message.(common.ClientMessage)
+		switch clientMsg.Type() {
+
+		case common.SetPixelFormatMsgType:
+			clientMsg := data.Message.(*server.SetPixelFormat)
+			r.serverInitMessage.PixelFormat = clientMsg.PF
+		default:
+			return errors.New("unknown client message type:" + string(data.UpcomingObjectType))
+		}
 
 	default:
 		return errors.New("undefined RfbSegment type")

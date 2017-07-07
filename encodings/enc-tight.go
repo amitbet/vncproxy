@@ -28,9 +28,7 @@ type TightEncoding struct {
 // 	t.output = output
 // }
 
-func (*TightEncoding) Type() int32 {
-	return 7
-}
+func (*TightEncoding) Type() int32 { return int32(common.EncTight) }
 
 // func ReadAndRecBytes(conn io.Reader, rec io.Writer, count int) ([]byte, error) {
 // 	buf, err := readBytes(conn, count)

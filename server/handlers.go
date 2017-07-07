@@ -3,6 +3,7 @@ package server
 import (
 	"encoding/binary"
 	"fmt"
+	"vncproxy/common"
 
 	"io"
 )
@@ -126,7 +127,7 @@ func ServerSecurityHandler(cfg *ServerConfig, c *ServerConn) error {
 }
 
 func ServerServerInitHandler(cfg *ServerConfig, c *ServerConn) error {
-	srvInit := &ServerInit{
+	srvInit := &common.ServerInit{
 		FBWidth:     c.Width(),
 		FBHeight:    c.Height(),
 		PixelFormat: *c.PixelFormat(),

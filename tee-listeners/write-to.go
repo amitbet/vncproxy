@@ -6,11 +6,11 @@ import (
 	"vncproxy/common"
 )
 
-type PassListener struct {
+type WriteToListener struct {
 	io.Writer
 }
 
-func (p *PassListener) Consume(seg *common.RfbSegment) error {
+func (p *WriteToListener) Consume(seg *common.RfbSegment) error {
 	switch seg.SegmentType {
 	case common.SegmentMessageSeparator:
 	case common.SegmentRectSeparator:

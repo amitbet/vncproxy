@@ -19,12 +19,7 @@ var DefaultClientMessages = []common.ClientMessage{
 	&ClientCutText{},
 }
 
-type ServerInit struct {
-	FBWidth, FBHeight uint16
-	PixelFormat       common.PixelFormat
-	NameLength        uint32
-	NameText          []byte
-}
+
 
 //var _ Conn = (*ServerConn)(nil)
 

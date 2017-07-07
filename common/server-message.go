@@ -23,3 +23,10 @@ const (
 	Bell
 	ServerCutText
 )
+
+type ServerInit struct {
+	FBWidth, FBHeight uint16
+	PixelFormat       PixelFormat
+	NameLength        uint32
+	NameText          []byte
+}

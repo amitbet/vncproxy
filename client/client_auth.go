@@ -1,12 +1,10 @@
 package client
 
 import (
-	"net"
-
 	"crypto/des"
 	"encoding/binary"
+	"io"
 )
-
 
 // ClientAuthNone is the "none" authentication. See 7.2.1
 type ClientAuthNone byte
@@ -15,7 +13,7 @@ func (*ClientAuthNone) SecurityType() uint8 {
 	return 1
 }
 
-func (*ClientAuthNone) Handshake(net.Conn) error {
+func (*ClientAuthNone) Handshake(closer io.ReadWriteCloser) error {
 	return nil
 }
 
@@ -28,7 +26,7 @@ func (p *PasswordAuth) SecurityType() uint8 {
 	return 2
 }
 
-func (p *PasswordAuth) Handshake(c net.Conn) error {
+func (p *PasswordAuth) Handshake(c io.ReadWriteCloser) error {
 	randomValue := make([]uint8, 16)
 	if err := binary.Read(c, binary.BigEndian, &randomValue); err != nil {
 		return err
@@ -36,7 +34,7 @@ func (p *PasswordAuth) Handshake(c net.Conn) error {
 
 	crypted, err := p.encrypt(p.Password, randomValue)
 
-	if (err != nil) {
+	if err != nil {
 		return err
 	}
 
@@ -87,7 +85,7 @@ func (p *PasswordAuth) reverseBits(b byte) byte {
 }
 
 func (p *PasswordAuth) encrypt(key string, bytes []byte) ([]byte, error) {
-	keyBytes := []byte{0,0,0,0,0,0,0,0}
+	keyBytes := []byte{0, 0, 0, 0, 0, 0, 0, 0}
 
 	if len(key) > 8 {
 		key = key[:8]

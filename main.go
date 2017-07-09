@@ -33,9 +33,9 @@ func main() {
 			Auth:            authArr,
 			ServerMessageCh: vncSrvMessagesChan,
 			Exclusive:       true,
-			Listener:        split,
 		})
-
+	clientConn.Listener = split
+	
 	if err != nil {
 		fmt.Printf("error creating client: %s", err)
 	}

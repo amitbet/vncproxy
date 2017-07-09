@@ -1,8 +1,6 @@
 package server
 
 import (
-	"context"
-	"encoding/binary"
 	"fmt"
 	"io"
 	"log"
@@ -19,9 +17,7 @@ var DefaultClientMessages = []common.ClientMessage{
 	&ClientCutText{},
 }
 
-
-
-//var _ Conn = (*ServerConn)(nil)
+//var _ ServerConn = (*ServerConn)(nil)
 
 // ServerMessage represents a Client-to-Server RFB message type.
 // type ServerMessageType uint8
@@ -55,60 +51,43 @@ type ServerConfig struct {
 	SecurityHandlers []SecurityHandler
 	//ClientInitHandler ServerHandler
 	//ServerInitHandler ServerHandler
-	Encodings       []common.Encoding
-	PixelFormat     *common.PixelFormat
-	ColorMap        *common.ColorMap
-	ClientMessageCh chan common.ClientMessage
+	Encodings   []common.Encoding
+	PixelFormat *common.PixelFormat
+	ColorMap    *common.ColorMap
+	//ClientMessageCh chan common.ClientMessage
 	ServerMessageCh chan common.ServerMessage
 	ClientMessages  []common.ClientMessage
 	DesktopName     []byte
 	Height          uint16
 	Width           uint16
+
+	//handler to allow for registering for messages, this can't be a channel
+	//because of the websockets handler function which will kill the connection on exit if conn.handle() is run on another thread
+	NewConnHandler ServerHandler
 }
 
-func newServerConn(c io.ReadWriter, cfg *ServerConfig) (*ServerConn, error) {
-	if cfg.ClientMessageCh == nil {
-		return nil, fmt.Errorf("ClientMessageCh nil")
-	}
-
-	if len(cfg.ClientMessages) == 0 {
-		return nil, fmt.Errorf("ClientMessage 0")
-	}
-
-	return &ServerConn{
-		c: c,
-		//br:          bufio.NewReader(c),
-		//bw:          bufio.NewWriter(c),
-		cfg:         cfg,
-		quit:        make(chan struct{}),
-		encodings:   cfg.Encodings,
-		pixelFormat: cfg.PixelFormat,
-		fbWidth:     cfg.Width,
-		fbHeight:    cfg.Height,
-	}, nil
-}
-func wsHandlerFunc(ws io.ReadWriter, cfg *ServerConfig) {
+func wsHandlerFunc(ws io.ReadWriter, cfg *ServerConfig, sessionId string) {
 	// header := ws.Request().Header
 	// url := ws.Request().URL
 	// //stam := header.Get("Origin")
 	// fmt.Printf("header: %v\nurl: %v\n", header, url)
 	// io.Copy(ws, ws)
 
-	err := attachNewServerConn(ws, cfg)
+	err := attachNewServerConn(ws, cfg, sessionId)
 	if err != nil {
 		log.Fatalf("Error attaching new connection. %v", err)
 	}
 }
 
-func WsServe(url string, ctx context.Context, cfg *ServerConfig) error {
+func WsServe(url string, cfg *ServerConfig) error {
 	//server := WsServer1{cfg}
 	server := WsServer{cfg}
 	server.Listen(url, WsHandler(wsHandlerFunc))
 	return nil
 }
 
-func TcpServe(url string, ctx context.Context, cfg *ServerConfig) error {
-	ln, err := net.Listen("tcp", ":5903")
+func TcpServe(url string, cfg *ServerConfig) error {
+	ln, err := net.Listen("tcp", url)
 	if err != nil {
 		log.Fatalf("Error listen. %v", err)
 	}
@@ -117,7 +96,7 @@ func TcpServe(url string, ctx context.Context, cfg *ServerConfig) error {
 		if err != nil {
 			return err
 		}
-		go attachNewServerConn(c, cfg)
+		go attachNewServerConn(c, cfg, "tcpDummySession")
 		// if err != nil {
 		// 	return err
 		// }
@@ -125,9 +104,9 @@ func TcpServe(url string, ctx context.Context, cfg *ServerConfig) error {
 	return nil
 }
 
-func attachNewServerConn(c io.ReadWriter, cfg *ServerConfig) error {
+func attachNewServerConn(c io.ReadWriter, cfg *ServerConfig, sessionId string) error {
 
-	conn, err := newServerConn(c, cfg)
+	conn, err := NewServerConn(c, cfg)
 	if err != nil {
 		return err
 	}
@@ -152,72 +131,11 @@ func attachNewServerConn(c io.ReadWriter, cfg *ServerConfig) error {
 		conn.Close()
 		return err
 	}
+	conn.SessionId = sessionId
+	cfg.NewConnHandler(cfg, conn)
 
-	//go
+	//go here will kill ws connections
 	conn.handle()
 
 	return nil
-}
-
-func (c *ServerConn) handle() error {
-	//var err error
-	//var wg sync.WaitGroup
-
-	//defer c.Close()
-
-	//create a map of all message types
-	clientMessages := make(map[common.ClientMessageType]common.ClientMessage)
-	for _, m := range c.cfg.ClientMessages {
-		clientMessages[m.Type()] = m
-	}
-	//wg.Add(2)
-
-	// server
-	// go func() error {
-	// 	defer wg.Done()
-	// 	for {
-	// 		select {
-	// 		case msg := <-c.cfg.ServerMessageCh:
-	// 			fmt.Printf("%v", msg)
-	// 			// if err = msg.Write(c); err != nil {
-	// 			// 	return err
-	// 			// }
-	// 		case <-c.quit:
-	// 			c.Close()
-	// 			return nil
-	// 		}
-	// 	}
-	// }()
-
-	// client
-	//go func() error {
-	//defer wg.Done()
-	for {
-		select {
-		case <-c.quit:
-			return nil
-		default:
-			var messageType common.ClientMessageType
-			if err := binary.Read(c, binary.BigEndian, &messageType); err != nil {
-				fmt.Printf("Error: %v\n", err)
-				return err
-			}
-			msg, ok := clientMessages[messageType]
-			if !ok {
-				return fmt.Errorf("unsupported message-type: %v", messageType)
-
-			}
-			parsedMsg, err := msg.Read(c)
-			if err != nil {
-				fmt.Printf("srv err %s\n", err.Error())
-				return err
-			}
-			fmt.Printf("message:%s, %v\n", parsedMsg.Type(), parsedMsg)
-			//c.cfg.ClientMessageCh <- parsedMsg
-		}
-	}
-	//}()
-
-	//wg.Wait()
-	//return nil
 }

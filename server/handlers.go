@@ -130,7 +130,7 @@ func ServerServerInitHandler(cfg *ServerConfig, c *ServerConn) error {
 	srvInit := &common.ServerInit{
 		FBWidth:     c.Width(),
 		FBHeight:    c.Height(),
-		PixelFormat: *c.PixelFormat(),
+		PixelFormat: *c.CurrentPixelFormat(),
 		NameLength:  uint32(len(cfg.DesktopName)),
 		NameText:    []byte(cfg.DesktopName),
 	}

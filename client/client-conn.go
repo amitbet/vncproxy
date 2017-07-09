@@ -26,7 +26,7 @@ type ClientAuth interface {
 type ClientConn struct {
 	conn io.ReadWriteCloser
 
-	//c      net.Conn
+	//c      net.ServerConn
 	config *ClientConfig
 
 	// If the pixel format uses a color map, then this is the color
@@ -51,6 +51,8 @@ type ClientConn struct {
 	// be modified. If you wish to set a new pixel format, use the
 	// SetPixelFormat method.
 	PixelFormat common.PixelFormat
+
+	Listener common.SegmentConsumer
 }
 
 // A ClientConfig structure is used to configure a ClientConn. After
@@ -76,7 +78,6 @@ type ClientConfig struct {
 	// This only needs to contain NEW server messages, and doesn't
 	// need to explicitly contain the RFC-required messages.
 	ServerMessages []common.ServerMessage
-	Listener       common.SegmentConsumer
 }
 
 func Client(c net.Conn, cfg *ClientConfig) (*ClientConn, error) {
@@ -105,6 +106,14 @@ func (c *ClientConn) Encodings() []common.Encoding {
 
 func (c *ClientConn) CurrentPixelFormat() *common.PixelFormat {
 	return &c.PixelFormat
+}
+
+func (c *ClientConn) Write(bytes []byte) (n int, err error) {
+	return c.conn.Write(bytes)
+}
+
+func (c *ClientConn) Read(bytes []byte) (n int, err error) {
+	return c.conn.Read(bytes)
 }
 
 func (c *ClientConn) CurrentColorMap() *common.ColorMap {
@@ -446,7 +455,7 @@ FindAuth:
 		PixelFormat: c.PixelFormat,
 	}
 	rfbSeg := &common.RfbSegment{SegmentType: common.SegmentServerInitMessage, Message: &srvInit}
-	c.config.Listener.Consume(rfbSeg)
+	c.Listener.Consume(rfbSeg)
 
 	return nil
 }
@@ -456,7 +465,7 @@ FindAuth:
 func (c *ClientConn) mainLoop() {
 	defer c.Close()
 
-	reader := &common.RfbReadHelper{Reader: c.conn, Listener: c.config.Listener}
+	reader := &common.RfbReadHelper{Reader: c.conn, Listener: c.Listener}
 	// Build the map of available server messages
 	typeMap := make(map[uint8]common.ServerMessage)
 

@@ -49,7 +49,7 @@ const (
 type SecurityHandler interface {
 	Type() SecurityType
 	SubType() SecuritySubType
-	Auth(common.Conn) error
+	Auth(common.ServerConn) error
 }
 
 // type ClientAuthNone struct{}
@@ -62,7 +62,7 @@ type SecurityHandler interface {
 // 	return SecSubTypeUnknown
 // }
 
-// func (*ClientAuthNone) Auth(conn common.Conn) error {
+// func (*ClientAuthNone) Auth(conn common.ServerConn) error {
 // 	return nil
 // }
 
@@ -73,7 +73,7 @@ func (*ServerAuthNone) Type() SecurityType {
 	return SecTypeNone
 }
 
-func (*ServerAuthNone) Auth(c common.Conn) error {
+func (*ServerAuthNone) Auth(c common.ServerConn) error {
 	return nil
 }
 
@@ -95,7 +95,7 @@ func (*ServerAuthNone) SubType() SecuritySubType {
 // 	Password []byte
 // }
 
-// func (auth *ClientAuthVeNCrypt02Plain) Auth(c common.Conn) error {
+// func (auth *ClientAuthVeNCrypt02Plain) Auth(c common.ServerConn) error {
 // 	if err := binary.Write(c, binary.BigEndian, []uint8{0, 2}); err != nil {
 // 		return err
 // 	}
@@ -185,7 +185,7 @@ func (*ServerAuthNone) SubType() SecuritySubType {
 
 // ServerAuthVNC is the standard password authentication. See 7.2.2.
 type ServerAuthVNC struct {
-	pass string
+	Pass string
 }
 
 func (*ServerAuthVNC) Type() SecurityType {
@@ -198,7 +198,7 @@ func (*ServerAuthVNC) SubType() SecuritySubType {
 
 const AUTH_FAIL = "Authentication Failure"
 
-func (auth *ServerAuthVNC) Auth(c common.Conn) error {
+func (auth *ServerAuthVNC) Auth(c common.ServerConn) error {
 	buf := make([]byte, 8+len([]byte(AUTH_FAIL)))
 	rand.Read(buf[:16]) // Random 16 bytes in buf
 	sndsz, err := c.Write(buf[:16])
@@ -217,7 +217,7 @@ func (auth *ServerAuthVNC) Auth(c common.Conn) error {
 		log.Printf("The authentication result was not read: %s\n", err.Error())
 		return errors.New("The authentication result was not read" + err.Error())
 	}
-	AuthText := auth.pass
+	AuthText := auth.Pass
 	bk, err := des.NewCipher([]byte(fixDesKey(AuthText)))
 	if err != nil {
 		log.Printf("Error generating authentication cipher: %s\n", err.Error())
@@ -290,7 +290,7 @@ func fixDesKey(key string) []byte {
 // 	return SecSubTypeUnknown
 // }
 
-// func (auth *ClientAuthVNC) Auth(c common.Conn) error {
+// func (auth *ClientAuthVNC) Auth(c common.ServerConn) error {
 // 	if len(auth.Password) == 0 {
 // 		return fmt.Errorf("Security Handshake failed; no password provided for VNCAuth.")
 // 	}

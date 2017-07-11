@@ -3,7 +3,6 @@ package listeners
 import (
 	"bytes"
 	"encoding/binary"
-	"errors"
 	"os"
 	"time"
 	"vncproxy/common"
@@ -73,7 +72,7 @@ const (
 // }
 
 func (r *Recorder) writeStartSession(initMsg *common.ServerInit) error {
-
+	r.sessionStartWritten = true
 	desktopName := string(initMsg.NameText)
 	framebufferWidth := initMsg.FBWidth
 	framebufferHeight := initMsg.FBHeight
@@ -91,13 +90,21 @@ func (r *Recorder) writeStartSession(initMsg *common.ServerInit) error {
 	binary.Write(&r.buffer, binary.BigEndian, int16(framebufferWidth))
 	binary.Write(&r.buffer, binary.BigEndian, int16(framebufferHeight))
 
-	var fbsServerInitMsg = []byte{32, 24, 0, 1, 0, byte(0xFF), 0, byte(0xFF), 0, byte(0xFF), 16, 8, 0, 0, 0, 0}
-	r.buffer.Write(fbsServerInitMsg)
+	buff := bytes.Buffer{}
+	//binary.Write(&buff, binary.BigEndian, initMsg.FBWidth)
+	//binary.Write(&buff, binary.BigEndian, initMsg.FBHeight)
+	binary.Write(&buff, binary.BigEndian, initMsg.PixelFormat)
+	buff.Write([]byte{0, 0, 0}) //padding
+	r.buffer.Write(buff.Bytes())
+	//logger.Debugf(">>>>>>buffer for initMessage:%v ", buff.Bytes())
 
-	binary.Write(&r.buffer, binary.BigEndian, uint32(len(desktopName)+1))
+	//var fbsServerInitMsg = []byte{32, 24, 0, 1, 0, byte(0xFF), 0, byte(0xFF), 0, byte(0xFF), 16, 8, 0, 0, 0, 0}
+	//r.buffer.Write(fbsServerInitMsg)
+
+	binary.Write(&r.buffer, binary.BigEndian, uint32(len(desktopName)))
 
 	r.buffer.WriteString(desktopName)
-	binary.Write(&r.buffer, binary.BigEndian, byte(0)) // add null termination for desktop string
+	//binary.Write(&r.buffer, binary.BigEndian, byte(0)) // add null termination for desktop string
 
 	return nil
 }
@@ -123,23 +130,23 @@ func (r *Recorder) HandleRfbSegment(data *common.RfbSegment) error {
 	switch data.SegmentType {
 	case common.SegmentMessageSeparator:
 		if !r.sessionStartWritten {
-			logger.Debugf("Recorder.HandleRfbSegment: writing start session segment: %v",r.serverInitMessage)
+			logger.Debugf("Recorder.HandleRfbSegment: writing start session segment: %v", r.serverInitMessage)
 			r.writeStartSession(r.serverInitMessage)
 		}
 
 		switch common.ServerMessageType(data.UpcomingObjectType) {
 		case common.FramebufferUpdate:
 			logger.Debugf("Recorder.HandleRfbSegment: saving FramebufferUpdate segment")
-			r.writeToDisk()
+			//r.writeToDisk()
 		case common.SetColourMapEntries:
 		case common.Bell:
 		case common.ServerCutText:
 		default:
-			return errors.New("unknown message type:" + string(data.UpcomingObjectType))
+			logger.Warn("Recorder.HandleRfbSegment: unknown message type:" + string(data.UpcomingObjectType))
 		}
 
 	case common.SegmentRectSeparator:
-		logger.Debugf("Recorder.HandleRfbSegment: writing start rect start")
+		logger.Debugf("Recorder.HandleRfbSegment: writing rect")
 		r.writeToDisk()
 	case common.SegmentBytes:
 		_, err := r.buffer.Write(data.Bytes)

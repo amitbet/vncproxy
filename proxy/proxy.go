@@ -101,8 +101,9 @@ func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server
 
 	// gets the messages from the server part (from vnc-client),
 	// and write through the client to the actual vnc-server
-	clientMsgRepeater := &listeners.WriteTo{cconn, "vnc-server-bound"}
-	sconn.Listeners.AddListener(clientMsgRepeater)
+	//clientMsgRepeater := &listeners.WriteTo{cconn, "vnc-server-bound"}
+	clientUpdater := &ClientUpdater{cconn}
+	sconn.Listeners.AddListener(clientUpdater)
 
 	err = cconn.Connect()
 	if err != nil {
@@ -121,7 +122,8 @@ func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server
 		//encodings.CoRREEncoding{},
 		//encodings.HextileEncoding{},
 	}
-	err = cconn.SetEncodings(encs)
+	cconn.Encs = encs
+	//err = cconn.SetEncodings(encs)
 	if err != nil {
 		logger.Errorf("Proxy.newServerConnHandler error connecting to client: %s", err)
 		return err

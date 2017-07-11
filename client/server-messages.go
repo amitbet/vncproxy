@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"strings"
 	"vncproxy/common"
 	"vncproxy/encodings"
 	"vncproxy/logger"
-	"strings"
 )
 
 // FramebufferUpdateMessage consists of a sequence of rectangles of
@@ -90,6 +90,7 @@ func (fbm *FramebufferUpdateMessage) Read(c common.IClientConn, r *common.RfbRea
 			if strings.Contains(encType.String(), "Pseudo") {
 				rect.Enc = &encodings.PseudoEncoding{encodingTypeInt}
 			} else {
+				logger.Errorf("unsupported encoding type: %d, %s", encodingTypeInt, encType)
 				return nil, fmt.Errorf("unsupported encoding type: %d, %s", encodingTypeInt, encType)
 			}
 
@@ -99,10 +100,6 @@ func (fbm *FramebufferUpdateMessage) Read(c common.IClientConn, r *common.RfbRea
 
 	return &FramebufferUpdateMessage{rects}, nil
 }
-
-
-
-
 
 // SetColorMapEntriesMessage is sent by the server to set values into
 // the color map. This message will automatically update the color map

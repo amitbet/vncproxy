@@ -61,17 +61,17 @@ type ClientMessage interface {
 func (cmt ClientMessageType) String() string {
 	switch  cmt {
 	case SetPixelFormatMsgType:
-		return "SetPixelFormatMsgType"
+		return "SetPixelFormat"
 	case SetEncodingsMsgType:
-		return "SetEncodingsMsgType"
+		return "SetEncodings"
 	case FramebufferUpdateRequestMsgType:
-		return "FramebufferUpdateRequestMsgType"
+		return "FramebufferUpdateRequest"
 	case KeyEventMsgType:
-		return "KeyEventMsgType"
+		return "KeyEvent"
 	case PointerEventMsgType:
-		return "PointerEventMsgType"
+		return "PointerEvent"
 	case ClientCutTextMsgType:
-		return "ClientCutTextMsgType"
+		return "ClientCutText"
 	}
 	return ""
 }

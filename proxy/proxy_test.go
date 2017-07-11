@@ -7,8 +7,8 @@ func TestProxy(t *testing.T) {
 
 	proxy := &VncProxy{
 		wsListeningUrl:        "http://localhost:7777/", // empty = not listening on ws
-		recordingDir:          "c:\\vncRec",             // empty = no recording
-		targetServersPassword: "Ch_#!T@8",                //empty = no auth
+		recordingDir:          "/Users/amitbet/vncRec",  // empty = no recording
+		targetServersPassword: "Ch_#!T@8",               //empty = no auth
 		SingleSession: &VncSession{
 			TargetHostname: "localhost",
 			TargetPort:     "5903",

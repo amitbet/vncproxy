@@ -493,18 +493,20 @@ func (c *ClientConn) mainLoop() {
 		}
 	}
 
-	defer func(){
+	defer func() {
 		logger.Warn("ClientConn.MainLoop: exiting!")
 	}()
 
 	for {
 		var messageType uint8
 		if err := binary.Read(c.conn, binary.BigEndian, &messageType); err != nil {
+			logger.Errorf("ClientConn.MainLoop: error reading messagetype, %s", err)
 			break
 		}
 
 		msg, ok := typeMap[messageType]
 		if !ok {
+			logger.Errorf("ClientConn.MainLoop: bad message type, %d", messageType)
 			// Unsupported message type! Bad!
 			break
 		}
@@ -514,9 +516,10 @@ func (c *ClientConn) mainLoop() {
 
 		parsedMsg, err := msg.Read(c, reader)
 		if err != nil {
+			logger.Errorf("ClientConn.MainLoop: error parsing message, %s", err)
 			break
 		}
-		logger.Debugf("ClientConn.MainLoop: read & parsed ServerMessage:%s, %v", parsedMsg.Type(), parsedMsg)
+		logger.Debugf("ClientConn.MainLoop: read & parsed ServerMessage:%d, %s", parsedMsg.Type(), parsedMsg)
 
 		if c.config.ServerMessageCh == nil {
 			continue

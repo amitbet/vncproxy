@@ -206,7 +206,7 @@ func (c *ServerConn) handle() error {
 		default:
 			var messageType common.ClientMessageType
 			if err := binary.Read(c, binary.BigEndian, &messageType); err != nil {
-				logger.Errorf("Error: %v", err)
+				logger.Errorf("ServerConn.handle error: %v", err)
 				return err
 			}
 			msg, ok := clientMessages[messageType]
@@ -216,11 +216,27 @@ func (c *ServerConn) handle() error {
 
 			parsedMsg, err := msg.Read(c)
 
+			//update connection for pixel format / color map changes
+			switch parsedMsg.Type() {
+			case common.SetPixelFormatMsgType:
+				// update pixel format
+				logger.Debugf("ClientUpdater.Consume: updating pixel format")
+				pixFmtMsg := parsedMsg.(*SetPixelFormat)
+				c.SetPixelFormat(&pixFmtMsg.PF)
+				if pixFmtMsg.PF.TrueColor != 0 {
+					c.SetColorMap(&common.ColorMap{})
+				}
+			}
+			////////
+
 			if err != nil {
 				logger.Errorf("srv err %s", err.Error())
 				return err
 			}
 
+			//logger.Debugf("ServerConn.Handle got client message, type=%s", parsedMsg.Type())
+			logger.Debugf("ServerConn.Handle got ClientMessage: %s, %v", parsedMsg.Type(), parsedMsg)
+			//parsedMsg.Type()
 			seg := &common.RfbSegment{
 				SegmentType: common.SegmentFullyParsedClientMessage,
 				Message:     parsedMsg,
@@ -231,7 +247,6 @@ func (c *ServerConn) handle() error {
 				return err
 			}
 
-			logger.Debugf("ServerConn.Handle got ClientMessage: %s, %v", parsedMsg.Type(), parsedMsg)
 			//c.cfg.ClientMessageCh <- parsedMsg
 		}
 	}

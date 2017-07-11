@@ -23,7 +23,8 @@ func main() {
 
 	vncSrvMessagesChan := make(chan common.ServerMessage)
 
-	rec := listeners.NewRecorder("c:/Users/betzalel/recording.rbs")
+	//rec := listeners.NewRecorder("c:/Users/betzalel/recording.rbs")
+	rec := listeners.NewRecorder("/Users/amitbet/vncRec/recording.rbs")
 
 	clientConn, err := client.NewClientConn(nc,
 		&client.ClientConfig{
@@ -42,20 +43,22 @@ func main() {
 	// if err != nil {
 	// 	logger.Errorf("error requesting fb update: %s", err)
 	// }
+	encs := []common.Encoding{
+		&encodings.TightEncoding{},
+		//&encodings.TightPngEncoding{},
+		//rre := encodings.RREEncoding{},
+		//zlib := encodings.ZLibEncoding{},
+		//zrle := encodings.ZRLEEncoding{},
+		//&encodings.CopyRectEncoding{},
+		//coRRE := encodings.CoRREEncoding{},
+		//hextile := encodings.HextileEncoding{},
+	}
 
-	tight := encodings.TightEncoding{}
-	tightPng := encodings.TightPngEncoding{}
-	//rre := encodings.RREEncoding{}
-	//zlib := encodings.ZLibEncoding{}
-	//zrle := encodings.ZRLEEncoding{}
-	cpyRect := encodings.CopyRectEncoding{}
-	//coRRE := encodings.CoRREEncoding{}
-	//hextile := encodings.HextileEncoding{}
 	// file, _ := os.OpenFile("stam.bin", os.O_CREATE|os.O_RDWR, 0755)
 	// defer file.Close()
 
 	//tight.SetOutput(file)
-	clientConn.SetEncodings([]common.Encoding{&cpyRect, &tightPng, &tight})
+	clientConn.SetEncodings(encs)
 
 	go func() {
 		for {

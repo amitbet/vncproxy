@@ -1,6 +1,9 @@
 package encodings
 
-import "vncproxy/common"
+import (
+	"vncproxy/common"
+	"vncproxy/logger"
+)
 
 const (
 	HextileRaw                 = 1
@@ -34,16 +37,16 @@ func (z *HextileEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectan
 
 			//handle Hextile Subrect(tx, ty, tw, th):
 			subencoding, err := r.ReadUint8()
-			//fmt.Printf("hextile reader tile: (%d,%d) subenc=%d\n", ty, tx, subencoding)
+			//logger.Debugf("hextile reader tile: (%d,%d) subenc=%d\n", ty, tx, subencoding)
 			if err != nil {
-				//fmt.Printf("error in hextile reader: %v\n", err)
+				logger.Errorf("HextileEncoding.Read: error in hextile reader: %v", err)
 				return nil, err
 			}
 
 			if (subencoding & HextileRaw) != 0 {
 				//ReadRawRect(c, rect, r)
 				r.ReadBytes(tw * th * bytesPerPixel)
-				//fmt.Printf("hextile reader: HextileRaw\n")
+				//logger.Debug("hextile reader: HextileRaw\n")
 				continue
 			}
 			if (subencoding & HextileBackgroundSpecified) != 0 {
@@ -53,10 +56,10 @@ func (z *HextileEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectan
 				r.ReadBytes(int(bytesPerPixel))
 			}
 			if (subencoding & HextileAnySubrects) == 0 {
-				//fmt.Printf("hextile reader: no Subrects\n")
+				//logger.Debug("hextile reader: no Subrects")
 				continue
 			}
-			//fmt.Printf("hextile reader: handling Subrects\n")
+
 			nSubrects, err := r.ReadUint8()
 			if err != nil {
 				return nil, err

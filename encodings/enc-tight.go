@@ -21,7 +21,7 @@ const (
 
 type TightEncoding struct {
 	//output io.Writer
-	logger common.Logger
+	//logger common.Logger
 }
 
 // func (t *TightEncoding) SetOutput(output io.Writer) {

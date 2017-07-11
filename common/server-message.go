@@ -18,11 +18,25 @@ type ServerMessage interface {
 type ServerMessageType int8
 
 const (
-	FramebufferUpdate ServerMessageType = iota
+	FramebufferUpdate   ServerMessageType = iota
 	SetColourMapEntries
 	Bell
 	ServerCutText
 )
+
+func (typ ServerMessageType) String() string {
+	switch    typ {
+	case FramebufferUpdate:
+		return "FramebufferUpdate"
+	case SetColourMapEntries:
+		return "SetColourMapEntries"
+	case Bell:
+		return "Bell"
+	case ServerCutText:
+		return "ServerCutText"
+	}
+	return ""
+}
 
 type ServerInit struct {
 	FBWidth, FBHeight uint16

@@ -6,6 +6,7 @@ import (
 	"io"
 	"sync"
 	"vncproxy/common"
+	"vncproxy/logger"
 )
 
 type ServerConn struct {
@@ -40,7 +41,7 @@ type ServerConn struct {
 	pixelFormat *common.PixelFormat
 
 	// a consumer for the parsed messages, to allow for recording and proxy
-	Listener common.SegmentConsumer
+	Listeners *common.MultiListener
 
 	SessionId string
 
@@ -70,6 +71,7 @@ func NewServerConn(c io.ReadWriter, cfg *ServerConfig) (*ServerConn, error) {
 		pixelFormat: cfg.PixelFormat,
 		fbWidth:     cfg.Width,
 		fbHeight:    cfg.Height,
+		Listeners:   &common.MultiListener{},
 	}, nil
 }
 
@@ -183,7 +185,7 @@ func (c *ServerConn) handle() error {
 		for {
 			select {
 			case msg := <-c.cfg.ServerMessageCh:
-				fmt.Printf("%v", msg)
+				logger.Debugf("%v", msg)
 				// if err = msg.Write(c); err != nil {
 				// 	return err
 				// }
@@ -204,25 +206,32 @@ func (c *ServerConn) handle() error {
 		default:
 			var messageType common.ClientMessageType
 			if err := binary.Read(c, binary.BigEndian, &messageType); err != nil {
-				fmt.Printf("Error: %v\n", err)
+				logger.Errorf("Error: %v", err)
 				return err
 			}
 			msg, ok := clientMessages[messageType]
 			if !ok {
-				return fmt.Errorf("unsupported message-type: %v", messageType)
-
+				return fmt.Errorf("ServerConn.Handle: unsupported message-type: %v", messageType)
 			}
+
 			parsedMsg, err := msg.Read(c)
+
+			if err != nil {
+				logger.Errorf("srv err %s", err.Error())
+				return err
+			}
+
 			seg := &common.RfbSegment{
 				SegmentType: common.SegmentFullyParsedClientMessage,
 				Message:     parsedMsg,
 			}
-			c.Listener.Consume(seg)
+			err = c.Listeners.Consume(seg)
 			if err != nil {
-				fmt.Printf("srv err %s\n", err.Error())
+				logger.Errorf("ServerConn.Handle: listener consume err %s", err.Error())
 				return err
 			}
-			fmt.Printf("message:%s, %v\n", parsedMsg.Type(), parsedMsg)
+
+			logger.Debugf("ServerConn.Handle got ClientMessage: %s, %v", parsedMsg.Type(), parsedMsg)
 			//c.cfg.ClientMessageCh <- parsedMsg
 		}
 	}

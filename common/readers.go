@@ -2,14 +2,14 @@ package common
 
 import (
 	"encoding/binary"
-	"fmt"
 	"io"
+	"vncproxy/logger"
 )
 
 var TightMinToCompress = 12
 
 const (
-	SegmentBytes SegmentType = iota
+	SegmentBytes                    SegmentType = iota
 	SegmentMessageSeparator
 	SegmentRectSeparator
 	SegmentFullyParsedClientMessage
@@ -18,6 +18,24 @@ const (
 )
 
 type SegmentType int
+
+func (seg SegmentType ) String() string {
+	switch seg {
+	case SegmentBytes:
+		return "SegmentBytes"
+	case SegmentMessageSeparator:
+		return "SegmentMessageSeparator"
+	case SegmentRectSeparator:
+		return "SegmentRectSeparator"
+	case SegmentFullyParsedClientMessage:
+		return "SegmentFullyParsedClientMessage"
+	case SegmentFullyParsedServerMessage:
+		return "SegmentFullyParsedServerMessage"
+	case SegmentServerInitMessage:
+		return "SegmentServerInitMessage"
+	}
+	return ""
+}
 
 type RfbSegment struct {
 	Bytes              []byte
@@ -32,7 +50,7 @@ type SegmentConsumer interface {
 
 type RfbReadHelper struct {
 	io.Reader
-	Listener SegmentConsumer
+	Listeners *MultiListener
 }
 
 func (r *RfbReadHelper) ReadDiscrete(p []byte) (int, error) {
@@ -41,27 +59,17 @@ func (r *RfbReadHelper) ReadDiscrete(p []byte) (int, error) {
 
 func (r *RfbReadHelper) SendRectSeparator(upcomingRectType int) error {
 	seg := &RfbSegment{SegmentType: SegmentRectSeparator, UpcomingObjectType: upcomingRectType}
-	if r.Listener != nil {
-		return nil
-	}
-	return r.Listener.Consume(seg)
-
+	return r.Listeners.Consume(seg)
 }
 
 func (r *RfbReadHelper) SendMessageSeparator(upcomingMessageType ServerMessageType) error {
 	seg := &RfbSegment{SegmentType: SegmentMessageSeparator, UpcomingObjectType: int(upcomingMessageType)}
-	if r.Listener == nil {
-		return nil
-	}
-	return r.Listener.Consume(seg)
+	return r.Listeners.Consume(seg)
 }
 
 func (r *RfbReadHelper) PublishBytes(p []byte) error {
 	seg := &RfbSegment{Bytes: p, SegmentType: SegmentBytes}
-	if r.Listener == nil {
-		return nil
-	}
-	return r.Listener.Consume(seg)
+	return r.Listeners.Consume(seg)
 }
 
 func (r *RfbReadHelper) Read(p []byte) (n int, err error) {
@@ -71,13 +79,11 @@ func (r *RfbReadHelper) Read(p []byte) (n int, err error) {
 	}
 	//write the bytes to the Listener for further processing
 	seg := &RfbSegment{Bytes: p, SegmentType: SegmentBytes}
-	if r.Listener == nil {
-		return 0, nil
-	}
-	r.Listener.Consume(seg)
+	err = r.Listeners.Consume(seg)
 	if err != nil {
 		return 0, err
 	}
+
 	return readLen, err
 }
 
@@ -97,7 +103,7 @@ func (r *RfbReadHelper) ReadUint8() (uint8, error) {
 	if err := binary.Read(r, binary.BigEndian, &myUint); err != nil {
 		return 0, err
 	}
-	//fmt.Printf("myUint=%d", myUint)
+
 	return myUint, nil
 }
 func (r *RfbReadHelper) ReadUint16() (uint16, error) {
@@ -105,7 +111,7 @@ func (r *RfbReadHelper) ReadUint16() (uint16, error) {
 	if err := binary.Read(r, binary.BigEndian, &myUint); err != nil {
 		return 0, err
 	}
-	//fmt.Printf("myUint=%d", myUint)
+
 	return myUint, nil
 }
 func (r *RfbReadHelper) ReadUint32() (uint32, error) {
@@ -113,7 +119,7 @@ func (r *RfbReadHelper) ReadUint32() (uint32, error) {
 	if err := binary.Read(r, binary.BigEndian, &myUint); err != nil {
 		return 0, err
 	}
-	//fmt.Printf("myUint=%d", myUint)
+
 	return myUint, nil
 }
 func (r *RfbReadHelper) ReadCompactLen() (int, error) {
@@ -144,7 +150,7 @@ func (r *RfbReadHelper) ReadTightData(dataSize int) ([]byte, error) {
 		return r.ReadBytes(int(dataSize))
 	}
 	zlibDataLen, err := r.ReadCompactLen()
-	fmt.Printf("compactlen=%d\n", zlibDataLen)
+	logger.Debugf("compactlen=%d", zlibDataLen)
 	if err != nil {
 		return nil, err
 	}

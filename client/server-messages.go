@@ -7,6 +7,8 @@ import (
 	"io"
 	"vncproxy/common"
 	"vncproxy/encodings"
+	"vncproxy/logger"
+	"strings"
 )
 
 // FramebufferUpdateMessage consists of a sequence of rectangles of
@@ -49,13 +51,13 @@ func (fbm *FramebufferUpdateMessage) Read(c common.IClientConn, r *common.RfbRea
 	// We must always support the raw encoding
 	rawEnc := new(encodings.RawEncoding)
 	encMap[rawEnc.Type()] = rawEnc
-	fmt.Printf("numrects= %d\n", numRects)
+	logger.Debugf("numrects= %d", numRects)
 
 	rects := make([]common.Rectangle, numRects)
 	for i := uint16(0); i < numRects; i++ {
-		fmt.Printf("###############rect################: %d\n", i)
+		logger.Debugf("###############rect################: %d\n", i)
 
-		var encodingType int32
+		var encodingTypeInt int32
 		r.SendRectSeparator(-1)
 		rect := &rects[i]
 		data := []interface{}{
@@ -63,33 +65,44 @@ func (fbm *FramebufferUpdateMessage) Read(c common.IClientConn, r *common.RfbRea
 			&rect.Y,
 			&rect.Width,
 			&rect.Height,
-			&encodingType,
+			&encodingTypeInt,
 		}
 
 		for _, val := range data {
 			if err := binary.Read(r, binary.BigEndian, val); err != nil {
-				fmt.Printf("err: %v\n", err)
+				logger.Errorf("err: %v", err)
 				return nil, err
 			}
 		}
 		jBytes, _ := json.Marshal(data)
 
-		fmt.Printf("rect hdr data: %s\n", string(jBytes))
-		//fmt.Printf(" encoding type: %d", encodingType)
-		enc, ok := encMap[encodingType]
-		if !ok {
-			return nil, fmt.Errorf("unsupported encoding type: %d\n", encodingType)
+		encType := common.EncodingType(encodingTypeInt)
+
+		logger.Debugf("rect hdr data: enctype=%s, data: %s\n", encType, string(jBytes))
+		enc, supported := encMap[encodingTypeInt]
+		if supported {
+			var err error
+			rect.Enc, err = enc.Read(c.CurrentPixelFormat(), rect, r)
+			if err != nil {
+				return nil, err
+			}
+		} else {
+			if strings.Contains(encType.String(), "Pseudo") {
+				rect.Enc = &encodings.PseudoEncoding{encodingTypeInt}
+			} else {
+				return nil, fmt.Errorf("unsupported encoding type: %d, %s", encodingTypeInt, encType)
+			}
+
 		}
 
-		var err error
-		rect.Enc, err = enc.Read(c.CurrentPixelFormat(), rect, r)
-		if err != nil {
-			return nil, err
-		}
 	}
 
 	return &FramebufferUpdateMessage{rects}, nil
 }
+
+
+
+
 
 // SetColorMapEntriesMessage is sent by the server to set values into
 // the color map. This message will automatically update the color map

@@ -8,6 +8,7 @@ import (
 	"net"
 	"unicode"
 	"vncproxy/common"
+	"vncproxy/logger"
 )
 
 // A ServerMessage implements a message sent from the server to the client.
@@ -52,7 +53,7 @@ type ClientConn struct {
 	// SetPixelFormat method.
 	PixelFormat common.PixelFormat
 
-	Listener common.SegmentConsumer
+	Listeners *common.MultiListener
 }
 
 // A ClientConfig structure is used to configure a ClientConn. After
@@ -80,20 +81,26 @@ type ClientConfig struct {
 	ServerMessages []common.ServerMessage
 }
 
-func Client(c net.Conn, cfg *ClientConfig) (*ClientConn, error) {
+func NewClientConn(c net.Conn, cfg *ClientConfig) (*ClientConn, error) {
 	conn := &ClientConn{
-		conn:   c,
-		config: cfg,
+		conn:      c,
+		config:    cfg,
+		Listeners: &common.MultiListener{},
 	}
+	return conn, nil
+}
+
+func (conn *ClientConn) Connect() error {
 
 	if err := conn.handshake(); err != nil {
+		logger.Errorf("ClientConn.Connect error: %v", err)
 		conn.Close()
-		return nil, err
+		return err
 	}
 
 	go conn.mainLoop()
 
-	return conn, nil
+	return nil
 }
 
 func (c *ClientConn) Close() error {
@@ -360,11 +367,12 @@ func (c *ClientConn) handshake() error {
 	// 7.1.2 Security Handshake from server
 	var numSecurityTypes uint8
 	if err = binary.Read(c.conn, binary.BigEndian, &numSecurityTypes); err != nil {
+		return fmt.Errorf("Error reading security types: %v", err)
 		return err
 	}
 
 	if numSecurityTypes == 0 {
-		return fmt.Errorf("no security types: %s", c.readErrorReason())
+		return fmt.Errorf("Error: no security types: %s", c.readErrorReason())
 	}
 
 	securityTypes := make([]uint8, numSecurityTypes)
@@ -455,9 +463,8 @@ FindAuth:
 		PixelFormat: c.PixelFormat,
 	}
 	rfbSeg := &common.RfbSegment{SegmentType: common.SegmentServerInitMessage, Message: &srvInit}
-	c.Listener.Consume(rfbSeg)
 
-	return nil
+	return c.Listeners.Consume(rfbSeg)
 }
 
 // mainLoop reads messages sent from the server and routes them to the
@@ -465,7 +472,7 @@ FindAuth:
 func (c *ClientConn) mainLoop() {
 	defer c.Close()
 
-	reader := &common.RfbReadHelper{Reader: c.conn, Listener: c.Listener}
+	reader := &common.RfbReadHelper{Reader: c.conn, Listeners: c.Listeners}
 	// Build the map of available server messages
 	typeMap := make(map[uint8]common.ServerMessage)
 
@@ -486,6 +493,10 @@ func (c *ClientConn) mainLoop() {
 		}
 	}
 
+	defer func(){
+		logger.Warn("ClientConn.MainLoop: exiting!")
+	}()
+
 	for {
 		var messageType uint8
 		if err := binary.Read(c.conn, binary.BigEndian, &messageType); err != nil {
@@ -497,6 +508,7 @@ func (c *ClientConn) mainLoop() {
 			// Unsupported message type! Bad!
 			break
 		}
+		logger.Debugf("ClientConn.MainLoop: got ServerMessage:%s", common.ServerMessageType(messageType))
 		reader.SendMessageSeparator(common.ServerMessageType(messageType))
 		reader.PublishBytes([]byte{byte(messageType)})
 
@@ -504,6 +516,7 @@ func (c *ClientConn) mainLoop() {
 		if err != nil {
 			break
 		}
+		logger.Debugf("ClientConn.MainLoop: read & parsed ServerMessage:%s, %v", parsedMsg.Type(), parsedMsg)
 
 		if c.config.ServerMessageCh == nil {
 			continue

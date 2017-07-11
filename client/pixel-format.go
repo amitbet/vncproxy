@@ -29,7 +29,7 @@ func readPixelFormat(r io.Reader, result *common.PixelFormat) error {
 
 	if pfBoolByte != 0 {
 		// Big endian is true
-		result.BigEndian = true
+		result.BigEndian = 1
 	}
 
 	if err := binary.Read(brPF, binary.BigEndian, &pfBoolByte); err != nil {
@@ -38,7 +38,7 @@ func readPixelFormat(r io.Reader, result *common.PixelFormat) error {
 
 	if pfBoolByte != 0 {
 		// True Color is true. So we also have to read all the color max & shifts.
-		result.TrueColor = true
+		result.TrueColor = 1
 
 		if err := binary.Read(brPF, binary.BigEndian, &result.RedMax); err != nil {
 			return err
@@ -82,7 +82,7 @@ func writePixelFormat(format *common.PixelFormat) ([]byte, error) {
 	}
 
 	var boolByte byte
-	if format.BigEndian {
+	if format.BigEndian == 1 {
 		boolByte = 1
 	} else {
 		boolByte = 0
@@ -93,7 +93,7 @@ func writePixelFormat(format *common.PixelFormat) ([]byte, error) {
 		return nil, err
 	}
 
-	if format.TrueColor {
+	if format.TrueColor == 1 {
 		boolByte = 1
 	} else {
 		boolByte = 0
@@ -106,7 +106,7 @@ func writePixelFormat(format *common.PixelFormat) ([]byte, error) {
 
 	// If we have true color enabled then we have to fill in the rest of the
 	// structure with the color values.
-	if format.TrueColor {
+	if format.TrueColor == 1 {
 		if err := binary.Write(&buf, binary.BigEndian, format.RedMax); err != nil {
 			return nil, err
 		}

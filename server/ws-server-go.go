@@ -1,10 +1,10 @@
 package server
 
 import (
-	"fmt"
 	"io"
 	"net/http"
 	"net/url"
+	"vncproxy/logger"
 
 	"golang.org/x/net/websocket"
 )
@@ -31,7 +31,7 @@ func (wsServer *WsServer) Listen(urlStr string, handlerFunc WsHandler) {
 	}
 	url, err := url.Parse(urlStr)
 	if err != nil {
-		fmt.Println("error while parsing url: ", err)
+		logger.Errorf("error while parsing url: ", err)
 	}
 
 	// http.HandleFunc(url.Path,

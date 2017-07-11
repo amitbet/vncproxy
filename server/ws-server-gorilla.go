@@ -1,11 +1,11 @@
 package server
 
 import (
-	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"net/url"
+	"vncproxy/logger"
 
 	"bytes"
 
@@ -92,7 +92,7 @@ func (wsServer *WsServer1) Listen(urlStr string, handlerFunc WsHandler) {
 	}
 	url, err := url.Parse(urlStr)
 	if err != nil {
-		fmt.Println("error while parsing url: ", err)
+		logger.Errorf("error while parsing url: ", err)
 	}
 
 	http.HandleFunc(url.Path, handleConnection)

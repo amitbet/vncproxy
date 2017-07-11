@@ -1,6 +1,9 @@
 package common
 
-import "io"
+import (
+	"io"
+
+)
 
 type ClientMessageType uint8
 
@@ -8,7 +11,7 @@ type ClientMessageType uint8
 
 // Client-to-Server message types.
 const (
-	SetPixelFormatMsgType ClientMessageType = iota
+	SetPixelFormatMsgType           ClientMessageType = iota
 	_
 	SetEncodingsMsgType
 	FramebufferUpdateRequestMsgType
@@ -53,4 +56,22 @@ type ClientMessage interface {
 	Type() ClientMessageType
 	Read(io.Reader) (ClientMessage, error)
 	Write(io.Writer) error
+}
+
+func (cmt ClientMessageType) String() string {
+	switch  cmt {
+	case SetPixelFormatMsgType:
+		return "SetPixelFormatMsgType"
+	case SetEncodingsMsgType:
+		return "SetEncodingsMsgType"
+	case FramebufferUpdateRequestMsgType:
+		return "FramebufferUpdateRequestMsgType"
+	case KeyEventMsgType:
+		return "KeyEventMsgType"
+	case PointerEventMsgType:
+		return "PointerEventMsgType"
+	case ClientCutTextMsgType:
+		return "ClientCutTextMsgType"
+	}
+	return ""
 }

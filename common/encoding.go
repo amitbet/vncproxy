@@ -21,6 +21,124 @@ type Encoding interface {
 // EncodingType represents a known VNC encoding type.
 type EncodingType int32
 
+func (enct EncodingType) String() string {
+	switch enct {
+	case EncRaw:
+		return "EncRaw"
+	case EncCopyRect:
+		return "EncCopyRect"
+	case EncRRE:
+		return "EncRRE"
+	case EncCoRRE:
+		return "EncCoRRE"
+	case EncHextile:
+		return "EncHextile"
+	case EncZlib:
+		return "EncZlib"
+	case EncTight:
+		return "EncTight"
+	case EncZlibHex:
+		return "EncZlibHex"
+	case EncUltra1:
+		return "EncUltra1"
+	case EncUltra2:
+		return "EncUltra2"
+	case EncJPEG:
+		return "EncJPEG"
+	case EncJRLE:
+		return "EncJRLE"
+	case EncTRLE:
+		return "EncTRLE"
+	case EncZRLE:
+		return "EncZRLE"
+	case EncJPEGQualityLevelPseudo10:
+		return "EncJPEGQualityLevelPseudo10"
+	case EncJPEGQualityLevelPseudo9:
+		return "EncJPEGQualityLevelPseudo9"
+	case EncJPEGQualityLevelPseudo8:
+		return "EncJPEGQualityLevelPseudo8"
+	case EncJPEGQualityLevelPseudo7:
+		return "EncJPEGQualityLevelPseudo7"
+	case EncJPEGQualityLevelPseudo6:
+		return "EncJPEGQualityLevelPseudo6"
+	case EncJPEGQualityLevelPseudo5:
+		return "EncJPEGQualityLevelPseudo5"
+	case EncJPEGQualityLevelPseudo4:
+		return "EncJPEGQualityLevelPseudo4"
+	case EncJPEGQualityLevelPseudo3:
+		return "EncJPEGQualityLevelPseudo3"
+	case EncJPEGQualityLevelPseudo2:
+		return "EncJPEGQualityLevelPseudo2"
+	case EncJPEGQualityLevelPseudo1:
+		return "EncJPEGQualityLevelPseudo1"
+	case EncColorPseudo:
+		return "EncColorPseudo"
+	case EncDesktopSizePseudo:
+		return "EncDesktopSizePseudo"
+	case EncLastRectPseudo:
+		return "EncLastRectPseudo"
+	case EncCompressionLevel10:
+		return "EncCompressionLevel10"
+	case EncCompressionLevel9:
+		return "EncCompressionLevel9"
+	case EncCompressionLevel8:
+		return "EncCompressionLevel8"
+	case EncCompressionLevel7:
+		return "EncCompressionLevel7"
+	case EncCompressionLevel6:
+		return "EncCompressionLevel6"
+	case EncCompressionLevel5:
+		return "EncCompressionLevel5"
+	case EncCompressionLevel4:
+		return "EncCompressionLevel4"
+	case EncCompressionLevel3:
+		return "EncCompressionLevel3"
+	case EncCompressionLevel2:
+		return "EncCompressionLevel2"
+	case EncCompressionLevel1:
+		return "EncCompressionLevel1"
+	case EncQEMUPointerMotionChangePseudo:
+		return "EncQEMUPointerMotionChangePseudo"
+	case EncQEMUExtendedKeyEventPseudo:
+		return "EncQEMUExtendedKeyEventPseudo"
+	case EncTightPng:
+		return "EncTightPng"
+	case EncExtendedDesktopSizePseudo:
+		return "EncExtendedDesktopSizePseudo"
+	case EncXvpPseudo:
+		return "EncXvpPseudo"
+	case EncFencePseudo:
+		return "EncFencePseudo"
+	case EncContinuousUpdatesPseudo:
+		return "EncContinuousUpdatesPseudo"
+	case EncClientRedirect:
+		return "EncClientRedirect"
+	case EncTightPNGBase64:
+		return "EncTightPNGBase64"
+	case EncTightDiffComp:
+		return "EncTightDiffComp"
+	case EncVMWDefineCursor:
+		return "EncVMWDefineCursor"
+	case EncVMWCursorState:
+		return "EncVMWCursorState"
+	case EncVMWCursorPosition:
+		return "EncVMWCursorPosition"
+	case EncVMWTypematicInfo:
+		return "EncVMWTypematicInfo"
+	case EncVMWLEDState:
+		return "EncVMWLEDState"
+	case EncVMWServerPush2:
+		return "EncVMWServerPush2"
+	case EncVMWServerCaps:
+		return "EncVMWServerCaps"
+	case EncVMWFrameStamp:
+		return "EncVMWFrameStamp"
+	case EncOffscreenCopyRect:
+		return "EncOffscreenCopyRect"
+	}
+	return ""
+}
+
 const (
 	EncRaw                           EncodingType = 0
 	EncCopyRect                      EncodingType = 1
@@ -86,8 +204,8 @@ const (
 type PixelFormat struct {
 	BPP        uint8
 	Depth      uint8
-	BigEndian  bool
-	TrueColor  bool
+	BigEndian  uint8
+	TrueColor  uint8
 	RedMax     uint16
 	GreenMax   uint16
 	BlueMax    uint16
@@ -110,7 +228,7 @@ func (format *PixelFormat) WriteTo(w io.Writer) error {
 	}
 
 	var boolByte byte
-	if format.BigEndian {
+	if format.BigEndian == 1 {
 		boolByte = 1
 	} else {
 		boolByte = 0
@@ -121,7 +239,7 @@ func (format *PixelFormat) WriteTo(w io.Writer) error {
 		return err
 	}
 
-	if format.TrueColor {
+	if format.TrueColor == 1 {
 		boolByte = 1
 	} else {
 		boolByte = 0
@@ -134,7 +252,7 @@ func (format *PixelFormat) WriteTo(w io.Writer) error {
 
 	// If we have true color enabled then we have to fill in the rest of the
 	// structure with the color values.
-	if format.TrueColor {
+	if format.TrueColor == 1 {
 		if err := binary.Write(&buf, binary.BigEndian, format.RedMax); err != nil {
 			return err
 		}
@@ -165,19 +283,19 @@ func (format *PixelFormat) WriteTo(w io.Writer) error {
 }
 
 func NewPixelFormat(bpp uint8) *PixelFormat {
-	bigEndian := false
+	bigEndian := 0
 	//	rgbMax := uint16(math.Exp2(float64(bpp))) - 1
 	rMax := uint16(255)
 	gMax := uint16(255)
 	bMax := uint16(255)
 	var (
-		tc         = true
+		tc         = 1
 		rs, gs, bs uint8
 		depth      uint8
 	)
 	switch bpp {
 	case 8:
-		tc = false
+		tc = 0
 		depth = 8
 		rs, gs, bs = 0, 0, 0
 	case 16:
@@ -189,5 +307,5 @@ func NewPixelFormat(bpp uint8) *PixelFormat {
 		rs, gs, bs = 16, 8, 0
 	}
 
-	return &PixelFormat{bpp, depth, bigEndian, tc, rMax, gMax, bMax, rs, gs, bs}
+	return &PixelFormat{bpp, depth, uint8(bigEndian), uint8(tc), rMax, gMax, bMax, rs, gs, bs}
 }

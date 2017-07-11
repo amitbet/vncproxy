@@ -1,7 +1,6 @@
 package proxy
 
 import (
-	"fmt"
 	"log"
 	"net"
 	"path"
@@ -10,6 +9,7 @@ import (
 	"vncproxy/client"
 	"vncproxy/common"
 	"vncproxy/encodings"
+	"vncproxy/logger"
 	"vncproxy/server"
 	listeners "vncproxy/tee-listeners"
 )
@@ -20,16 +20,16 @@ type VncProxy struct {
 	recordingDir          string      // empty = no recording
 	proxyPassword         string      // empty = no auth
 	targetServersPassword string      //empty = no auth
-	singleSession         *VncSession // to be used when not using sessions
-	usingSessions         bool        //false = single session - defined in the var above
+	SingleSession         *VncSession // to be used when not using sessions
+	UsingSessions         bool        //false = single session - defined in the var above
 	sessionManager        *SessionManager
 }
 
-func (vp *VncProxy) connectToVncServer(targetServerUrl string) (*client.ClientConn, error) {
+func (vp *VncProxy) createClientConnection(targetServerUrl string) (*client.ClientConn, error) {
 	nc, err := net.Dial("tcp", targetServerUrl)
 
 	if err != nil {
-		fmt.Printf("error connecting to vnc server: %s", err)
+		logger.Errorf("error connecting to vnc server: %s", err)
 		return nil, err
 	}
 
@@ -38,14 +38,7 @@ func (vp *VncProxy) connectToVncServer(targetServerUrl string) (*client.ClientCo
 
 	vncSrvMessagesChan := make(chan common.ServerMessage)
 
-	//rec := listeners.NewRecorder("recording.rbs")
-
-	// split := &listeners.MultiListener{}
-	// for _, listener := range rfbListeners {
-	// 	split.AddListener(listener)
-	// }
-
-	clientConn, err := client.Client(nc,
+	clientConn, err := client.NewClientConn(nc,
 		&client.ClientConfig{
 			Auth:            authArr,
 			ServerMessageCh: vncSrvMessagesChan,
@@ -54,71 +47,89 @@ func (vp *VncProxy) connectToVncServer(targetServerUrl string) (*client.ClientCo
 	//clientConn.Listener = split
 
 	if err != nil {
-		fmt.Printf("error creating client: %s", err)
+		logger.Errorf("error creating client: %s", err)
 		return nil, err
 	}
 
-	tight := encodings.TightEncoding{}
-	tightPng := encodings.TightPngEncoding{}
-	rre := encodings.RREEncoding{}
-	zlib := encodings.ZLibEncoding{}
-	zrle := encodings.ZRLEEncoding{}
-	cpyRect := encodings.CopyRectEncoding{}
-	coRRE := encodings.CoRREEncoding{}
-	hextile := encodings.HextileEncoding{}
-
-	clientConn.SetEncodings([]common.Encoding{&cpyRect, &tightPng, &tight, &hextile, &coRRE, &rre, &zlib, &zrle})
 	return clientConn, nil
 }
 
 // if sessions not enabled, will always return the configured target server (only one)
 func (vp *VncProxy) getTargetServerFromSession(sessionId string) (*VncSession, error) {
 
-	if !vp.usingSessions {
-		return vp.singleSession, nil
+	if !vp.UsingSessions {
+		if vp.SingleSession == nil {
+			logger.Errorf("SingleSession is empty, use sessions or populate the SingleSession member of the VncProxy struct.")
+		}
+		return vp.SingleSession, nil
 	}
 	return vp.sessionManager.GetSession(sessionId)
 }
 
-func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server.ServerConn, rfbListeners []common.SegmentConsumer) error {
+func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server.ServerConn) error {
 
 	recFile := "recording" + strconv.FormatInt(time.Now().Unix(), 10) + ".rbs"
 	recPath := path.Join(vp.recordingDir, recFile)
 	rec := listeners.NewRecorder(recPath)
 	session, err := vp.getTargetServerFromSession(sconn.SessionId)
 	if err != nil {
-		fmt.Printf("Proxy.newServerConnHandler can't get session: %d\n", sconn.SessionId)
+		logger.Errorf("Proxy.newServerConnHandler can't get session: %d", sconn.SessionId)
 		return err
 	}
 
-	serverSplitter := &listeners.MultiListener{}
-	for _, l := range rfbListeners {
-		serverSplitter.AddListener(l)
+	// for _, l := range rfbListeners {
+	// 	sconn.Listeners.AddListener(l)
+	// }
+	sconn.Listeners.AddListener(rec)
+
+	//clientSplitter := &common.MultiListener{}
+
+	cconn, err := vp.createClientConnection(session.TargetHostname + ":" + session.TargetPort)
+	if err != nil {
+		logger.Errorf("Proxy.newServerConnHandler error creating connection: %s", err)
+		return err
 	}
-	serverSplitter.AddListener(rec)
-	sconn.Listener = serverSplitter
-
-	clientSplitter := &listeners.MultiListener{}
-	clientSplitter.AddListener(rec)
-
-	cconn, err := vp.connectToVncServer(session.TargetHostname + ":" + session.TargetPort)
-	cconn.Listener = clientSplitter
+	cconn.Listeners.AddListener(rec)
+	//cconn.Listener = clientSplitter
 
 	//creating cross-listeners between server and client parts to pass messages through the proxy:
 
 	// gets the bytes from the actual vnc server on the env (client part of the proxy)
 	// and writes them through the server socket to the vnc-client
-	serverMsgRepeater := &listeners.WriteTo{sconn, "vnc-client bound"}
-	clientSplitter.AddListener(serverMsgRepeater)
+	serverMsgRepeater := &listeners.WriteTo{sconn, "vnc-client-bound"}
+	cconn.Listeners.AddListener(serverMsgRepeater)
 
 	// gets the messages from the server part (from vnc-client),
 	// and write through the client to the actual vnc-server
-	clientMsgRepeater := &listeners.WriteTo{cconn, "vnc-server bound"}
-	serverSplitter.AddListener(clientMsgRepeater)
+	clientMsgRepeater := &listeners.WriteTo{cconn, "vnc-server-bound"}
+	sconn.Listeners.AddListener(clientMsgRepeater)
+
+	err = cconn.Connect()
+	if err != nil {
+		logger.Errorf("Proxy.newServerConnHandler error connecting to client: %s", err)
+		return err
+	}
+
+	encs := []common.Encoding{
+		&encodings.RawEncoding{},
+		&encodings.TightEncoding{},
+		//encodings.TightPngEncoding{},
+		//encodings.RREEncoding{},
+		//encodings.ZLibEncoding{},
+		//encodings.ZRLEEncoding{},
+		//encodings.CopyRectEncoding{},
+		//encodings.CoRREEncoding{},
+		//encodings.HextileEncoding{},
+	}
+	err = cconn.SetEncodings(encs)
+	if err != nil {
+		logger.Errorf("Proxy.newServerConnHandler error connecting to client: %s", err)
+		return err
+	}
 	return nil
 }
 
-func (vp *VncProxy) StartListening(rfbListeners []common.SegmentConsumer) {
+func (vp *VncProxy) StartListening() {
 
 	//chServer := make(chan common.ClientMessage)
 	chClient := make(chan common.ServerMessage)
@@ -137,10 +148,12 @@ func (vp *VncProxy) StartListening(rfbListeners []common.SegmentConsumer) {
 		DesktopName:      []byte("workDesk"),
 		Height:           uint16(768),
 		Width:            uint16(1024),
-		NewConnHandler: func(cfg *server.ServerConfig, conn *server.ServerConn) error {
-			vp.newServerConnHandler(cfg, conn, rfbListeners)
-			return nil
-		},
+		NewConnHandler:   vp.newServerConnHandler,
+		UseDummySession:  !vp.UsingSessions,
+		// func(cfg *server.ServerConfig, conn *server.ServerConn) error {
+		// 	vp.newServerConnHandler(cfg, conn)
+		// 	return nil
+		// },
 	}
 
 	if vp.wsListeningUrl != "" {

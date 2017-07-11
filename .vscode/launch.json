@@ -2,13 +2,36 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Test",
+            "name": "Launch Server Test",
             "type": "go",
             "request": "launch",
             "mode": "test",
             "remotePath": "",
             "port": 2345,
             "program": "${workspaceRoot}/server",
+            "args": [
+                "-test.v"
+            ],
+            "osx": {
+                "env": {
+                    //"GOPATH": "/Users/amitbet/Dropbox/go"
+                }
+            },
+            "windows": {
+                "env": {
+                    //"GOPATH": "${env.USERPROFILE}\\Dropbox\\go"
+                }
+            },
+            "showLog": true
+        },
+        {
+            "name": "Launch Proxy Test",
+            "type": "go",
+            "request": "launch",
+            "mode": "test",
+            "remotePath": "",
+            "port": 2345,
+            "program": "${workspaceRoot}/proxy",
             "args": [
                 "-test.v"
             ],

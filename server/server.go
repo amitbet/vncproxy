@@ -60,7 +60,7 @@ type ServerConfig struct {
 	DesktopName     []byte
 	Height          uint16
 	Width           uint16
-
+	UseDummySession bool
 	//handler to allow for registering for messages, this can't be a channel
 	//because of the websockets handler function which will kill the connection on exit if conn.handle() is run on another thread
 	NewConnHandler ServerHandler
@@ -70,7 +70,7 @@ func wsHandlerFunc(ws io.ReadWriter, cfg *ServerConfig, sessionId string) {
 	// header := ws.Request().Header
 	// url := ws.Request().URL
 	// //stam := header.Get("Origin")
-	// fmt.Printf("header: %v\nurl: %v\n", header, url)
+	// logger.Debugf("header: %v\nurl: %v", header, url)
 	// io.Copy(ws, ws)
 
 	err := attachNewServerConn(ws, cfg, sessionId)
@@ -96,7 +96,7 @@ func TcpServe(url string, cfg *ServerConfig) error {
 		if err != nil {
 			return err
 		}
-		go attachNewServerConn(c, cfg, "tcpDummySession")
+		go attachNewServerConn(c, cfg, "dummySession")
 		// if err != nil {
 		// 	return err
 		// }
@@ -131,7 +131,11 @@ func attachNewServerConn(c io.ReadWriter, cfg *ServerConfig, sessionId string) e
 		conn.Close()
 		return err
 	}
+
 	conn.SessionId = sessionId
+	if cfg.UseDummySession {
+		conn.SessionId = "dummySession"
+	}
 	cfg.NewConnHandler(cfg, conn)
 
 	//go here will kill ws connections

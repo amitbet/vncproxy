@@ -4,18 +4,18 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
-	"fmt"
 	"os"
 	"time"
 	"vncproxy/common"
+	"vncproxy/logger"
 	"vncproxy/server"
 )
 
 type Recorder struct {
 	//common.BytesListener
-	RBSFileName         string
-	writer              *os.File
-	logger              common.Logger
+	RBSFileName string
+	writer      *os.File
+	//logger              common.Logger
 	startTime           int
 	buffer              bytes.Buffer
 	serverInitMessage   *common.ServerInit
@@ -38,7 +38,7 @@ func NewRecorder(saveFilePath string) *Recorder {
 
 	rec.writer, err = os.OpenFile(saveFilePath, os.O_RDWR|os.O_CREATE, 0755)
 	if err != nil {
-		fmt.Printf("unable to open file: %s, error: %v", saveFilePath, err)
+		logger.Errorf("unable to open file: %s, error: %v", saveFilePath, err)
 		return nil
 	}
 
@@ -53,18 +53,6 @@ func NewRecorder(saveFilePath string) *Recorder {
 
 	return &rec
 }
-
-// func (rec *Recorder) startSession(desktopName string, fbWidth uint16, fbHeight uint16) error {
-
-// 	err := rec.writeStartSession(desktopName, fbWidth, fbHeight)
-
-// 	if err != nil {
-// 		fmt.Printf("Recorder was unable to write StartSession to file error: %v", err)
-// 		return nil
-// 	}
-
-// 	return nil
-// }
 
 const versionMsg_3_3 = "RFB 003.003\n"
 const versionMsg_3_7 = "RFB 003.007\n"
@@ -115,27 +103,33 @@ func (r *Recorder) writeStartSession(initMsg *common.ServerInit) error {
 }
 
 func (r *Recorder) Consume(data *common.RfbSegment) error {
-
 	//using async writes so if chan buffer overflows, proxy will not be affected
 	select {
 	case r.segmentChan <- data:
 	default:
-		fmt.Println("error: recorder queue is full")
+		logger.Error("error: recorder queue is full")
 	}
 
 	return nil
 }
 
 func (r *Recorder) HandleRfbSegment(data *common.RfbSegment) error {
+	defer func() {
+		if r := recover(); r != nil {
+			logger.Error("Recovered in HandleRfbSegment: ", r)
+		}
+	}()
 
 	switch data.SegmentType {
 	case common.SegmentMessageSeparator:
 		if !r.sessionStartWritten {
+			logger.Debugf("Recorder.HandleRfbSegment: writing start session segment: %v",r.serverInitMessage)
 			r.writeStartSession(r.serverInitMessage)
 		}
 
 		switch common.ServerMessageType(data.UpcomingObjectType) {
 		case common.FramebufferUpdate:
+			logger.Debugf("Recorder.HandleRfbSegment: saving FramebufferUpdate segment")
 			r.writeToDisk()
 		case common.SetColourMapEntries:
 		case common.Bell:
@@ -145,6 +139,7 @@ func (r *Recorder) HandleRfbSegment(data *common.RfbSegment) error {
 		}
 
 	case common.SegmentRectSeparator:
+		logger.Debugf("Recorder.HandleRfbSegment: writing start rect start")
 		r.writeToDisk()
 	case common.SegmentBytes:
 		_, err := r.buffer.Write(data.Bytes)
@@ -157,9 +152,10 @@ func (r *Recorder) HandleRfbSegment(data *common.RfbSegment) error {
 		switch clientMsg.Type() {
 		case common.SetPixelFormatMsgType:
 			clientMsg := data.Message.(*server.SetPixelFormat)
+			logger.Debugf("Recorder.HandleRfbSegment: client message %v", *clientMsg)
 			r.serverInitMessage.PixelFormat = clientMsg.PF
 		default:
-			return errors.New("unknown client message type:" + string(data.UpcomingObjectType))
+			//return errors.New("unknown client message type:" + string(data.UpcomingObjectType))
 		}
 
 	default:
@@ -180,11 +176,11 @@ func (r *Recorder) writeToDisk() error {
 	paddedSize := (bytesLen + 3) & 0x7FFFFFFC
 	paddingSize := paddedSize - bytesLen
 
-	fmt.Printf("paddedSize=%d paddingSize=%d bytesLen=%d", paddedSize, paddingSize, bytesLen)
+	//logger.Debugf("paddedSize=%d paddingSize=%d bytesLen=%d", paddedSize, paddingSize, bytesLen)
 	//write buffer padded to 32bit
 	_, err := r.buffer.WriteTo(r.writer)
 	padding := make([]byte, paddingSize)
-	fmt.Printf("padding=%v ", padding)
+	//logger.Debugf("padding=%v ", padding)
 
 	binary.Write(r.writer, binary.BigEndian, padding)
 

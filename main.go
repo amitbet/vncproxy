@@ -52,6 +52,7 @@ func main() {
 		//&encodings.CopyRectEncoding{},
 		//coRRE := encodings.CoRREEncoding{},
 		//hextile := encodings.HextileEncoding{},
+		&encodings.PseudoEncoding{int32(common.EncJPEGQualityLevelPseudo9)},
 	}
 
 	// file, _ := os.OpenFile("stam.bin", os.O_CREATE|os.O_RDWR, 0755)
@@ -59,6 +60,20 @@ func main() {
 
 	//tight.SetOutput(file)
 	clientConn.SetEncodings(encs)
+
+	clientConn.FramebufferUpdateRequest(false, 0, 0, 1280, 800)
+	// clientConn.SetPixelFormat(&common.PixelFormat{
+	// 	BPP:        32,
+	// 	Depth:      24,
+	// 	BigEndian:  0,
+	// 	TrueColor:  1,
+	// 	RedMax:     255,
+	// 	GreenMax:   255,
+	// 	BlueMax:    255,
+	// 	RedShift:   16,
+	// 	GreenShift: 8,
+	// 	BlueShift:  0,
+	// })
 
 	go func() {
 		for {

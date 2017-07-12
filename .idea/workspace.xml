@@ -3,13 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="a5d84862-9821-4d30-9a77-6235b55d6727" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/client-conn.go" afterPath="$PROJECT_DIR$/client/client-conn.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/client-message.go" afterPath="$PROJECT_DIR$/common/client-message.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/encodings/enc-pseudo.go" afterPath="$PROJECT_DIR$/encodings/enc-pseudo.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/proxy/proxy.go" afterPath="$PROJECT_DIR$/proxy/proxy.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/server-conn.go" afterPath="$PROJECT_DIR$/server/server-conn.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tee-listeners/recorder.go" afterPath="$PROJECT_DIR$/tee-listeners/recorder.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tee-listeners/write-to.go" afterPath="$PROJECT_DIR$/tee-listeners/write-to.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.go" afterPath="$PROJECT_DIR$/main.go" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -44,9 +38,13 @@
         <entry file="file://$PROJECT_DIR$/client/client-conn.go">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-553">
-              <caret line="472" column="19" lean-forward="true" selection-start-line="472" selection-start-column="19" selection-end-line="472" selection-end-column="19" />
+              <caret line="472" column="19" lean-forward="false" selection-start-line="472" selection-start-column="19" selection-end-line="472" selection-end-column="19" />
               <folding>
                 <element signature="e#16#123#0" expanded="true" />
+                <marker date="1499806282000" expanded="true" signature="11763:13315" ph="{...}" />
+                <marker date="1499806282000" expanded="true" signature="13096:13109" ph="{...}" />
+                <marker date="1499806282000" expanded="true" signature="13096:13313" ph="{...}" />
+                <marker date="1499806282000" expanded="true" signature="13252:13269" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -55,8 +53,8 @@
       <file leaf-file-name="ws-server-go.go" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server/ws-server-go.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="197">
-              <caret line="50" column="32" lean-forward="true" selection-start-line="50" selection-start-column="32" selection-end-line="50" selection-end-column="32" />
+            <state relative-caret-position="432">
+              <caret line="31" column="33" lean-forward="true" selection-start-line="31" selection-start-column="33" selection-end-line="31" selection-end-column="33" />
               <folding>
                 <marker date="1499771264739" expanded="true" signature="23:27" ph="..." />
                 <marker date="1499771264739" expanded="true" signature="731:768" ph="{...}" />
@@ -68,8 +66,8 @@
       <file leaf-file-name="server-conn.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server/server-conn.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="313">
-              <caret line="221" column="13" lean-forward="true" selection-start-line="221" selection-start-column="13" selection-end-line="221" selection-end-column="13" />
+            <state relative-caret-position="547">
+              <caret line="234" column="13" lean-forward="false" selection-start-line="234" selection-start-column="13" selection-end-line="234" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -79,9 +77,17 @@
         <entry file="file://$PROJECT_DIR$/proxy/proxy.go">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="395">
-              <caret line="129" column="1" lean-forward="true" selection-start-line="129" selection-start-column="1" selection-end-line="129" selection-end-column="1" />
+              <caret line="131" column="1" lean-forward="false" selection-start-line="131" selection-start-column="1" selection-end-line="131" selection-end-column="1" />
               <folding>
                 <element signature="e#15#200#0" expanded="true" />
+                <marker date="1499806606000" expanded="true" signature="2011:4063" ph="{...}" />
+                <marker date="1499806606000" expanded="true" signature="3900:3934" ph="/.../" />
+                <marker date="1499806606000" expanded="true" signature="3950:4049" ph="{...}" />
+                <marker date="1499806606000" expanded="true" signature="4293:4379" ph="{...}" />
+                <marker date="1499806606000" expanded="true" signature="4408:5022" ph="{...}" />
+                <marker date="1499806606000" expanded="true" signature="4480:4565" ph="{...}" />
+                <marker date="1499806606000" expanded="true" signature="4887:5019" ph="/.../" />
+                <marker date="1499806606000" expanded="true" signature="5052:5100" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -102,7 +108,9 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="239">
               <caret line="22" column="54" lean-forward="false" selection-start-line="22" selection-start-column="54" selection-end-line="22" selection-end-column="54" />
-              <folding />
+              <folding>
+                <marker date="1499803665000" expanded="true" signature="1068:1628" ph="/.../" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -121,9 +129,23 @@
         <entry file="file://$PROJECT_DIR$/client/server-messages.go">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="312">
-              <caret line="68" column="9" lean-forward="true" selection-start-line="68" selection-start-column="9" selection-end-line="68" selection-end-column="9" />
+              <caret line="68" column="9" lean-forward="false" selection-start-line="68" selection-start-column="9" selection-end-line="68" selection-end-column="9" />
               <folding>
                 <element signature="e#16#146#0" expanded="true" />
+                <marker date="1499806378000" expanded="true" signature="2504:2783" ph="/.../" />
+                <marker date="1499806378000" expanded="true" signature="2822:2871" ph="{...}" />
+                <marker date="1499806378000" expanded="true" signature="3223:4045" ph="{...}" />
+                <marker date="1499806378000" expanded="true" signature="3689:4021" ph="{...}" />
+                <marker date="1499806378000" expanded="true" signature="3744:3788" ph="{...}" />
+                <marker date="1499806378000" expanded="true" signature="3817:3912" ph="{...}" />
+                <marker date="1499806378000" expanded="true" signature="4047:4146" ph="/.../" />
+                <marker date="1499806378000" expanded="true" signature="4449:4558" ph="/.../" />
+                <marker date="1499806378000" expanded="true" signature="4592:4608" ph="{...}" />
+                <marker date="1499806378000" expanded="true" signature="4897:5552" ph="{...}" />
+                <marker date="1499806378000" expanded="true" signature="4900:4969" ph="/.../" />
+                <marker date="1499806378000" expanded="true" signature="5117:5139" ph="{...}" />
+                <marker date="1499806378000" expanded="true" signature="5203:5225" ph="{...}" />
+                <marker date="1499806378000" expanded="true" signature="5227:5495" ph="/.../" />
               </folding>
             </state>
           </provider>
@@ -133,7 +155,7 @@
         <entry file="file://$PROJECT_DIR$/common/readers.go">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="204">
-              <caret line="61" column="35" lean-forward="true" selection-start-line="61" selection-start-column="35" selection-end-line="61" selection-end-column="35" />
+              <caret line="61" column="35" lean-forward="false" selection-start-line="61" selection-start-column="35" selection-end-line="61" selection-end-column="35" />
               <folding />
             </state>
           </provider>
@@ -143,9 +165,24 @@
         <entry file="file://$PROJECT_DIR$/tee-listeners/recorder.go">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="126">
-              <caret line="11" column="0" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+              <caret line="11" column="0" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
               <folding>
                 <element signature="e#19#128#0" expanded="true" />
+                <marker date="1499810608000" expanded="true" signature="1663:1665" ph="{...}" />
+                <marker date="1499810608000" expanded="true" signature="3928:3943" ph="..." />
+                <marker date="1499810608000" expanded="true" signature="3928:4143" ph="{...}" />
+                <marker date="1499810608000" expanded="true" signature="3928:4945" ph="{...}" />
+                <marker date="1499810608000" expanded="true" signature="3928:4959" ph="{...}" />
+                <marker date="1499810608000" expanded="true" signature="4038:4139" ph="..." />
+                <marker date="1499810608000" expanded="true" signature="4179:4256" ph="..." />
+                <marker date="1499810608000" expanded="true" signature="4283:4335" ph="..." />
+                <marker date="1499810608000" expanded="true" signature="4374:4432" ph="..." />
+                <marker date="1499810608000" expanded="true" signature="4478:4880" ph="..." />
+                <marker date="1499810608000" expanded="true" signature="4557:4880" ph="{...}" />
+                <marker date="1499810608000" expanded="true" signature="4595:4776" ph="..." />
+                <marker date="1499810608000" expanded="true" signature="5000:5700" ph="{...}" />
+                <marker date="1499810608000" expanded="true" signature="5076:5093" ph="{...}" />
+                <marker date="1499810608000" expanded="true" signature="5287:5413" ph="/.../" />
               </folding>
             </state>
           </provider>
@@ -250,10 +287,10 @@
     <treeState />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
+    <option name="x" value="-1928" />
+    <option name="y" value="-31" />
     <option name="width" value="1936" />
-    <option name="height" value="1176" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -984,7 +1021,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="54001000" />
+    <option name="totallyTimeSpent" value="57646000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -996,7 +1033,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
+    <frame x="-1928" y="-31" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1017,7 +1054,7 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32981783" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.44199425" sideWeight="0.4978678" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.41170096" sideWeight="0.4978678" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32981783" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2867804" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.21506849" sideWeight="0.49676898" order="0" side_tool="false" content_ui="tabs" />
@@ -1106,37 +1143,37 @@
         </line-breakpoint>
         <line-breakpoint type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/tee-listeners/recorder.go</url>
-          <line>146</line>
+          <line>154</line>
           <properties />
           <option name="timeStamp" value="112" />
         </line-breakpoint>
         <line-breakpoint type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/tee-listeners/recorder.go</url>
-          <line>152</line>
+          <line>160</line>
           <properties />
           <option name="timeStamp" value="113" />
         </line-breakpoint>
         <line-breakpoint type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/client/client-conn.go</url>
-          <line>508</line>
+          <line>510</line>
           <properties />
           <option name="timeStamp" value="116" />
         </line-breakpoint>
         <line-breakpoint type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/client/client-conn.go</url>
-          <line>516</line>
+          <line>519</line>
           <properties />
           <option name="timeStamp" value="117" />
         </line-breakpoint>
         <line-breakpoint type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/client/client-conn.go</url>
-          <line>521</line>
+          <line>524</line>
           <properties />
           <option name="timeStamp" value="118" />
         </line-breakpoint>
         <line-breakpoint type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/client/client-conn.go</url>
-          <line>502</line>
+          <line>503</line>
           <properties />
           <option name="timeStamp" value="119" />
         </line-breakpoint>
@@ -1148,13 +1185,13 @@
         </line-breakpoint>
         <line-breakpoint type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/client/client-conn.go</url>
-          <line>503</line>
+          <line>504</line>
           <properties />
           <option name="timeStamp" value="121" />
         </line-breakpoint>
         <line-breakpoint type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/client/client-conn.go</url>
-          <line>511</line>
+          <line>512</line>
           <properties />
           <option name="timeStamp" value="122" />
         </line-breakpoint>
@@ -1190,19 +1227,19 @@
         </line-breakpoint>
         <line-breakpoint type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/client/server-messages.go</url>
-          <line>34</line>
+          <line>33</line>
           <properties />
           <option name="timeStamp" value="128" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/client/server-messages.go</url>
-          <line>80</line>
+          <line>79</line>
           <properties />
           <option name="timeStamp" value="130" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/client/server-messages.go</url>
-          <line>62</line>
+          <line>61</line>
           <properties />
           <option name="timeStamp" value="131" />
         </line-breakpoint>
@@ -1257,6 +1294,10 @@
           <caret line="27" column="27" lean-forward="true" selection-start-line="27" selection-start-column="27" selection-end-line="27" selection-end-column="27" />
           <folding>
             <element signature="e#16#123#0" expanded="true" />
+            <marker date="1499806282000" expanded="true" signature="11763:13315" ph="{...}" />
+            <marker date="1499806282000" expanded="true" signature="13096:13109" ph="{...}" />
+            <marker date="1499806282000" expanded="true" signature="13096:13313" ph="{...}" />
+            <marker date="1499806282000" expanded="true" signature="13252:13269" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -1291,6 +1332,10 @@
           <caret line="450" column="0" lean-forward="false" selection-start-line="450" selection-start-column="0" selection-end-line="450" selection-end-column="0" />
           <folding>
             <element signature="e#16#123#0" expanded="true" />
+            <marker date="1499806282000" expanded="true" signature="11763:13315" ph="{...}" />
+            <marker date="1499806282000" expanded="true" signature="13096:13109" ph="{...}" />
+            <marker date="1499806282000" expanded="true" signature="13096:13313" ph="{...}" />
+            <marker date="1499806282000" expanded="true" signature="13252:13269" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -1316,6 +1361,21 @@
           <caret line="21" column="27" lean-forward="true" selection-start-line="21" selection-start-column="27" selection-end-line="21" selection-end-column="27" />
           <folding>
             <element signature="e#19#128#0" expanded="true" />
+            <marker date="1499810608000" expanded="true" signature="1663:1665" ph="{...}" />
+            <marker date="1499810608000" expanded="true" signature="3928:3943" ph="..." />
+            <marker date="1499810608000" expanded="true" signature="3928:4143" ph="{...}" />
+            <marker date="1499810608000" expanded="true" signature="3928:4945" ph="{...}" />
+            <marker date="1499810608000" expanded="true" signature="3928:4959" ph="{...}" />
+            <marker date="1499810608000" expanded="true" signature="4038:4139" ph="..." />
+            <marker date="1499810608000" expanded="true" signature="4179:4256" ph="..." />
+            <marker date="1499810608000" expanded="true" signature="4283:4335" ph="..." />
+            <marker date="1499810608000" expanded="true" signature="4374:4432" ph="..." />
+            <marker date="1499810608000" expanded="true" signature="4478:4880" ph="..." />
+            <marker date="1499810608000" expanded="true" signature="4557:4880" ph="{...}" />
+            <marker date="1499810608000" expanded="true" signature="4595:4776" ph="..." />
+            <marker date="1499810608000" expanded="true" signature="5000:5700" ph="{...}" />
+            <marker date="1499810608000" expanded="true" signature="5076:5093" ph="{...}" />
+            <marker date="1499810608000" expanded="true" signature="5287:5413" ph="/.../" />
           </folding>
         </state>
       </provider>
@@ -1557,7 +1617,7 @@
     <entry file="file://$PROJECT_DIR$/common/readers.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
-          <caret line="61" column="35" lean-forward="true" selection-start-line="61" selection-start-column="35" selection-end-line="61" selection-end-column="35" />
+          <caret line="61" column="35" lean-forward="false" selection-start-line="61" selection-start-column="35" selection-end-line="61" selection-end-column="35" />
           <folding />
         </state>
       </provider>
@@ -1565,9 +1625,23 @@
     <entry file="file://$PROJECT_DIR$/client/server-messages.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="312">
-          <caret line="68" column="9" lean-forward="true" selection-start-line="68" selection-start-column="9" selection-end-line="68" selection-end-column="9" />
+          <caret line="68" column="9" lean-forward="false" selection-start-line="68" selection-start-column="9" selection-end-line="68" selection-end-column="9" />
           <folding>
             <element signature="e#16#146#0" expanded="true" />
+            <marker date="1499806378000" expanded="true" signature="2504:2783" ph="/.../" />
+            <marker date="1499806378000" expanded="true" signature="2822:2871" ph="{...}" />
+            <marker date="1499806378000" expanded="true" signature="3223:4045" ph="{...}" />
+            <marker date="1499806378000" expanded="true" signature="3689:4021" ph="{...}" />
+            <marker date="1499806378000" expanded="true" signature="3744:3788" ph="{...}" />
+            <marker date="1499806378000" expanded="true" signature="3817:3912" ph="{...}" />
+            <marker date="1499806378000" expanded="true" signature="4047:4146" ph="/.../" />
+            <marker date="1499806378000" expanded="true" signature="4449:4558" ph="/.../" />
+            <marker date="1499806378000" expanded="true" signature="4592:4608" ph="{...}" />
+            <marker date="1499806378000" expanded="true" signature="4897:5552" ph="{...}" />
+            <marker date="1499806378000" expanded="true" signature="4900:4969" ph="/.../" />
+            <marker date="1499806378000" expanded="true" signature="5117:5139" ph="{...}" />
+            <marker date="1499806378000" expanded="true" signature="5203:5225" ph="{...}" />
+            <marker date="1499806378000" expanded="true" signature="5227:5495" ph="/.../" />
           </folding>
         </state>
       </provider>
@@ -1575,9 +1649,24 @@
     <entry file="file://$PROJECT_DIR$/tee-listeners/recorder.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="126">
-          <caret line="11" column="0" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+          <caret line="11" column="0" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
           <folding>
             <element signature="e#19#128#0" expanded="true" />
+            <marker date="1499810608000" expanded="true" signature="1663:1665" ph="{...}" />
+            <marker date="1499810608000" expanded="true" signature="3928:3943" ph="..." />
+            <marker date="1499810608000" expanded="true" signature="3928:4143" ph="{...}" />
+            <marker date="1499810608000" expanded="true" signature="3928:4945" ph="{...}" />
+            <marker date="1499810608000" expanded="true" signature="3928:4959" ph="{...}" />
+            <marker date="1499810608000" expanded="true" signature="4038:4139" ph="..." />
+            <marker date="1499810608000" expanded="true" signature="4179:4256" ph="..." />
+            <marker date="1499810608000" expanded="true" signature="4283:4335" ph="..." />
+            <marker date="1499810608000" expanded="true" signature="4374:4432" ph="..." />
+            <marker date="1499810608000" expanded="true" signature="4478:4880" ph="..." />
+            <marker date="1499810608000" expanded="true" signature="4557:4880" ph="{...}" />
+            <marker date="1499810608000" expanded="true" signature="4595:4776" ph="..." />
+            <marker date="1499810608000" expanded="true" signature="5000:5700" ph="{...}" />
+            <marker date="1499810608000" expanded="true" signature="5076:5093" ph="{...}" />
+            <marker date="1499810608000" expanded="true" signature="5287:5413" ph="/.../" />
           </folding>
         </state>
       </provider>
@@ -1601,9 +1690,13 @@
     <entry file="file://$PROJECT_DIR$/client/client-conn.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-553">
-          <caret line="472" column="19" lean-forward="true" selection-start-line="472" selection-start-column="19" selection-end-line="472" selection-end-column="19" />
+          <caret line="472" column="19" lean-forward="false" selection-start-line="472" selection-start-column="19" selection-end-line="472" selection-end-column="19" />
           <folding>
             <element signature="e#16#123#0" expanded="true" />
+            <marker date="1499806282000" expanded="true" signature="11763:13315" ph="{...}" />
+            <marker date="1499806282000" expanded="true" signature="13096:13109" ph="{...}" />
+            <marker date="1499806282000" expanded="true" signature="13096:13313" ph="{...}" />
+            <marker date="1499806282000" expanded="true" signature="13252:13269" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -1611,9 +1704,17 @@
     <entry file="file://$PROJECT_DIR$/proxy/proxy.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="395">
-          <caret line="129" column="1" lean-forward="true" selection-start-line="129" selection-start-column="1" selection-end-line="129" selection-end-column="1" />
+          <caret line="131" column="1" lean-forward="false" selection-start-line="131" selection-start-column="1" selection-end-line="131" selection-end-column="1" />
           <folding>
             <element signature="e#15#200#0" expanded="true" />
+            <marker date="1499806606000" expanded="true" signature="2011:4063" ph="{...}" />
+            <marker date="1499806606000" expanded="true" signature="3900:3934" ph="/.../" />
+            <marker date="1499806606000" expanded="true" signature="3950:4049" ph="{...}" />
+            <marker date="1499806606000" expanded="true" signature="4293:4379" ph="{...}" />
+            <marker date="1499806606000" expanded="true" signature="4408:5022" ph="{...}" />
+            <marker date="1499806606000" expanded="true" signature="4480:4565" ph="{...}" />
+            <marker date="1499806606000" expanded="true" signature="4887:5019" ph="/.../" />
+            <marker date="1499806606000" expanded="true" signature="5052:5100" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -1622,22 +1723,24 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="239">
           <caret line="22" column="54" lean-forward="false" selection-start-line="22" selection-start-column="54" selection-end-line="22" selection-end-column="54" />
-          <folding />
+          <folding>
+            <marker date="1499803665000" expanded="true" signature="1068:1628" ph="/.../" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/server/server-conn.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="313">
-          <caret line="221" column="13" lean-forward="true" selection-start-line="221" selection-start-column="13" selection-end-line="221" selection-end-column="13" />
+        <state relative-caret-position="547">
+          <caret line="234" column="13" lean-forward="false" selection-start-line="234" selection-start-column="13" selection-end-line="234" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/server/ws-server-go.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="197">
-          <caret line="50" column="32" lean-forward="true" selection-start-line="50" selection-start-column="32" selection-end-line="50" selection-end-column="32" />
+        <state relative-caret-position="432">
+          <caret line="31" column="33" lean-forward="true" selection-start-line="31" selection-start-column="33" selection-end-line="31" selection-end-column="33" />
           <folding>
             <marker date="1499771264739" expanded="true" signature="23:27" ph="..." />
             <marker date="1499771264739" expanded="true" signature="731:768" ph="{...}" />

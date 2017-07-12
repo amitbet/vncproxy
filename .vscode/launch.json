@@ -68,6 +68,28 @@
             },
             "args": [],
             "showLog": true
+        },
+        {
+            "name": "Launch fbs server",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "remotePath": "",
+            "port": 2345,
+            "host": "127.0.0.1",
+            "program": "${workspaceRoot}/server/",
+            "osx": {
+                "env": {
+                    //"GOPATH": "${env.HOME}/Dropbox/go"
+                }
+            },
+            "windows": {
+                "env": {
+                    //"GOPATH": "${env.USERPROFILE}\\Dropbox\\go"
+                }
+            },
+            "args": [],
+            "showLog": true
         }
     ]
 }

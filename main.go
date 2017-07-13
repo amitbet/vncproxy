@@ -74,15 +74,20 @@ func main() {
 	// 	GreenShift: 8,
 	// 	BlueShift:  0,
 	// })
-
+	start := getNowMillisec()
 	go func() {
 		for {
+			if getNowMillisec()-start >= 10000 {
+				break
+			}
+
 			err = clientConn.FramebufferUpdateRequest(true, 0, 0, 1280, 800)
 			if err != nil {
 				logger.Errorf("error requesting fb update: %s", err)
 			}
-			time.Sleep(500 * time.Millisecond)
+			time.Sleep(250 * time.Millisecond)
 		}
+		clientConn.Close()
 	}()
 
 	//go func() {
@@ -92,4 +97,7 @@ func main() {
 	//}()
 
 	//clientConn.Close()
+}
+func getNowMillisec() int {
+	return int(time.Now().UnixNano() / int64(time.Millisecond))
 }

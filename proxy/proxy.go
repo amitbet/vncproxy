@@ -145,13 +145,13 @@ func (vp *VncProxy) StartListening() {
 		SecurityHandlers: secHandlers,
 		Encodings:        []common.Encoding{&encodings.RawEncoding{}, &encodings.TightEncoding{}, &encodings.CopyRectEncoding{}},
 		PixelFormat:      common.NewPixelFormat(32),
-		ServerMessageCh:  chClient,
-		ClientMessages:   server.DefaultClientMessages,
-		DesktopName:      []byte("workDesk"),
-		Height:           uint16(768),
-		Width:            uint16(1024),
-		NewConnHandler:   vp.newServerConnHandler,
-		UseDummySession:  !vp.UsingSessions,
+		//ServerMessageCh:  chClient,
+		ClientMessages:  server.DefaultClientMessages,
+		DesktopName:     []byte("workDesk"),
+		Height:          uint16(768),
+		Width:           uint16(1024),
+		NewConnHandler:  vp.newServerConnHandler,
+		UseDummySession: !vp.UsingSessions,
 		// func(cfg *server.ServerConfig, conn *server.ServerConn) error {
 		// 	vp.newServerConnHandler(cfg, conn)
 		// 	return nil

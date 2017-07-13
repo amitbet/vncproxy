@@ -20,6 +20,7 @@ type Recorder struct {
 	serverInitMessage   *common.ServerInit
 	sessionStartWritten bool
 	segmentChan         chan *common.RfbSegment
+	maxWriteSize        int
 }
 
 func getNowMillisec() int {
@@ -34,6 +35,8 @@ func NewRecorder(saveFilePath string) *Recorder {
 
 	rec := Recorder{RBSFileName: saveFilePath, startTime: getNowMillisec()}
 	var err error
+
+	rec.maxWriteSize = 65536
 
 	rec.writer, err = os.OpenFile(saveFilePath, os.O_RDWR|os.O_CREATE, 0755)
 	if err != nil {
@@ -78,9 +81,7 @@ func (r *Recorder) writeStartSession(initMsg *common.ServerInit) error {
 	framebufferHeight := initMsg.FBHeight
 
 	//write rfb header information (the only part done without the [size|data|timestamp] block wrapper)
-	r.buffer.WriteString("FBS 001.000\n")
-	r.buffer.WriteTo(r.writer)
-	r.buffer.Reset()
+	r.writer.WriteString("FBS 001.000\n")
 
 	//push the version message into the buffer so it will be written in the first rbs block
 	r.buffer.WriteString(versionMsg_3_3)
@@ -144,11 +145,15 @@ func (r *Recorder) HandleRfbSegment(data *common.RfbSegment) error {
 		default:
 			logger.Warn("Recorder.HandleRfbSegment: unknown message type:" + string(data.UpcomingObjectType))
 		}
-
+	case common.SegmentConnectionClosed:
+		r.writeToDisk()
 	case common.SegmentRectSeparator:
 		logger.Debugf("Recorder.HandleRfbSegment: writing rect")
-		r.writeToDisk()
+		//r.writeToDisk()
 	case common.SegmentBytes:
+		if r.buffer.Len()+len(data.Bytes) > r.maxWriteSize-4 {
+			r.writeToDisk()
+		}
 		_, err := r.buffer.Write(data.Bytes)
 		return err
 	case common.SegmentServerInitMessage:

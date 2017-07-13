@@ -9,17 +9,18 @@ import (
 var TightMinToCompress = 12
 
 const (
-	SegmentBytes                    SegmentType = iota
+	SegmentBytes SegmentType = iota
 	SegmentMessageSeparator
 	SegmentRectSeparator
 	SegmentFullyParsedClientMessage
 	SegmentFullyParsedServerMessage
 	SegmentServerInitMessage
+	SegmentConnectionClosed
 )
 
 type SegmentType int
 
-func (seg SegmentType ) String() string {
+func (seg SegmentType) String() string {
 	switch seg {
 	case SegmentBytes:
 		return "SegmentBytes"

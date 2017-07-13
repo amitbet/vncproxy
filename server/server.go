@@ -55,7 +55,7 @@ type ServerConfig struct {
 	PixelFormat *common.PixelFormat
 	ColorMap    *common.ColorMap
 	//ClientMessageCh chan common.ClientMessage
-	ServerMessageCh chan common.ServerMessage
+	//ServerMessageCh chan common.ServerMessage
 	ClientMessages  []common.ClientMessage
 	DesktopName     []byte
 	Height          uint16

@@ -1,7 +1,7 @@
 {
     "version": "0.2.0",
     "configurations": [
-        {
+          {
             "name": "Launch Server Test",
             "type": "go",
             "request": "launch",
@@ -70,25 +70,16 @@
             "showLog": true
         },
         {
-            "name": "Launch fbs server",
+            "name": "Launch fbs player",
             "type": "go",
             "request": "launch",
-            "mode": "debug",
+            "mode": "test",
             "remotePath": "",
             "port": 2345,
-            "host": "127.0.0.1",
-            "program": "${workspaceRoot}/server/",
-            "osx": {
-                "env": {
-                    //"GOPATH": "${env.HOME}/Dropbox/go"
-                }
-            },
-            "windows": {
-                "env": {
-                    //"GOPATH": "${env.USERPROFILE}\\Dropbox\\go"
-                }
-            },
-            "args": [],
+            "program": "${workspaceRoot}/player",
+            "args": [
+                "-test.v"
+            ],
             "showLog": true
         }
     ]

@@ -171,7 +171,11 @@ func (c *ServerConn) handle() error {
 	//var wg sync.WaitGroup
 
 	//defer c.Close()
-
+	defer func() {
+		c.Listeners.Consume(&common.RfbSegment{
+			SegmentType: common.SegmentConnectionClosed,
+		})
+	}()
 	//create a map of all message types
 	clientMessages := make(map[common.ClientMessageType]common.ClientMessage)
 	for _, m := range c.cfg.ClientMessages {
@@ -180,21 +184,21 @@ func (c *ServerConn) handle() error {
 	//wg.Add(2)
 
 	// server
-	go func() error {
-		//defer wg.Done()
-		for {
-			select {
-			case msg := <-c.cfg.ServerMessageCh:
-				logger.Debugf("%v", msg)
-				// if err = msg.Write(c); err != nil {
-				// 	return err
-				// }
-			case <-c.quit:
-				c.Close()
-				return nil
-			}
-		}
-	}()
+	// go func() error {
+	// 	//defer wg.Done()
+	// 	for {
+	// 		select {
+	// 		case msg := <-c.cfg.ServerMessageCh:
+	// 			logger.Debugf("%v", msg)
+	// 			// if err = msg.Write(c); err != nil {
+	// 			// 	return err
+	// 			// }
+	// 		case <-c.quit:
+	// 			c.Close()
+	// 			return nil
+	// 		}
+	// 	}
+	// }()
 
 	// client
 	//go func() error {

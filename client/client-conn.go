@@ -495,6 +495,9 @@ func (c *ClientConn) mainLoop() {
 
 	defer func() {
 		logger.Warn("ClientConn.MainLoop: exiting!")
+		c.Listeners.Consume(&common.RfbSegment{
+			SegmentType: common.SegmentConnectionClosed,
+		})
 	}()
 
 	for {

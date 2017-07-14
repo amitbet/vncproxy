@@ -68,6 +68,12 @@ func (h *ServerMessageHandler) sendFbsMessage() {
 		logger.Error("TestServer.NewConnHandler: Error unknown message type: ", messageType)
 		return
 	}
+	timeSinceStart := int(time.Now().UnixNano()/int64(time.Millisecond)) - h.startTime
+	timeToSleep := fbs.currentTimestamp - timeSinceStart
+	if timeToSleep > 0 {
+		time.Sleep(time.Duration(timeToSleep) * time.Millisecond)
+	}
+
 	err = msg.CopyTo(fbs, h.Conn, fbs)
 	if err != nil {
 		logger.Error("TestServer.NewConnHandler: Error in reading FBS segment: ", err)

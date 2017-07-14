@@ -13,7 +13,7 @@ import (
 type FbsReader struct {
 	reader           io.Reader
 	buffer           bytes.Buffer
-	currentTimestamp uint32
+	currentTimestamp int
 	pixelFormat      *common.PixelFormat
 	encodings        []common.Encoding
 }
@@ -26,7 +26,7 @@ func (fbs *FbsReader) Read(p []byte) (n int, err error) {
 			return 0, err
 		}
 		fbs.buffer.Write(seg.bytes)
-		fbs.currentTimestamp = seg.timestamp
+		fbs.currentTimestamp = int(seg.timestamp)
 	}
 	return fbs.buffer.Read(p)
 }

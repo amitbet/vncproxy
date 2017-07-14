@@ -102,9 +102,7 @@ func (fbm *FramebufferUpdateMessage) Read(c common.IClientConn, r *common.RfbRea
 				logger.Errorf("unsupported encoding type: %d, %s", encodingTypeInt, encType)
 				return nil, fmt.Errorf("unsupported encoding type: %d, %s", encodingTypeInt, encType)
 			}
-
 		}
-
 	}
 
 	return &FramebufferUpdateMessage{rects}, nil

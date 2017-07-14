@@ -1,6 +1,8 @@
 package encodings
 
 import (
+	"bytes"
+	"io"
 	"vncproxy/common"
 )
 
@@ -9,12 +11,15 @@ import (
 // See RFC 6143 Section 7.7.1
 type RawEncoding struct {
 	//Colors []Color
+	bytes []byte
 }
 
 func (*RawEncoding) Type() int32 {
 	return 0
 }
-
+func (z *RawEncoding) WriteTo(w io.Writer) (n int, err error) {
+	return w.Write(z.bytes)
+}
 func (*RawEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.Encoding, error) {
 	//conn := &DataSource{conn: conn.c, PixelFormat: conn.PixelFormat}
 	//conn := common.RfbReadHelper{Reader:r}
@@ -27,10 +32,11 @@ func (*RawEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r
 	// }
 
 	//colors := make([]vnc.Color, int(rect.Height)*int(rect.Width))
-
+	bytes := &bytes.Buffer{}
 	for y := uint16(0); y < rect.Height; y++ {
 		for x := uint16(0); x < rect.Width; x++ {
-			if _, err := r.ReadBytes(bytesPerPixel); err != nil {
+			if bts, err := r.ReadBytes(bytesPerPixel); err != nil {
+				StoreBytes(bytes, bts)
 				return nil, err
 			}
 
@@ -54,5 +60,5 @@ func (*RawEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r
 		}
 	}
 
-	return &RawEncoding{}, nil
+	return &RawEncoding{bytes.Bytes()}, nil
 }

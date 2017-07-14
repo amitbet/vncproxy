@@ -1,23 +1,36 @@
 package player
 
 import (
+	"encoding/binary"
 	"log"
 	"testing"
 	"time"
+	"vncproxy/client"
 	"vncproxy/common"
 	"vncproxy/encodings"
 	"vncproxy/logger"
 	"vncproxy/server"
-	"encoding/binary"
 )
 
 type ServerMessageHandler struct {
-	Conn         *server.ServerConn
-	Fbs          *FbsReader
-	firstSegDone bool
-	startTime    int
+	Conn             *server.ServerConn
+	Fbs              *FbsReader
+	serverMessageMap map[uint8]common.ServerMessage
+	firstSegDone     bool
+	startTime        int
 }
 
+func NewServerMessageHandler(conn *server.ServerConn, r *FbsReader) *ServerMessageHandler {
+	h := &ServerMessageHandler{Conn: conn, Fbs: r}
+	cm := client.BellMessage(0)
+	h.serverMessageMap = make(map[uint8]common.ServerMessage)
+	h.serverMessageMap[0] = &client.FramebufferUpdateMessage{}
+	h.serverMessageMap[1] = &client.SetColorMapEntriesMessage{}
+	h.serverMessageMap[2] = &cm
+	h.serverMessageMap[3] = &client.ServerCutTextMessage{}
+
+	return h
+}
 func (handler *ServerMessageHandler) Consume(seg *common.RfbSegment) error {
 
 	switch seg.SegmentType {
@@ -40,29 +53,27 @@ func (handler *ServerMessageHandler) Consume(seg *common.RfbSegment) error {
 
 func (h *ServerMessageHandler) sendFbsMessage() {
 	var messageType uint8
+	//messages := make(map[uint8]common.ServerMessage)
 	fbs := h.Fbs
 	//conn := h.Conn
-	binary.Read(fbs,binary.BigEndian,&messageType)
-	bytes := messages[messageType].Read(fbs)
-	h.Conn.Write(bytes)
-
-	//seg, err := fbs.ReadSegment()
-	//
-	//now := int(time.Now().UnixNano() / int64(time.Millisecond))
-	//if err != nil {
-	//	logger.Error("TestServer.NewConnHandler: Error in reading FBS segment: ", err)
-	//	return
-	//}
-	//timeSinceStart := now - h.startTime
-	//
-	//timeToWait := timeSinceStart - int(seg.timestamp)
-	//
-	//if timeToWait > 0 {
-	//	time.Sleep(time.Duration(timeToWait) * time.Millisecond)
-	//}
-	//fmt.Printf("bytes: %v", seg.bytes)
-	//conn.Write(seg.bytes)
-}	
+	err := binary.Read(fbs, binary.BigEndian, &messageType)
+	if err != nil {
+		logger.Error("TestServer.NewConnHandler: Error in reading FBS segment: ", err)
+		return
+	}
+	//common.IClientConn{}
+	binary.Write(h.Conn, binary.BigEndian, messageType)
+	msg := h.serverMessageMap[messageType]
+	if msg == nil {
+		logger.Error("TestServer.NewConnHandler: Error unknown message type: ", messageType)
+		return
+	}
+	err = msg.CopyTo(fbs, h.Conn, fbs)
+	if err != nil {
+		logger.Error("TestServer.NewConnHandler: Error in reading FBS segment: ", err)
+		return
+	}
+}
 
 func loadFbsFile(filename string, conn *server.ServerConn) (*FbsReader, error) {
 	fbs, err := NewFbsReader(filename)
@@ -109,7 +120,7 @@ func TestServer(t *testing.T) {
 			logger.Error("TestServer.NewConnHandler: Error in loading FBS: ", err)
 			return err
 		}
-		conn.Listeners.AddListener(&ServerMessageHandler{conn, fbs, false, 0})
+		conn.Listeners.AddListener(NewServerMessageHandler(conn, fbs))
 		return nil
 	}
 

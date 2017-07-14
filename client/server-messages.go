@@ -9,6 +9,7 @@ import (
 	"vncproxy/common"
 	"vncproxy/encodings"
 	"vncproxy/logger"
+	listeners "vncproxy/tee-listeners"
 )
 
 // FramebufferUpdateMessage consists of a sequence of rectangles of
@@ -27,6 +28,14 @@ func (m *FramebufferUpdateMessage) String() string {
 
 func (*FramebufferUpdateMessage) Type() uint8 {
 	return 0
+}
+
+func (fbm *FramebufferUpdateMessage) CopyTo(r io.Reader, w io.Writer, c common.IClientConn) error {
+	reader := common.NewRfbReadHelper(r)
+	writeTo := &listeners.WriteTo{w, "FramebufferUpdateMessage.CopyTo"}
+	reader.Listeners.AddListener(writeTo)
+	_, err := fbm.Read(c, reader)
+	return err
 }
 
 func (fbm *FramebufferUpdateMessage) Read(c common.IClientConn, r *common.RfbReadHelper) (common.ServerMessage, error) {
@@ -112,6 +121,13 @@ type SetColorMapEntriesMessage struct {
 	Colors     []common.Color
 }
 
+func (fbm *SetColorMapEntriesMessage) CopyTo(r io.Reader, w io.Writer, c common.IClientConn) error {
+	reader := &common.RfbReadHelper{Reader: r}
+	writeTo := &listeners.WriteTo{w, "SetColorMapEntriesMessage.CopyTo"}
+	reader.Listeners.AddListener(writeTo)
+	_, err := fbm.Read(c, reader)
+	return err
+}
 func (m *SetColorMapEntriesMessage) String() string {
 	return fmt.Sprintf("SetColorMapEntriesMessage (type=%d) first:%d colors: %v: ", m.Type(), m.FirstColor, m.Colors)
 }
@@ -165,6 +181,9 @@ func (*SetColorMapEntriesMessage) Read(c common.IClientConn, r *common.RfbReadHe
 // See RFC 6143 Section 7.6.3
 type BellMessage byte
 
+func (fbm *BellMessage) CopyTo(r io.Reader, w io.Writer, c common.IClientConn) error {
+	return nil
+}
 func (m *BellMessage) String() string {
 	return fmt.Sprintf("BellMessage (type=%d)", m.Type())
 }
@@ -184,6 +203,13 @@ type ServerCutTextMessage struct {
 	Text string
 }
 
+func (fbm *ServerCutTextMessage) CopyTo(r io.Reader, w io.Writer, c common.IClientConn) error {
+	reader := &common.RfbReadHelper{Reader: r}
+	writeTo := &listeners.WriteTo{w, "ServerCutTextMessage.CopyTo"}
+	reader.Listeners.AddListener(writeTo)
+	_, err := fbm.Read(c, reader)
+	return err
+}
 func (m *ServerCutTextMessage) String() string {
 	return fmt.Sprintf("ServerCutTextMessage (type=%d)", m.Type())
 }

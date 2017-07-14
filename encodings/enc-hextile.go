@@ -1,6 +1,7 @@
 package encodings
 
 import (
+	"io"
 	"vncproxy/common"
 	"vncproxy/logger"
 )
@@ -15,13 +16,22 @@ const (
 
 type HextileEncoding struct {
 	//Colors []Color
+	bytes []byte
 }
 
 func (z *HextileEncoding) Type() int32 {
 	return 5
 }
+func (z *HextileEncoding) WriteTo(w io.Writer) (n int, err error) {
+	return w.Write(z.bytes)
+}
 func (z *HextileEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.Encoding, error) {
 	bytesPerPixel := int(pixelFmt.BPP) / 8
+
+	r.StartByteCollection()
+	defer func() {
+		z.bytes = r.EndByteCollection()
+	}()
 
 	for ty := rect.Y; ty < rect.Y+rect.Height; ty += 16 {
 		th := 16

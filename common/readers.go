@@ -1,6 +1,7 @@
 package common
 
 import (
+	"bytes"
 	"encoding/binary"
 	"io"
 	"vncproxy/logger"
@@ -18,6 +19,14 @@ const (
 	SegmentConnectionClosed
 )
 
+// type ListenerType int
+
+// const (
+// 	ListenerTypeRawBytes ListenerType = iota
+// 	ListenerTypeParsedBytes
+// 	ListenerTypeClientMessages
+// )
+
 type SegmentType int
 
 func (seg SegmentType) String() string {
@@ -34,7 +43,10 @@ func (seg SegmentType) String() string {
 		return "SegmentFullyParsedServerMessage"
 	case SegmentServerInitMessage:
 		return "SegmentServerInitMessage"
+	case SegmentConnectionClosed:
+		return "SegmentConnectionClosed"
 	}
+
 	return ""
 }
 
@@ -51,7 +63,22 @@ type SegmentConsumer interface {
 
 type RfbReadHelper struct {
 	io.Reader
-	Listeners *MultiListener
+	Listeners  *MultiListener
+	savedBytes *bytes.Buffer
+}
+
+func NewRfbReadHelper(r io.Reader) *RfbReadHelper {
+	return &RfbReadHelper{Reader: r, Listeners: &MultiListener{}}
+}
+
+func (r *RfbReadHelper) StartByteCollection() {
+	r.savedBytes = &bytes.Buffer{}
+}
+
+func (r *RfbReadHelper) EndByteCollection() []byte {
+	bts := r.savedBytes.Bytes()
+	r.savedBytes = nil
+	return bts
 }
 
 func (r *RfbReadHelper) ReadDiscrete(p []byte) (int, error) {
@@ -78,6 +105,14 @@ func (r *RfbReadHelper) Read(p []byte) (n int, err error) {
 	if err != nil {
 		return 0, err
 	}
+	//if saving up our bytes, write them into the predefined buffer
+	if r.savedBytes != nil {
+		_, err := r.savedBytes.Write(p)
+		if err != nil {
+			logger.Warn("RfbReadHelper.Read: failed to collect bytes in mem buffer:", err)
+		}
+	}
+
 	//write the bytes to the Listener for further processing
 	seg := &RfbSegment{Bytes: p, SegmentType: SegmentBytes}
 	err = r.Listeners.Consume(seg)

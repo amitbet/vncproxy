@@ -1,25 +1,28 @@
 package player
 
 import (
+	"bytes"
 	"encoding/binary"
 	"io"
 	"os"
 	"vncproxy/common"
+	"vncproxy/encodings"
 	"vncproxy/logger"
-	"bytes"
 )
 
 type FbsReader struct {
-	reader io.Reader
-	buffer bytes.Buffer
+	reader           io.Reader
+	buffer           bytes.Buffer
 	currentTimestamp uint32
+	pixelFormat      *common.PixelFormat
+	encodings        []common.Encoding
 }
 
 func (fbs *FbsReader) Read(p []byte) (n int, err error) {
 	if fbs.buffer.Len() < len(p) {
 		seg, err := fbs.ReadSegment()
 		if err != nil {
-			logger.Error("FBSReader.Read: error reading FBSsegment: ",err)
+			logger.Error("FBSReader.Read: error reading FBSsegment: ", err)
 			return 0, err
 		}
 		fbs.buffer.Write(seg.bytes)
@@ -28,6 +31,10 @@ func (fbs *FbsReader) Read(p []byte) (n int, err error) {
 	return fbs.buffer.Read(p)
 }
 
+func (fbs *FbsReader) CurrentPixelFormat() *common.PixelFormat { return fbs.pixelFormat }
+func (fbs *FbsReader) CurrentColorMap() *common.ColorMap       { return &common.ColorMap{} }
+func (fbs *FbsReader) Encodings() []common.Encoding            { return fbs.encodings }
+
 func NewFbsReader(fbsFile string) (*FbsReader, error) {
 
 	reader, err := os.OpenFile(fbsFile, os.O_RDONLY, 0644)
@@ -35,7 +42,20 @@ func NewFbsReader(fbsFile string) (*FbsReader, error) {
 		logger.Error("NewFbsReader: can't open fbs file: ", fbsFile)
 		return nil, err
 	}
-	return &FbsReader{reader: reader}, nil
+	return &FbsReader{reader: reader,
+		encodings: []common.Encoding{
+			&encodings.CopyRectEncoding{},
+			&encodings.ZLibEncoding{},
+			&encodings.ZRLEEncoding{},
+			&encodings.CoRREEncoding{},
+			&encodings.HextileEncoding{},
+			&encodings.TightEncoding{},
+			&encodings.TightPngEncoding{},
+			&encodings.RawEncoding{},
+			&encodings.RREEncoding{},
+		},
+	}, nil
+
 }
 
 func (fbs *FbsReader) ReadStartSession() (*common.ServerInit, error) {
@@ -96,6 +116,7 @@ func (fbs *FbsReader) ReadStartSession() (*common.ServerInit, error) {
 	//read padding
 	bytes = make([]byte, 3)
 	fbs.Read(bytes)
+	fbs.pixelFormat = pixelFormat
 
 	//read desktop name
 	var desknameLen uint32

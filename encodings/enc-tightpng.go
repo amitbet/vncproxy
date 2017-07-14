@@ -2,17 +2,27 @@ package encodings
 
 import (
 	"fmt"
+	"io"
 	"vncproxy/common"
 	"vncproxy/logger"
 )
 
 type TightPngEncoding struct {
+	bytes []byte
+}
+
+func (z *TightPngEncoding) WriteTo(w io.Writer) (n int, err error) {
+	return w.Write(z.bytes)
 }
 
 func (*TightPngEncoding) Type() int32 { return int32(common.EncTightPng) }
 
 func (t *TightPngEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.Encoding, error) {
 	bytesPixel := calcTightBytePerPixel(pixelFmt)
+	r.StartByteCollection()
+	defer func() {
+		t.bytes = r.EndByteCollection()
+	}()
 
 	//var subencoding uint8
 	compctl, err := r.ReadUint8()

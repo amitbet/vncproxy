@@ -14,10 +14,17 @@ but the code is already working (see main, proxy_test & player_test)**
 ## Usage
 **Some very usable cmdline executables are Coming Soon...**
 
-For now code usage samples can be seen by looking at:
-* main.go (fbs recorder vnc client)
+Code samples can be found by looking at:
+* main.go (fbs recording vnc client) 
+    * Connects, records to FBS file
+    * Programmed to quit after 10 seconds
 * proxy/proxy_test.go (vnc proxy with recording)
-* player/player_test.go (vnc replaye server)
+    * Listens to both Tcp and WS ports
+    * Proxies connections to a hard-coded localhost vnc server
+    * Records session to an FBS file
+* player/player_test.go (vnc replay server)
+    * Listens to Tcp & WS ports
+    * Replays a hard-coded FBS file in normal speed to all connecting vnc clients
 
 ## **Architecture**
 

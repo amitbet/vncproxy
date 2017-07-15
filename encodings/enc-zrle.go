@@ -8,7 +8,6 @@ import (
 )
 
 type ZRLEEncoding struct {
-	//Colors []Color
 	bytes []byte
 }
 
@@ -21,9 +20,7 @@ func (z *ZRLEEncoding) WriteTo(w io.Writer) (n int, err error) {
 }
 
 func (z *ZRLEEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.Encoding, error) {
-	//conn := common.RfbReadHelper{Reader: r}
-	//conn := &DataSource{conn: conn.c, PixelFormat: conn.PixelFormat}
-	//bytesPerPixel := c.PixelFormat.BPP / 8
+
 	bytes := &bytes.Buffer{}
 	len, err := r.ReadUint32()
 	if err != nil {

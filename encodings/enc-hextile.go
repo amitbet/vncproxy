@@ -47,16 +47,14 @@ func (z *HextileEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectan
 
 			//handle Hextile Subrect(tx, ty, tw, th):
 			subencoding, err := r.ReadUint8()
-			//logger.Debugf("hextile reader tile: (%d,%d) subenc=%d\n", ty, tx, subencoding)
+		
 			if err != nil {
 				logger.Errorf("HextileEncoding.Read: error in hextile reader: %v", err)
 				return nil, err
 			}
 
 			if (subencoding & HextileRaw) != 0 {
-				//ReadRawRect(c, rect, r)
 				r.ReadBytes(tw * th * bytesPerPixel)
-				//logger.Debug("hextile reader: HextileRaw\n")
 				continue
 			}
 			if (subencoding & HextileBackgroundSpecified) != 0 {
@@ -78,16 +76,9 @@ func (z *HextileEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectan
 			if (subencoding & HextileSubrectsColoured) != 0 {
 				bufsize += int(nSubrects) * int(bytesPerPixel)
 			}
-			//byte[] buf = new byte[bufsize];
 			r.ReadBytes(bufsize)
 		}
 	}
 
-	// len, _ := readUint32(c.c)
-	// _, err := readBytes(c.c, int(len))
-
-	// if err != nil {
-	// 	return nil, err
-	// }
 	return z, nil
 }

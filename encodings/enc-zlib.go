@@ -8,7 +8,6 @@ import (
 )
 
 type ZLibEncoding struct {
-	//Colors []Color
 	bytes []byte
 }
 

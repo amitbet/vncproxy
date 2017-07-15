@@ -134,12 +134,6 @@ func TestServer(t *testing.T) {
 	go server.WsServe(url, cfg)
 	go server.TcpServe(":5904", cfg)
 
-	// fbs, err := loadFbsFile("/Users/amitbet/vncRec/recording.rbs", cfg)
-	// if err != nil {
-	// 	logger.Error("TestServer.NewConnHandler: Error in loading FBS: ", err)
-	// 	return
-	// }
-
 	// Process messages coming in on the ClientMessage channel.
 
 	for {

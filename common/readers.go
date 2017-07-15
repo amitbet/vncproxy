@@ -19,14 +19,6 @@ const (
 	SegmentConnectionClosed
 )
 
-// type ListenerType int
-
-// const (
-// 	ListenerTypeRawBytes ListenerType = iota
-// 	ListenerTypeParsedBytes
-// 	ListenerTypeClientMessages
-// )
-
 type SegmentType int
 
 func (seg SegmentType) String() string {
@@ -190,7 +182,6 @@ func (r *RfbReadHelper) ReadTightData(dataSize int) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	//byte[] zlibData = new byte[zlibDataLen];
-	//rfb.readFully(zlibData);
+
 	return r.ReadBytes(zlibDataLen)
 }

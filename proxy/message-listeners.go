@@ -36,36 +36,3 @@ func (cc *ClientUpdater) Consume(seg *common.RfbSegment) error {
 	}
 	return nil
 }
-
-type ServerUpdater struct {
-	conn *server.ServerConn
-	Name string
-}
-
-// Consume receives vnc-client-bound messages (Server messages) and updates the server part of the proxy
-func (p *ServerUpdater) Consume(seg *common.RfbSegment) error {
-
-	logger.Debugf("ServerUpdater.Consume ("+p.Name+"): got segment type=%s bytes: %v", seg.SegmentType, seg.Bytes)
-	switch seg.SegmentType {
-	case common.SegmentMessageSeparator:
-	case common.SegmentRectSeparator:
-	case common.SegmentBytes:
-		// _, err := p.Writer.Write(seg.Bytes)
-		// if (err != nil) {
-		// 	logger.Errorf("WriteTo.Consume ("+p.Name+" SegmentBytes): problem writing to port: %s", err)
-		// }
-		// return err
-	case common.SegmentFullyParsedClientMessage:
-
-		// clientMsg := seg.Message.(common.ClientMessage)
-		// logger.Debugf("WriteTo.Consume ("+p.Name+"): got ClientMessage type=%s", clientMsg.Type())
-		// err := clientMsg.Write(p.Writer)
-		// if err != nil {
-		// 	logger.Errorf("WriteTo.Consume ("+p.Name+" SegmentFullyParsedClientMessage): problem writing to port: %s", err)
-		// }
-		// return err
-	default:
-		//return errors.New("WriteTo.Consume: undefined RfbSegment type")
-	}
-	return nil
-}

@@ -232,15 +232,6 @@ func (*ServerCutTextMessage) Read(conn common.IClientConn, r *common.RfbReadHelp
 	if err != nil {
 		return nil, err
 	}
-	//var textLength uint32
-	// if err := binary.Read(r, binary.BigEndian, &textLength); err != nil {
-	// 	return nil, err
-	// }
-
-	// textBytes := make([]uint8, textLength)
-	// if err := binary.Read(r, binary.BigEndian, &textBytes); err != nil {
-	// 	return nil, err
-	// }
 
 	return &ServerCutTextMessage{string(textBytes)}, nil
 }

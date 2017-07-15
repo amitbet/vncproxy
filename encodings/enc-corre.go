@@ -10,7 +10,6 @@ type CoRREEncoding struct {
 	numSubRects     uint32
 	backgroundColor []byte
 	subRectData     []byte
-	//Colors []Color
 }
 
 func (z *CoRREEncoding) Type() int32 {

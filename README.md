@@ -25,7 +25,7 @@ Currently client messages are used to determine the correct pixel format, since 
 
 Tracking the bytes that are read from the actual vnc-server is made simple by using the RfbReadHelper (implements io.Reader) which sends the bytes to the listeners, this negates the need for manually keeping track of each byte read in order to write it into the recorder.
 
-Encoding implementations do not decode pixel information, since this is not required for the proxy implementation.
+RFB Encoding-reader implementations do not decode pixel information, since this is not required for the proxy implementation.
 
 
 This listener system was chosen over direct use of channels, since it allows the listening side to decide whether or not it wants to run in parallel, in contrast having channels inside the server/client objects which require you to create go routines (this creates problems when using go's native websocket implementation)

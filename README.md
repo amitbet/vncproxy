@@ -11,6 +11,14 @@ An RFB proxy, written in go that can save and replay FBS files
 but the code is already working (see main, proxy_test & player_test)**
 - tested on tight encoding with: tightvnc (client+server), noVnc(web client), chickenOfTheVnc(client), vineVnc(server), tigerVnc(client)
 
+## Usage
+**Some very usable cmdline executables are Coming Soon...**
+
+For now code usage samples can be seen by looking at:
+* main.go (fbs recorder vnc client)
+* proxy/proxy_test.go (vnc proxy with recording)
+* player/player_test.go (vnc replaye server)
+
 ## **Architecture**
 
 ![Image of Arch](https://github.com/amitbet/vncproxy/blob/master/architecture/proxy-arch.png?raw=true)

@@ -19,9 +19,11 @@ but the code is already working (see server_test, proxy_test & player_test)
 Communication to vnc-server & vnc-client are done in the RFB binary protocol in the standard ways.
 Internal communication inside the proxy is done by listeners (a pub-sub system) that provide a stream of bytes, parsed by delimiters which provide information about RFB message start & type / rectangle start / communication closed, etc.
 This method allows for minimal delays in transfer, while retaining the ability to buffer and manipulate any part of the protocol.
+
 For the client messages which are smaller, we send fully parsed messages going trough the same listener system.
 Currently client messages are used to determine the correct pixel format, since the client can change it by sending a SetPixelFormatMessage.
-Tracking the bytes that are read from the actual vnc-server is made simple by using the RfbReadHelper (implements io.Reader) which sends the bytes to the listeners, this helps avoid keeping track of each byte read, in order to write it into the recorder.
+
+Tracking the bytes that are read from the actual vnc-server is made simple by using the RfbReadHelper (implements io.Reader) which sends the bytes to the listeners, this negates the need for manually keeping track of each byte read in order to write it into the recorder.
 
 Encoding implementations do not decode pixel information, since this is not required for the proxy implementation.
 

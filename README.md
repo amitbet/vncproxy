@@ -34,4 +34,4 @@ The Recorder uses channels and runs in parallel to avoid hampering the communica
 
 ![Image of Arch](https://github.com/amitbet/vncproxy/blob/master/architecture/player-arch.png?raw=true)
 
-The code is based on several implementations of go-vnc including the original one by **Mitchell Hashimoto**, and the very active fork which belongs to **Vasiliy Tolstov**.
+The code is based on several implementations of go-vnc including the original one by *Mitchell Hashimoto*, and the recentely active fork which belongs to *Vasiliy Tolstov*.

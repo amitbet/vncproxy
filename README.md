@@ -12,7 +12,6 @@ but the code is already working (see main, proxy_test & player_test)
 - tested on tight encoding with: tightvnc (client+server), noVnc(web client), chickenOfTheVnc(client), vineVnc(server), tigerVnc(client)
 
 ## **Architecture**
-**Proxy**
 
 ![Image of Arch](https://github.com/amitbet/vncproxy/blob/master/architecture/proxy-arch.png?raw=true)
 
@@ -32,7 +31,6 @@ This listener system was chosen over direct use of channels, since it allows the
 
 The Recorder uses channels and runs in parallel to avoid hampering the communication through the proxy.
 
-**Player**
 
 ![Image of Arch](https://github.com/amitbet/vncproxy/blob/master/architecture/player-arch.png?raw=true)
 

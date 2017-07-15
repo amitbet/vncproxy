@@ -27,6 +27,7 @@ Encoding implementations do not decode pixel information, since this is not requ
 
 
 This listener system was chosen over direct use of channels, since it allows the listening side to decide whether or not it wants to run in parallel, in contrast having channels inside the server/client objects which require you to create go routines (this creates problems when using go's native websocket implementation)
+
 The Recorder uses channels and runs in parallel to avoid hampering the communication through the proxy.
 
 **Player**

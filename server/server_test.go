@@ -22,8 +22,6 @@ func TestServer(t *testing.T) {
 		SecurityHandlers: []SecurityHandler{&ServerAuthVNC{"Ch_#!T@8"}},
 		Encodings:        []common.Encoding{&encodings.RawEncoding{}, &encodings.TightEncoding{}, &encodings.CopyRectEncoding{}},
 		PixelFormat:      common.NewPixelFormat(32),
-		//ClientMessageCh:  chServer,
-		ServerMessageCh: chClient,
 		ClientMessages:  DefaultClientMessages,
 		DesktopName:     []byte("workDesk"),
 		Height:          uint16(768),

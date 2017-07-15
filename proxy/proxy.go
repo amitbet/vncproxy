@@ -36,12 +36,11 @@ func (vp *VncProxy) createClientConnection(targetServerUrl string) (*client.Clie
 	var noauth client.ClientAuthNone
 	authArr := []client.ClientAuth{&client.PasswordAuth{Password: vp.targetServersPassword}, &noauth}
 
-	vncSrvMessagesChan := make(chan common.ServerMessage)
+	//vncSrvMessagesChan := make(chan common.ServerMessage)
 
 	clientConn, err := client.NewClientConn(nc,
 		&client.ClientConfig{
 			Auth:            authArr,
-			ServerMessageCh: vncSrvMessagesChan,
 			Exclusive:       true,
 		})
 	//clientConn.Listener = split
@@ -145,7 +144,6 @@ func (vp *VncProxy) StartListening() {
 		SecurityHandlers: secHandlers,
 		Encodings:        []common.Encoding{&encodings.RawEncoding{}, &encodings.TightEncoding{}, &encodings.CopyRectEncoding{}},
 		PixelFormat:      common.NewPixelFormat(32),
-		//ServerMessageCh:  chClient,
 		ClientMessages:  server.DefaultClientMessages,
 		DesktopName:     []byte("workDesk"),
 		Height:          uint16(768),

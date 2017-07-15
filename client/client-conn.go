@@ -68,13 +68,6 @@ type ClientConfig struct {
 	// disconnected when a connection is established to the VNC server.
 	Exclusive bool
 
-	// The channel that all messages received from the server will be
-	// sent on. If the channel blocks, then the goroutine reading data
-	// from the VNC server may block indefinitely. It is up to the user
-	// of the library to ensure that this channel is properly read.
-	// If this is not set, then all messages will be discarded.
-	ServerMessageCh chan<- common.ServerMessage
-
 	// A slice of supported messages that can be read from the server.
 	// This only needs to contain NEW server messages, and doesn't
 	// need to explicitly contain the RFC-required messages.
@@ -523,12 +516,6 @@ func (c *ClientConn) mainLoop() {
 			break
 		}
 		logger.Debugf("ClientConn.MainLoop: read & parsed ServerMessage:%d, %s", parsedMsg.Type(), parsedMsg)
-
-		if c.config.ServerMessageCh == nil {
-			continue
-		}
-
-		c.config.ServerMessageCh <- parsedMsg
 	}
 }
 

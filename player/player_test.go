@@ -2,7 +2,6 @@ package player
 
 import (
 	"encoding/binary"
-	"log"
 	"testing"
 	"time"
 	"vncproxy/client"
@@ -104,20 +103,17 @@ func loadFbsFile(filename string, conn *server.ServerConn) (*FbsReader, error) {
 func TestServer(t *testing.T) {
 
 	//chServer := make(chan common.ClientMessage)
-	chClient := make(chan common.ServerMessage)
+	//chClient := make(chan common.ServerMessage)
 
 	cfg := &server.ServerConfig{
 		//SecurityHandlers: []SecurityHandler{&ServerAuthNone{}, &ServerAuthVNC{}},
 		SecurityHandlers: []server.SecurityHandler{&server.ServerAuthNone{}},
 		Encodings:        []common.Encoding{&encodings.RawEncoding{}, &encodings.TightEncoding{}, &encodings.CopyRectEncoding{}},
 		PixelFormat:      common.NewPixelFormat(32),
-		//ClientMessageCh:  chServer,
-		//ServerMessageCh: chClient,
-		ClientMessages: server.DefaultClientMessages,
-		DesktopName:    []byte("workDesk"),
-		Height:         uint16(768),
-		Width:          uint16(1024),
-		//NewConnHandler:  serverNewConnHandler,
+		ClientMessages:   server.DefaultClientMessages,
+		DesktopName:      []byte("workDesk"),
+		Height:           uint16(768),
+		Width:            uint16(1024),
 	}
 
 	cfg.NewConnHandler = func(cfg *server.ServerConfig, conn *server.ServerConn) error {
@@ -134,15 +130,8 @@ func TestServer(t *testing.T) {
 	go server.WsServe(url, cfg)
 	go server.TcpServe(":5904", cfg)
 
-	// Process messages coming in on the ClientMessage channel.
-
 	for {
-		msg := <-chClient
-		switch msg.Type() {
-		default:
-			log.Printf("Received message type:%v msg:%v\n", msg.Type(), msg)
-
-		}
+		time.Sleep(time.Minute)
 	}
 
 }

@@ -21,16 +21,15 @@ func main() {
 	var noauth client.ClientAuthNone
 	authArr := []client.ClientAuth{&client.PasswordAuth{Password: "Ch_#!T@8"}, &noauth}
 
-	vncSrvMessagesChan := make(chan common.ServerMessage)
+	//vncSrvMessagesChan := make(chan common.ServerMessage)
 
 	//rec := listeners.NewRecorder("c:/Users/betzalel/recording.rbs")
 	rec := listeners.NewRecorder("/Users/amitbet/vncRec/recording.rbs")
 
 	clientConn, err := client.NewClientConn(nc,
 		&client.ClientConfig{
-			Auth:            authArr,
-			ServerMessageCh: vncSrvMessagesChan,
-			Exclusive:       true,
+			Auth: authArr,
+			Exclusive: true,
 		})
 
 	clientConn.Listeners.AddListener(rec)
@@ -91,8 +90,11 @@ func main() {
 	}()
 
 	//go func() {
-	for msg := range vncSrvMessagesChan {
-		logger.Debugf("message type: %d, content: %v\n", msg.Type(), msg)
+	// for msg := range vncSrvMessagesChan {
+	// 	logger.Debugf("message type: %d, content: %v\n", msg.Type(), msg)
+	// }
+	for {
+		time.Sleep(time.Minute)
 	}
 	//}()
 

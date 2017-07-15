@@ -1,0 +1,35 @@
+@startuml
+Title Vncproxy Architecture
+State VncProxy{
+State ClientPart
+State ServerPart
+state FbsRecorder
+}
+State VncClient
+State VncServer 
+
+VncClient -right-> ServerPart
+ServerPart -left-> VncClient
+VncServer -left-> ClientPart
+ClientPart -right-> VncServer
+ClientPart -left-> ServerPart
+ServerPart -right-> ClientPart
+
+ClientPart -down-> FbsRecorder
+ServerPart -down-> FbsRecorder
+@enduml
+
+
+@startuml
+Title Vncproxy Fbs Player
+State VncProxy{
+
+State ServerPart
+state FbsPlayer
+}
+State VncClient
+VncClient -left-> ServerPart
+ServerPart -right-> VncClient
+
+FbsPlayer -up-> ServerPart
+@enduml

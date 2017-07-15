@@ -12,8 +12,7 @@ import (
 type ServerConn struct {
 	c   io.ReadWriter
 	cfg *ServerConfig
-	//br       *bufio.Reader
-	//bw       *bufio.Writer
+	
 	protocol string
 	m        sync.Mutex
 	// If the pixel format uses a color map, then this is the color
@@ -96,25 +95,10 @@ func (c *ServerConn) SetProtoVersion(pv string) {
 	c.protocol = pv
 }
 
-// func (c *ServerConn) Flush() error {
-// 	//	c.m.Lock()
-// 	//	defer c.m.Unlock()
-// 	return c.bw.Flush()
-// }
-
 func (c *ServerConn) Close() error {
 	return c.c.(io.ReadWriteCloser).Close()
 }
 
-/*
-func (c *ServerConn) Input() chan *ServerMessage {
-	return c.cfg.ServerMessageCh
-}
-
-func (c *ServerConn) Output() chan *ClientMessage {
-	return c.cfg.ClientMessageCh
-}
-*/
 func (c *ServerConn) Read(buf []byte) (int, error) {
 	return c.c.Read(buf)
 }
@@ -157,8 +141,6 @@ func (c *ServerConn) Height() uint16 {
 func (c *ServerConn) Protocol() string {
 	return c.protocol
 }
-
-// TODO send desktopsize pseudo encoding
 func (c *ServerConn) SetWidth(w uint16) {
 	c.fbWidth = w
 }
@@ -167,42 +149,19 @@ func (c *ServerConn) SetHeight(h uint16) {
 }
 
 func (c *ServerConn) handle() error {
-	//var err error
-	//var wg sync.WaitGroup
-
-	//defer c.Close()
+	
 	defer func() {
 		c.Listeners.Consume(&common.RfbSegment{
 			SegmentType: common.SegmentConnectionClosed,
 		})
 	}()
+
 	//create a map of all message types
 	clientMessages := make(map[common.ClientMessageType]common.ClientMessage)
 	for _, m := range c.cfg.ClientMessages {
 		clientMessages[m.Type()] = m
 	}
-	//wg.Add(2)
 
-	// server
-	// go func() error {
-	// 	//defer wg.Done()
-	// 	for {
-	// 		select {
-	// 		case msg := <-c.cfg.ServerMessageCh:
-	// 			logger.Debugf("%v", msg)
-	// 			// if err = msg.Write(c); err != nil {
-	// 			// 	return err
-	// 			// }
-	// 		case <-c.quit:
-	// 			c.Close()
-	// 			return nil
-	// 		}
-	// 	}
-	// }()
-
-	// client
-	//go func() error {
-	//defer wg.Done()
 	for {
 		select {
 		case <-c.quit:
@@ -238,9 +197,8 @@ func (c *ServerConn) handle() error {
 				return err
 			}
 
-			//logger.Debugf("ServerConn.Handle got client message, type=%s", parsedMsg.Type())
 			logger.Debugf("ServerConn.Handle got ClientMessage: %s, %v", parsedMsg.Type(), parsedMsg)
-			//parsedMsg.Type()
+
 			seg := &common.RfbSegment{
 				SegmentType: common.SegmentFullyParsedClientMessage,
 				Message:     parsedMsg,
@@ -250,12 +208,6 @@ func (c *ServerConn) handle() error {
 				logger.Errorf("ServerConn.Handle: listener consume err %s", err.Error())
 				return err
 			}
-
-			//c.cfg.ClientMessageCh <- parsedMsg
 		}
 	}
-	//}()
-
-	//wg.Wait()
-	//return nil
 }

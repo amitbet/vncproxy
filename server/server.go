@@ -17,62 +17,32 @@ var DefaultClientMessages = []common.ClientMessage{
 	&ClientCutText{},
 }
 
-//var _ ServerConn = (*ServerConn)(nil)
-
-// ServerMessage represents a Client-to-Server RFB message type.
-// type ServerMessageType uint8
-
-// //go:generate stringer -type=ServerMessageType
-
-// // Client-to-Server message types.
-// const (
-// 	FramebufferUpdateMsgType ServerMessageType = iota
-// 	SetColorMapEntriesMsgType
-// 	BellMsgType
-// 	ServerCutTextMsgType
-// )
-
 // FramebufferUpdate holds a FramebufferUpdate wire format message.
 type FramebufferUpdate struct {
-	_       [1]byte             // pad
+	_       [1]byte             // padding
 	NumRect uint16              // number-of-rectangles
 	Rects   []*common.Rectangle // rectangles
 }
 
-// func (*FramebufferUpdate) Type() ServerMessageType {
-// 	return FramebufferUpdateMsgType
-// }
-
 type ServerHandler func(*ServerConfig, *ServerConn) error
 
 type ServerConfig struct {
-	//VersionHandler    ServerHandler
-	//SecurityHandler   ServerHandler
 	SecurityHandlers []SecurityHandler
-	//ClientInitHandler ServerHandler
-	//ServerInitHandler ServerHandler
-	Encodings   []common.Encoding
-	PixelFormat *common.PixelFormat
-	ColorMap    *common.ColorMap
-	//ClientMessageCh chan common.ClientMessage
-	//ServerMessageCh chan common.ServerMessage
-	ClientMessages  []common.ClientMessage
-	DesktopName     []byte
-	Height          uint16
-	Width           uint16
-	UseDummySession bool
+	Encodings        []common.Encoding
+	PixelFormat      *common.PixelFormat
+	ColorMap         *common.ColorMap
+	ClientMessages   []common.ClientMessage
+	DesktopName      []byte
+	Height           uint16
+	Width            uint16
+	UseDummySession  bool
+
 	//handler to allow for registering for messages, this can't be a channel
 	//because of the websockets handler function which will kill the connection on exit if conn.handle() is run on another thread
 	NewConnHandler ServerHandler
 }
 
 func wsHandlerFunc(ws io.ReadWriter, cfg *ServerConfig, sessionId string) {
-	// header := ws.Request().Header
-	// url := ws.Request().URL
-	// //stam := header.Get("Origin")
-	// logger.Debugf("header: %v\nurl: %v", header, url)
-	// io.Copy(ws, ws)
-
 	err := attachNewServerConn(ws, cfg, sessionId)
 	if err != nil {
 		log.Fatalf("Error attaching new connection. %v", err)
@@ -80,7 +50,6 @@ func wsHandlerFunc(ws io.ReadWriter, cfg *ServerConfig, sessionId string) {
 }
 
 func WsServe(url string, cfg *ServerConfig) error {
-	//server := WsServer1{cfg}
 	server := WsServer{cfg}
 	server.Listen(url, WsHandler(wsHandlerFunc))
 	return nil
@@ -97,9 +66,6 @@ func TcpServe(url string, cfg *ServerConfig) error {
 			return err
 		}
 		go attachNewServerConn(c, cfg, "dummySession")
-		// if err != nil {
-		// 	return err
-		// }
 	}
 	return nil
 }

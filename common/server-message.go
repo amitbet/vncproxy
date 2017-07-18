@@ -23,6 +23,7 @@ const (
 	SetColourMapEntries
 	Bell
 	ServerCutText
+	ServerFence = 248
 )
 
 func (typ ServerMessageType) String() string {

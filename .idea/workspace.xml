@@ -80,11 +80,9 @@
       <file leaf-file-name="fbs-reader.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/player/fbs-reader.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
+            <state relative-caret-position="165">
               <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-              <folding>
-                <element signature="e#16#126#0" expanded="true" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -92,19 +90,11 @@
       <file leaf-file-name="player_test.go" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/player/player_test.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="372">
-              <caret line="45" column="36" lean-forward="true" selection-start-line="45" selection-start-column="36" selection-end-line="45" selection-end-column="36" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="multiListener.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/common/multiListener.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="75">
+              <caret line="5" column="10" lean-forward="false" selection-start-line="5" selection-start-column="10" selection-end-line="5" selection-end-column="10" />
+              <folding>
+                <element signature="n#!!block;n#loadFbsFile#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -132,11 +122,14 @@
       <file leaf-file-name="proxy.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/proxy/proxy.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2130">
-              <caret line="154" column="0" lean-forward="false" selection-start-line="154" selection-start-column="0" selection-end-line="154" selection-end-column="0" />
+            <state relative-caret-position="345">
+              <caret line="180" column="0" lean-forward="true" selection-start-line="180" selection-start-column="0" selection-end-line="180" selection-end-column="0" />
               <folding>
+                <element signature="n#!!block;n#createClientConnection#0" expanded="false" />
+                <element signature="n#!!block;n#getTargetServerFromSession#0" expanded="false" />
+                <element signature="n#!!block;n#newServerConnHandler#0" expanded="false" />
+                <element signature="n#!!block;n#StartListening#0" expanded="false" />
                 <marker date="1500386875000" expanded="false" signature="22:26" ph="..." />
-                <marker date="1500386875000" expanded="true" signature="4939:5453" ph="{...}" />
                 <marker date="1500386875000" expanded="true" signature="5091:5092" ph="{...}" />
                 <marker date="1500386875000" expanded="true" signature="5091:5096" ph="{...}" />
               </folding>
@@ -144,16 +137,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="write-to.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tee-listeners/write-to.go">
+      <file leaf-file-name="proxy_test.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/proxy/proxy_test.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="34" column="12" lean-forward="false" selection-start-line="34" selection-start-column="12" selection-end-line="34" selection-end-column="12" />
-              <folding>
-                <marker date="1500088058000" expanded="false" signature="26:30" ph="..." />
-                <marker date="1500088058000" expanded="true" signature="189:257" ph="{...}" />
-                <marker date="1500088058000" expanded="true" signature="1040:1041" ph="{...}" />
-              </folding>
+            <state relative-caret-position="315">
+              <caret line="21" column="5" lean-forward="true" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -245,6 +234,7 @@
         <option value="$PROJECT_DIR$/server/server-conn.go" />
         <option value="$PROJECT_DIR$/server/ws-server-go.go" />
         <option value="$PROJECT_DIR$/player/fbs-reader.go" />
+        <option value="$PROJECT_DIR$/player/FBSPlayListener.go" />
         <option value="$PROJECT_DIR$/player/player_test.go" />
       </list>
     </option>
@@ -454,6 +444,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vncproxy" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vncproxy" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="proxy" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1072,7 +1076,7 @@
       <workItem from="1499416701375" duration="1802000" />
       <workItem from="1499522471716" duration="431000" />
       <workItem from="1499965517741" duration="5709000" />
-      <workItem from="1500411167182" duration="560000" />
+      <workItem from="1500411167182" duration="1498000" />
     </task>
     <servers />
   </component>
@@ -1109,7 +1113,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="63915000" />
+    <option name="totallyTimeSpent" value="64853000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1130,7 +1134,7 @@
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35068494" sideWeight="0.31260097" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13972603" sideWeight="0.31260097" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32956383" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30136988" sideWeight="0.49676898" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32876712" sideWeight="0.4676898" order="10" side_tool="false" content_ui="tabs" />
@@ -1290,24 +1294,14 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/player/player_test.go</url>
-          <line>77</line>
+          <line>13</line>
           <option name="timeStamp" value="133" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/player/player_test.go</url>
-          <line>81</line>
-          <option name="timeStamp" value="134" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/player/player_test.go</url>
-          <line>45</line>
-          <option name="timeStamp" value="135" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="136" />
+      <option name="time" value="137" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="GoApplicationRunConfiguration">
@@ -1323,14 +1317,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/client/client-conn.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="27" column="27" lean-forward="true" selection-start-line="27" selection-start-column="27" selection-end-line="27" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/security.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1512,13 +1498,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/proxy/proxy_test.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="15" column="43" lean-forward="true" selection-start-line="15" selection-start-column="43" selection-end-line="15" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/main.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="414">
@@ -1597,19 +1576,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/proxy/proxy.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2130">
-          <caret line="154" column="0" lean-forward="false" selection-start-line="154" selection-start-column="0" selection-end-line="154" selection-end-column="0" />
-          <folding>
-            <marker date="1500386875000" expanded="false" signature="22:26" ph="..." />
-            <marker date="1500386875000" expanded="true" signature="4939:5453" ph="{...}" />
-            <marker date="1500386875000" expanded="true" signature="5091:5092" ph="{...}" />
-            <marker date="1500386875000" expanded="true" signature="5091:5096" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tee-listeners/write-to.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="450">
@@ -1670,21 +1636,53 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/proxy/proxy.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="180" column="0" lean-forward="true" selection-start-line="180" selection-start-column="0" selection-end-line="180" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!block;n#createClientConnection#0" expanded="false" />
+            <element signature="n#!!block;n#getTargetServerFromSession#0" expanded="false" />
+            <element signature="n#!!block;n#newServerConnHandler#0" expanded="false" />
+            <element signature="n#!!block;n#StartListening#0" expanded="false" />
+            <marker date="1500386875000" expanded="false" signature="22:26" ph="..." />
+            <marker date="1500386875000" expanded="true" signature="5091:5092" ph="{...}" />
+            <marker date="1500386875000" expanded="true" signature="5091:5096" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/proxy/proxy_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="5" lean-forward="true" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/player/fbs-reader.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
+        <state relative-caret-position="165">
           <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding>
-            <element signature="e#16#126#0" expanded="true" />
-          </folding>
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/player/FBSPlayListener.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="0" lean-forward="true" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/player/player_test.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="372">
-          <caret line="45" column="36" lean-forward="true" selection-start-line="45" selection-start-column="36" selection-end-line="45" selection-end-column="36" />
-          <folding />
+        <state relative-caret-position="75">
+          <caret line="5" column="10" lean-forward="false" selection-start-line="5" selection-start-column="10" selection-end-line="5" selection-end-column="10" />
+          <folding>
+            <element signature="n#!!block;n#loadFbsFile#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>

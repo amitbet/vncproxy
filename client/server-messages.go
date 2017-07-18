@@ -19,9 +19,13 @@ type FramebufferUpdateMessage struct {
 }
 
 func (m *FramebufferUpdateMessage) String() string {
-	str := fmt.Sprintf("FramebufferUpdateMessage (type=%d) Rects: \n", m.Type())
+	str := fmt.Sprintf("FramebufferUpdateMessage (type=%d) Rects: ", m.Type())
 	for _, rect := range m.Rectangles {
 		str += rect.String() + "\n"
+		//if this is the last rect, break the loop
+		if rect.Enc.Type() == int32(common.EncLastRectPseudo) {
+			break
+		}
 	}
 	return str
 }
@@ -60,11 +64,11 @@ func (fbm *FramebufferUpdateMessage) Read(c common.IClientConn, r *common.RfbRea
 	// We must always support the raw encoding
 	rawEnc := new(encodings.RawEncoding)
 	encMap[rawEnc.Type()] = rawEnc
-	logger.Debugf("numrects= %d", numRects)
+	logger.Infof("FrameBufferUpdateMessage.Read: numrects= %d", numRects)
 
 	rects := make([]common.Rectangle, numRects)
 	for i := uint16(0); i < numRects; i++ {
-		logger.Debugf("###############rect################: %d\n", i)
+		logger.Debugf("FrameBufferUpdateMessage.Read: ###############rect################: %d", i)
 
 		var encodingTypeInt int32
 		r.SendRectSeparator(-1)
@@ -87,7 +91,7 @@ func (fbm *FramebufferUpdateMessage) Read(c common.IClientConn, r *common.RfbRea
 
 		encType := common.EncodingType(encodingTypeInt)
 
-		logger.Debugf("rect hdr data: enctype=%s, data: %s\n", encType, string(jBytes))
+		logger.Infof("FrameBufferUpdateMessage.Read: rect# %d, rect hdr data: enctype=%s, data: %s", i, encType, string(jBytes))
 		enc, supported := encMap[encodingTypeInt]
 		if supported {
 			var err error
@@ -98,9 +102,14 @@ func (fbm *FramebufferUpdateMessage) Read(c common.IClientConn, r *common.RfbRea
 		} else {
 			if strings.Contains(encType.String(), "Pseudo") {
 				rect.Enc = &encodings.PseudoEncoding{encodingTypeInt}
+
+				//if this is the last rect, break the for loop
+				if rect.Enc.Type() == int32(common.EncLastRectPseudo) {
+					break
+				}
 			} else {
-				logger.Errorf("unsupported encoding type: %d, %s", encodingTypeInt, encType)
-				return nil, fmt.Errorf("unsupported encoding type: %d, %s", encodingTypeInt, encType)
+				logger.Errorf("FrameBufferUpdateMessage.Read: unsupported encoding type: %d, %s", encodingTypeInt, encType)
+				return nil, fmt.Errorf("FrameBufferUpdateMessage.Read: unsupported encoding type: %d, %s", encodingTypeInt, encType)
 			}
 		}
 	}
@@ -192,6 +201,42 @@ func (*BellMessage) Type() uint8 {
 
 func (*BellMessage) Read(common.IClientConn, *common.RfbReadHelper) (common.ServerMessage, error) {
 	return new(BellMessage), nil
+}
+
+type ServerFenceMessage byte
+
+func (fbm *ServerFenceMessage) CopyTo(r io.Reader, w io.Writer, c common.IClientConn) error {
+	return nil
+}
+func (m *ServerFenceMessage) String() string {
+	return fmt.Sprintf("ServerFenceMessage (type=%d)", m.Type())
+}
+
+func (*ServerFenceMessage) Type() uint8 {
+	return uint8(common.ServerFence)
+}
+
+func (sf *ServerFenceMessage) Read(info common.IClientConn, c *common.RfbReadHelper) (common.ServerMessage, error) {
+	bytes := make([]byte, 3)
+	c.Read(bytes)
+	if _, err := c.Read(bytes); err != nil {
+		return nil, err
+	}
+	var flags uint32
+	if err := binary.Read(c, binary.BigEndian, &flags); err != nil {
+		return nil, err
+	}
+
+	var length uint8
+	if err := binary.Read(c, binary.BigEndian, &length); err != nil {
+		return nil, err
+	}
+
+	bytes = make([]byte, length)
+	if _, err := c.Read(bytes); err != nil {
+		return nil, err
+	}
+	return sf, nil
 }
 
 // ServerCutTextMessage indicates the server has new text in the cut buffer.

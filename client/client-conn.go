@@ -506,7 +506,7 @@ func (c *ClientConn) mainLoop() {
 			// Unsupported message type! Bad!
 			break
 		}
-		logger.Debugf("ClientConn.MainLoop: got ServerMessage:%s", common.ServerMessageType(messageType))
+		logger.Infof("ClientConn.MainLoop: got ServerMessage:%s", common.ServerMessageType(messageType))
 		reader.SendMessageSeparator(common.ServerMessageType(messageType))
 		reader.PublishBytes([]byte{byte(messageType)})
 

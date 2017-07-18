@@ -27,7 +27,7 @@ func getNowMillisec() int {
 	return int(time.Now().UnixNano() / int64(time.Millisecond))
 }
 
-func NewRecorder(saveFilePath string) *Recorder {
+func NewRecorder(saveFilePath string) (*Recorder, error) {
 	//delete file if it exists
 	if _, err := os.Stat(saveFilePath); err == nil {
 		os.Remove(saveFilePath)
@@ -41,7 +41,7 @@ func NewRecorder(saveFilePath string) *Recorder {
 	rec.writer, err = os.OpenFile(saveFilePath, os.O_RDWR|os.O_CREATE, 0755)
 	if err != nil {
 		logger.Errorf("unable to open file: %s, error: %v", saveFilePath, err)
-		return nil
+		return nil, err
 	}
 
 	//buffer the channel so we don't halt the proxying flow for slow writes when under pressure
@@ -53,7 +53,7 @@ func NewRecorder(saveFilePath string) *Recorder {
 		}
 	}()
 
-	return &rec
+	return &rec, nil
 }
 
 const versionMsg_3_3 = "RFB 003.003\n"
@@ -114,8 +114,8 @@ func (r *Recorder) Consume(data *common.RfbSegment) error {
 	//using async writes so if chan buffer overflows, proxy will not be affected
 	select {
 	case r.segmentChan <- data:
-	default:
-		logger.Error("error: recorder queue is full")
+		// default:
+		// 	logger.Error("error: recorder queue is full")
 	}
 
 	return nil

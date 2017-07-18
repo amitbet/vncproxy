@@ -71,8 +71,8 @@ func (enct EncodingType) String() string {
 		return "EncJPEGQualityLevelPseudo2"
 	case EncJPEGQualityLevelPseudo1:
 		return "EncJPEGQualityLevelPseudo1"
-	case EncColorPseudo:
-		return "EncColorPseudo"
+	case EncCursorPseudo:
+		return "EncCursorPseudo"
 	case EncDesktopSizePseudo:
 		return "EncDesktopSizePseudo"
 	case EncLastRectPseudo:
@@ -164,7 +164,7 @@ const (
 	EncJPEGQualityLevelPseudo3       EncodingType = -30
 	EncJPEGQualityLevelPseudo2       EncodingType = -31
 	EncJPEGQualityLevelPseudo1       EncodingType = -32
-	EncColorPseudo                   EncodingType = -239
+	EncCursorPseudo                  EncodingType = -239
 	EncDesktopSizePseudo             EncodingType = -223
 	EncLastRectPseudo                EncodingType = -224
 	EncCompressionLevel10            EncodingType = -247

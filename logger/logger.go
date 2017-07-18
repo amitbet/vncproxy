@@ -14,39 +14,109 @@ type Logger interface {
 	Fatal(v ...interface{})
 	Fatalf(format string, v ...interface{})
 }
+type LogLevel int
+
+const (
+	LogLevelDebug LogLevel = iota
+	LogLevelInfo
+	LogLevelWarn
+	LogLevelError
+	LogLevelFatal
+)
+
+type SimpleLogger struct {
+	level LogLevel
+}
+
+func (sl *SimpleLogger) Debug(v ...interface{}) {
+	if sl.level <= LogLevelDebug {
+		fmt.Print("[Debug] ")
+		fmt.Println(v...)
+	}
+}
+func (sl *SimpleLogger) Debugf(format string, v ...interface{}) {
+	if sl.level <= LogLevelDebug {
+		fmt.Printf("[Debug] "+format+"\n", v...)
+	}
+}
+func (sl *SimpleLogger) Info(v ...interface{}) {
+	if sl.level <= LogLevelInfo {
+		fmt.Print("[Info] ")
+		fmt.Println(v...)
+	}
+}
+func (sl *SimpleLogger) Infof(format string, v ...interface{}) {
+	if sl.level <= LogLevelInfo {
+		fmt.Printf("[Info] "+format+"\n", v...)
+	}
+}
+func (sl *SimpleLogger) Warn(v ...interface{}) {
+	if sl.level <= LogLevelWarn {
+		fmt.Print("[Warn] ")
+		fmt.Println(v...)
+	}
+}
+func (sl *SimpleLogger) Warnf(format string, v ...interface{}) {
+	if sl.level <= LogLevelWarn {
+		fmt.Printf("[Warn] "+format+"\n", v...)
+	}
+}
+func (sl *SimpleLogger) Error(v ...interface{}) {
+	if sl.level <= LogLevelError {
+		fmt.Print("[Error] ")
+		fmt.Println(v...)
+	}
+}
+func (sl *SimpleLogger) Errorf(format string, v ...interface{}) {
+	if sl.level <= LogLevelError {
+		fmt.Printf("[Error] "+format+"\n", v...)
+	}
+}
+func (sl *SimpleLogger) Fatal(v ...interface{}) {
+	if sl.level <= LogLevelFatal {
+		fmt.Print("[Fatal] ")
+		fmt.Println(v...)
+	}
+}
+func (sl *SimpleLogger) Fatalf(format string, v ...interface{}) {
+	if sl.level <= LogLevelFatal {
+		fmt.Printf("[Fatal] "+format+"\n", v)
+	}
+}
+
+var simpleLogger = SimpleLogger{LogLevelInfo}
 
 func Debug(v ...interface{}) {
-	fmt.Print("[Debug] ")
-	fmt.Println(v...)
+	simpleLogger.Debug(v...)
 }
 func Debugf(format string, v ...interface{}) {
-	fmt.Printf("[Debug] "+format+"\n", v...)
+	simpleLogger.Debugf(format, v...)
 }
+
 func Info(v ...interface{}) {
-	fmt.Print("[Info] ")
-	fmt.Println(v...)
+	simpleLogger.Info(v...)
 }
 func Infof(format string, v ...interface{}) {
-	fmt.Printf("[Info] "+format+"\n", v...)
+	simpleLogger.Infof(format, v...)
 }
+
 func Warn(v ...interface{}) {
-	fmt.Print("[Warn] ")
-	fmt.Println(v...)
+	simpleLogger.Warn(v...)
 }
 func Warnf(format string, v ...interface{}) {
-	fmt.Printf("[Warn] "+format+"\n", v...)
+	simpleLogger.Warnf(format, v...)
 }
+
 func Error(v ...interface{}) {
-	fmt.Print("[Error] ")
-	fmt.Println(v...)
+	simpleLogger.Error(v...)
 }
 func Errorf(format string, v ...interface{}) {
-	fmt.Printf("[Error] "+format+"\n", v...)
+	simpleLogger.Errorf(format, v...)
 }
+
 func Fatal(v ...interface{}) {
-	fmt.Print("[Fatal] ")
-	fmt.Println(v...)
+	simpleLogger.Fatal(v...)
 }
 func Fatalf(format string, v ...interface{}) {
-	fmt.Printf("[Fatal] "+format+"\n", v)
+	simpleLogger.Fatalf(format, v...)
 }

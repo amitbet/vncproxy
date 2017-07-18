@@ -2,7 +2,6 @@ package common
 
 import (
 	"io"
-
 )
 
 type ClientMessageType uint8
@@ -11,13 +10,14 @@ type ClientMessageType uint8
 
 // Client-to-Server message types.
 const (
-	SetPixelFormatMsgType           ClientMessageType = iota
+	SetPixelFormatMsgType ClientMessageType = iota
 	_
 	SetEncodingsMsgType
 	FramebufferUpdateRequestMsgType
 	KeyEventMsgType
 	PointerEventMsgType
 	ClientCutTextMsgType
+	ClientFenceMsgType = 248
 )
 
 // Color represents a single color in a color map.
@@ -59,7 +59,7 @@ type ClientMessage interface {
 }
 
 func (cmt ClientMessageType) String() string {
-	switch  cmt {
+	switch cmt {
 	case SetPixelFormatMsgType:
 		return "SetPixelFormat"
 	case SetEncodingsMsgType:

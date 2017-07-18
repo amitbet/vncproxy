@@ -193,6 +193,40 @@ func (msg *PointerEvent) Write(c io.Writer) error {
 	return nil
 }
 
+type ClientFence struct {
+}
+
+func (*ClientFence) Type() common.ClientMessageType {
+	return common.ClientFenceMsgType
+}
+
+func (cf *ClientFence) Read(c io.Reader) (common.ClientMessage, error) {
+	bytes := make([]byte, 3)
+	c.Read(bytes)
+	if _, err := c.Read(bytes); err != nil {
+		return nil, err
+	}
+	var flags uint32
+	if err := binary.Read(c, binary.BigEndian, &flags); err != nil {
+		return nil, err
+	}
+
+	var length uint8
+	if err := binary.Read(c, binary.BigEndian, &length); err != nil {
+		return nil, err
+	}
+
+	bytes = make([]byte, length)
+	if _, err := c.Read(bytes); err != nil {
+		return nil, err
+	}
+	return cf, nil
+}
+
+func (msg *ClientFence) Write(c io.Writer) error {
+	panic("not implemented!")
+}
+
 // ClientCutText holds the wire format message, sans the text field.
 type ClientCutText struct {
 	_      [3]byte // padding

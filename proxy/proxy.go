@@ -40,8 +40,8 @@ func (vp *VncProxy) createClientConnection(targetServerUrl string) (*client.Clie
 
 	clientConn, err := client.NewClientConn(nc,
 		&client.ClientConfig{
-			Auth:            authArr,
-			Exclusive:       true,
+			Auth:      authArr,
+			Exclusive: true,
 		})
 	//clientConn.Listener = split
 
@@ -69,7 +69,12 @@ func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server
 
 	recFile := "recording" + strconv.FormatInt(time.Now().Unix(), 10) + ".rbs"
 	recPath := path.Join(vp.recordingDir, recFile)
-	rec := listeners.NewRecorder(recPath)
+	rec, err := listeners.NewRecorder(recPath)
+	if err != nil {
+		logger.Errorf("Proxy.newServerConnHandler can't open recorder save path: %s", recPath)
+		return err
+	}
+
 	session, err := vp.getTargetServerFromSession(sconn.SessionId)
 	if err != nil {
 		logger.Errorf("Proxy.newServerConnHandler can't get session: %d", sconn.SessionId)
@@ -113,13 +118,14 @@ func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server
 	encs := []common.Encoding{
 		&encodings.RawEncoding{},
 		&encodings.TightEncoding{},
+		&encodings.EncCursorPseudo{},
 		//encodings.TightPngEncoding{},
-		//encodings.RREEncoding{},
-		//encodings.ZLibEncoding{},
-		//encodings.ZRLEEncoding{},
-		//encodings.CopyRectEncoding{},
-		//encodings.CoRREEncoding{},
-		//encodings.HextileEncoding{},
+		&encodings.RREEncoding{},
+		&encodings.ZLibEncoding{},
+		&encodings.ZRLEEncoding{},
+		&encodings.CopyRectEncoding{},
+		&encodings.CoRREEncoding{},
+		&encodings.HextileEncoding{},
 	}
 	cconn.Encs = encs
 	//err = cconn.SetEncodings(encs)
@@ -144,12 +150,12 @@ func (vp *VncProxy) StartListening() {
 		SecurityHandlers: secHandlers,
 		Encodings:        []common.Encoding{&encodings.RawEncoding{}, &encodings.TightEncoding{}, &encodings.CopyRectEncoding{}},
 		PixelFormat:      common.NewPixelFormat(32),
-		ClientMessages:  server.DefaultClientMessages,
-		DesktopName:     []byte("workDesk"),
-		Height:          uint16(768),
-		Width:           uint16(1024),
-		NewConnHandler:  vp.newServerConnHandler,
-		UseDummySession: !vp.UsingSessions,
+		ClientMessages:   server.DefaultClientMessages,
+		DesktopName:      []byte("workDesk"),
+		Height:           uint16(768),
+		Width:            uint16(1024),
+		NewConnHandler:   vp.newServerConnHandler,
+		UseDummySession:  !vp.UsingSessions,
 		// func(cfg *server.ServerConfig, conn *server.ServerConn) error {
 		// 	vp.newServerConnHandler(cfg, conn)
 		// 	return nil

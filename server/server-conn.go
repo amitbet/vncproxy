@@ -12,7 +12,7 @@ import (
 type ServerConn struct {
 	c   io.ReadWriter
 	cfg *ServerConfig
-	
+
 	protocol string
 	m        sync.Mutex
 	// If the pixel format uses a color map, then this is the color
@@ -149,7 +149,7 @@ func (c *ServerConn) SetHeight(h uint16) {
 }
 
 func (c *ServerConn) handle() error {
-	
+
 	defer func() {
 		c.Listeners.Consume(&common.RfbSegment{
 			SegmentType: common.SegmentConnectionClosed,
@@ -197,7 +197,11 @@ func (c *ServerConn) handle() error {
 				return err
 			}
 
-			logger.Debugf("ServerConn.Handle got ClientMessage: %s, %v", parsedMsg.Type(), parsedMsg)
+			logger.Infof("ServerConn.Handle got ClientMessage: %s, %v", parsedMsg.Type(), parsedMsg)
+			//TODO: treat set encodings by allowing only supported encoding in proxy configurations
+			//// if parsedMsg.Type() == common.SetEncodingsMsgType{
+			//// 	c.cfg.Encodings
+			//// }
 
 			seg := &common.RfbSegment{
 				SegmentType: common.SegmentFullyParsedClientMessage,

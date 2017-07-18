@@ -23,12 +23,16 @@ func main() {
 
 	//vncSrvMessagesChan := make(chan common.ServerMessage)
 
-	//rec := listeners.NewRecorder("c:/Users/betzalel/recording.rbs")
-	rec := listeners.NewRecorder("/Users/amitbet/vncRec/recording.rbs")
+	rec, err := listeners.NewRecorder("c:/Users/betzalel/recording.rbs")
+	//rec, err := listeners.NewRecorder("/Users/amitbet/vncRec/recording.rbs")
+	if err != nil {
+		logger.Errorf("error creating recorder: %s", err)
+		return
+	}
 
 	clientConn, err := client.NewClientConn(nc,
 		&client.ClientConfig{
-			Auth: authArr,
+			Auth:      authArr,
 			Exclusive: true,
 		})
 
@@ -37,6 +41,7 @@ func main() {
 
 	if err != nil {
 		logger.Errorf("error creating client: %s", err)
+		return
 	}
 	// err = clientConn.FramebufferUpdateRequest(false, 0, 0, 1024, 768)
 	// if err != nil {

@@ -30,27 +30,6 @@ type Color struct {
 
 type ColorMap [256]Color
 
-type ServerConn interface {
-	io.ReadWriter
-	//ServerConn() io.ReadWriter
-	Protocol() string
-	CurrentPixelFormat() *PixelFormat
-	SetPixelFormat(*PixelFormat) error
-	//ColorMap() *ColorMap
-	SetColorMap(*ColorMap)
-	Encodings() []Encoding
-	SetEncodings([]EncodingType) error
-	Width() uint16
-	Height() uint16
-	SetWidth(uint16)
-	SetHeight(uint16)
-	DesktopName() string
-	SetDesktopName(string)
-	//Flush() error
-	SetProtoVersion(string)
-	// Write([]byte) (int, error)
-}
-
 // ClientMessage is the interface
 type ClientMessage interface {
 	Type() ClientMessageType

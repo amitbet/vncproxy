@@ -12,14 +12,14 @@ import (
 	listeners "vncproxy/tee-listeners"
 )
 
-// FramebufferUpdateMessage consists of a sequence of rectangles of
+// MsgFramebufferUpdate consists of a sequence of rectangles of
 // pixel data that the client should put into its framebuffer.
-type FramebufferUpdateMessage struct {
+type MsgFramebufferUpdate struct {
 	Rectangles []common.Rectangle
 }
 
-func (m *FramebufferUpdateMessage) String() string {
-	str := fmt.Sprintf("FramebufferUpdateMessage (type=%d) Rects: ", m.Type())
+func (m *MsgFramebufferUpdate) String() string {
+	str := fmt.Sprintf("MsgFramebufferUpdate (type=%d) Rects: ", m.Type())
 	for _, rect := range m.Rectangles {
 		str += rect.String() + "\n"
 		//if this is the last rect, break the loop
@@ -30,19 +30,19 @@ func (m *FramebufferUpdateMessage) String() string {
 	return str
 }
 
-func (*FramebufferUpdateMessage) Type() uint8 {
+func (*MsgFramebufferUpdate) Type() uint8 {
 	return 0
 }
 
-func (fbm *FramebufferUpdateMessage) CopyTo(r io.Reader, w io.Writer, c common.IClientConn) error {
+func (fbm *MsgFramebufferUpdate) CopyTo(r io.Reader, w io.Writer, c common.IClientConn) error {
 	reader := common.NewRfbReadHelper(r)
-	writeTo := &listeners.WriteTo{w, "FramebufferUpdateMessage.CopyTo"}
+	writeTo := &listeners.WriteTo{w, "MsgFramebufferUpdate.CopyTo"}
 	reader.Listeners.AddListener(writeTo)
 	_, err := fbm.Read(c, reader)
 	return err
 }
 
-func (fbm *FramebufferUpdateMessage) Read(c common.IClientConn, r *common.RfbReadHelper) (common.ServerMessage, error) {
+func (fbm *MsgFramebufferUpdate) Read(c common.IClientConn, r *common.RfbReadHelper) (common.ServerMessage, error) {
 
 	// Read off the padding
 	var padding [1]byte
@@ -56,7 +56,7 @@ func (fbm *FramebufferUpdateMessage) Read(c common.IClientConn, r *common.RfbRea
 	}
 
 	// Build the map of encodings supported
-	encMap := make(map[int32]common.Encoding)
+	encMap := make(map[int32]common.IEncoding)
 	for _, enc := range c.Encodings() {
 		encMap[enc.Type()] = enc
 	}
@@ -64,11 +64,11 @@ func (fbm *FramebufferUpdateMessage) Read(c common.IClientConn, r *common.RfbRea
 	// We must always support the raw encoding
 	rawEnc := new(encodings.RawEncoding)
 	encMap[rawEnc.Type()] = rawEnc
-	logger.Infof("FrameBufferUpdateMessage.Read: numrects= %d", numRects)
+	logger.Infof("MsgFramebufferUpdate.Read: numrects= %d", numRects)
 
 	rects := make([]common.Rectangle, numRects)
 	for i := uint16(0); i < numRects; i++ {
-		logger.Debugf("FrameBufferUpdateMessage.Read: ###############rect################: %d", i)
+		logger.Debugf("MsgFramebufferUpdate.Read: ###############rect################: %d", i)
 
 		var encodingTypeInt int32
 		r.SendRectSeparator(-1)
@@ -91,7 +91,7 @@ func (fbm *FramebufferUpdateMessage) Read(c common.IClientConn, r *common.RfbRea
 
 		encType := common.EncodingType(encodingTypeInt)
 
-		logger.Infof("FrameBufferUpdateMessage.Read: rect# %d, rect hdr data: enctype=%s, data: %s", i, encType, string(jBytes))
+		logger.Infof("MsgFramebufferUpdate.Read: rect# %d, rect hdr data: enctype=%s, data: %s", i, encType, string(jBytes))
 		enc, supported := encMap[encodingTypeInt]
 		if supported {
 			var err error
@@ -108,49 +108,49 @@ func (fbm *FramebufferUpdateMessage) Read(c common.IClientConn, r *common.RfbRea
 					break
 				}
 			} else {
-				logger.Errorf("FrameBufferUpdateMessage.Read: unsupported encoding type: %d, %s", encodingTypeInt, encType)
-				return nil, fmt.Errorf("FrameBufferUpdateMessage.Read: unsupported encoding type: %d, %s", encodingTypeInt, encType)
+				logger.Errorf("MsgFramebufferUpdate.Read: unsupported encoding type: %d, %s", encodingTypeInt, encType)
+				return nil, fmt.Errorf("MsgFramebufferUpdate.Read: unsupported encoding type: %d, %s", encodingTypeInt, encType)
 			}
 		}
 	}
 
-	return &FramebufferUpdateMessage{rects}, nil
+	return &MsgFramebufferUpdate{rects}, nil
 }
 
-// SetColorMapEntriesMessage is sent by the server to set values into
+// MsgSetColorMapEntries is sent by the server to set values into
 // the color map. This message will automatically update the color map
 // for the associated connection, but contains the color change data
 // if the consumer wants to read it.
 //
 // See RFC 6143 Section 7.6.2
-type SetColorMapEntriesMessage struct {
+type MsgSetColorMapEntries struct {
 	FirstColor uint16
 	Colors     []common.Color
 }
 
-func (fbm *SetColorMapEntriesMessage) CopyTo(r io.Reader, w io.Writer, c common.IClientConn) error {
+func (fbm *MsgSetColorMapEntries) CopyTo(r io.Reader, w io.Writer, c common.IClientConn) error {
 	reader := &common.RfbReadHelper{Reader: r}
-	writeTo := &listeners.WriteTo{w, "SetColorMapEntriesMessage.CopyTo"}
+	writeTo := &listeners.WriteTo{w, "MsgSetColorMapEntries.CopyTo"}
 	reader.Listeners.AddListener(writeTo)
 	_, err := fbm.Read(c, reader)
 	return err
 }
-func (m *SetColorMapEntriesMessage) String() string {
-	return fmt.Sprintf("SetColorMapEntriesMessage (type=%d) first:%d colors: %v: ", m.Type(), m.FirstColor, m.Colors)
+func (m *MsgSetColorMapEntries) String() string {
+	return fmt.Sprintf("MsgSetColorMapEntries (type=%d) first:%d colors: %v: ", m.Type(), m.FirstColor, m.Colors)
 }
 
-func (*SetColorMapEntriesMessage) Type() uint8 {
+func (*MsgSetColorMapEntries) Type() uint8 {
 	return 1
 }
 
-func (*SetColorMapEntriesMessage) Read(c common.IClientConn, r *common.RfbReadHelper) (common.ServerMessage, error) {
+func (*MsgSetColorMapEntries) Read(c common.IClientConn, r *common.RfbReadHelper) (common.ServerMessage, error) {
 	// Read off the padding
 	var padding [1]byte
 	if _, err := io.ReadFull(r, padding[:]); err != nil {
 		return nil, err
 	}
 
-	var result SetColorMapEntriesMessage
+	var result MsgSetColorMapEntries
 	if err := binary.Read(r, binary.BigEndian, &result.FirstColor); err != nil {
 		return nil, err
 	}
@@ -186,37 +186,37 @@ func (*SetColorMapEntriesMessage) Read(c common.IClientConn, r *common.RfbReadHe
 // Bell signals that an audible bell should be made on the client.
 //
 // See RFC 6143 Section 7.6.3
-type BellMessage byte
+type MsgBell byte
 
-func (fbm *BellMessage) CopyTo(r io.Reader, w io.Writer, c common.IClientConn) error {
+func (fbm *MsgBell) CopyTo(r io.Reader, w io.Writer, c common.IClientConn) error {
 	return nil
 }
-func (m *BellMessage) String() string {
-	return fmt.Sprintf("BellMessage (type=%d)", m.Type())
+func (m *MsgBell) String() string {
+	return fmt.Sprintf("MsgBell (type=%d)", m.Type())
 }
 
-func (*BellMessage) Type() uint8 {
+func (*MsgBell) Type() uint8 {
 	return 2
 }
 
-func (*BellMessage) Read(common.IClientConn, *common.RfbReadHelper) (common.ServerMessage, error) {
-	return new(BellMessage), nil
+func (*MsgBell) Read(common.IClientConn, *common.RfbReadHelper) (common.ServerMessage, error) {
+	return new(MsgBell), nil
 }
 
-type ServerFenceMessage byte
+type MsgServerFence byte
 
-func (fbm *ServerFenceMessage) CopyTo(r io.Reader, w io.Writer, c common.IClientConn) error {
+func (fbm *MsgServerFence) CopyTo(r io.Reader, w io.Writer, c common.IClientConn) error {
 	return nil
 }
-func (m *ServerFenceMessage) String() string {
-	return fmt.Sprintf("ServerFenceMessage (type=%d)", m.Type())
+func (m *MsgServerFence) String() string {
+	return fmt.Sprintf("MsgServerFence (type=%d)", m.Type())
 }
 
-func (*ServerFenceMessage) Type() uint8 {
+func (*MsgServerFence) Type() uint8 {
 	return uint8(common.ServerFence)
 }
 
-func (sf *ServerFenceMessage) Read(info common.IClientConn, c *common.RfbReadHelper) (common.ServerMessage, error) {
+func (sf *MsgServerFence) Read(info common.IClientConn, c *common.RfbReadHelper) (common.ServerMessage, error) {
 	bytes := make([]byte, 3)
 	c.Read(bytes)
 	if _, err := c.Read(bytes); err != nil {
@@ -239,29 +239,29 @@ func (sf *ServerFenceMessage) Read(info common.IClientConn, c *common.RfbReadHel
 	return sf, nil
 }
 
-// ServerCutTextMessage indicates the server has new text in the cut buffer.
+// MsgServerCutText indicates the server has new text in the cut buffer.
 //
 // See RFC 6143 Section 7.6.4
-type ServerCutTextMessage struct {
+type MsgServerCutText struct {
 	Text string
 }
 
-func (fbm *ServerCutTextMessage) CopyTo(r io.Reader, w io.Writer, c common.IClientConn) error {
+func (fbm *MsgServerCutText) CopyTo(r io.Reader, w io.Writer, c common.IClientConn) error {
 	reader := &common.RfbReadHelper{Reader: r}
-	writeTo := &listeners.WriteTo{w, "ServerCutTextMessage.CopyTo"}
+	writeTo := &listeners.WriteTo{w, "MsgServerCutText.CopyTo"}
 	reader.Listeners.AddListener(writeTo)
 	_, err := fbm.Read(c, reader)
 	return err
 }
-func (m *ServerCutTextMessage) String() string {
-	return fmt.Sprintf("ServerCutTextMessage (type=%d)", m.Type())
+func (m *MsgServerCutText) String() string {
+	return fmt.Sprintf("MsgServerCutText (type=%d)", m.Type())
 }
 
-func (*ServerCutTextMessage) Type() uint8 {
+func (*MsgServerCutText) Type() uint8 {
 	return 3
 }
 
-func (*ServerCutTextMessage) Read(conn common.IClientConn, r *common.RfbReadHelper) (common.ServerMessage, error) {
+func (*MsgServerCutText) Read(conn common.IClientConn, r *common.RfbReadHelper) (common.ServerMessage, error) {
 	//reader := common.RfbReadHelper{Reader: r}
 
 	// Read off the padding
@@ -278,5 +278,5 @@ func (*ServerCutTextMessage) Read(conn common.IClientConn, r *common.RfbReadHelp
 		return nil, err
 	}
 
-	return &ServerCutTextMessage{string(textBytes)}, nil
+	return &MsgServerCutText{string(textBytes)}, nil
 }

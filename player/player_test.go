@@ -1,7 +1,6 @@
 package player
 
 import (
-
 	"testing"
 	"time"
 	"vncproxy/common"
@@ -10,9 +9,7 @@ import (
 	"vncproxy/server"
 )
 
-
-
-func loadFbsFile(filename string, conn *server.ServerConn) (*FbsReader, error) {
+func connectFbsFile(filename string, conn *server.ServerConn) (*FbsReader, error) {
 	fbs, err := NewFbsReader(filename)
 	if err != nil {
 		logger.Error("failed to open fbs reader:", err)
@@ -37,10 +34,23 @@ func TestServer(t *testing.T) {
 	//chServer := make(chan common.ClientMessage)
 	//chClient := make(chan common.ServerMessage)
 
+	encs := []common.IEncoding{
+		&encodings.RawEncoding{},
+		&encodings.TightEncoding{},
+		&encodings.EncCursorPseudo{},
+		//encodings.TightPngEncoding{},
+		&encodings.RREEncoding{},
+		&encodings.ZLibEncoding{},
+		&encodings.ZRLEEncoding{},
+		&encodings.CopyRectEncoding{},
+		&encodings.CoRREEncoding{},
+		&encodings.HextileEncoding{},
+	}
+
 	cfg := &server.ServerConfig{
 		//SecurityHandlers: []SecurityHandler{&ServerAuthNone{}, &ServerAuthVNC{}},
 		SecurityHandlers: []server.SecurityHandler{&server.ServerAuthNone{}},
-		Encodings:        []common.Encoding{&encodings.RawEncoding{}, &encodings.TightEncoding{}, &encodings.CopyRectEncoding{}},
+		Encodings:        encs,
 		PixelFormat:      common.NewPixelFormat(32),
 		ClientMessages:   server.DefaultClientMessages,
 		DesktopName:      []byte("workDesk"),
@@ -51,7 +61,7 @@ func TestServer(t *testing.T) {
 	cfg.NewConnHandler = func(cfg *server.ServerConfig, conn *server.ServerConn) error {
 		//fbs, err := loadFbsFile("/Users/amitbet/Dropbox/recording.rbs", conn)
 		//fbs, err := loadFbsFile("/Users/amitbet/vncRec/recording.rbs", conn)
-		fbs, err := loadFbsFile("/Users/amitbet/vncRec/recording1500411789.rbs", conn)
+		fbs, err := connectFbsFile("/Users/amitbet/vncRec/recording1500503851.rbs", conn)
 
 		if err != nil {
 			logger.Error("TestServer.NewConnHandler: Error in loading FBS: ", err)

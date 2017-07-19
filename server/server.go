@@ -9,12 +9,12 @@ import (
 )
 
 var DefaultClientMessages = []common.ClientMessage{
-	&SetPixelFormat{},
-	&SetEncodings{},
-	&FramebufferUpdateRequest{},
-	&KeyEvent{},
-	&PointerEvent{},
-	&ClientCutText{},
+	&MsgSetPixelFormat{},
+	&MsgSetEncodings{},
+	&MsgFramebufferUpdateRequest{},
+	&MsgKeyEvent{},
+	&MsgPointerEvent{},
+	&MsgClientCutText{},
 }
 
 // FramebufferUpdate holds a FramebufferUpdate wire format message.
@@ -28,7 +28,7 @@ type ServerHandler func(*ServerConfig, *ServerConn) error
 
 type ServerConfig struct {
 	SecurityHandlers []SecurityHandler
-	Encodings        []common.Encoding
+	Encodings        []common.IEncoding
 	PixelFormat      *common.PixelFormat
 	ColorMap         *common.ColorMap
 	ClientMessages   []common.ClientMessage

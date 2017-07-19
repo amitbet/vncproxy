@@ -163,7 +163,7 @@ func (r *Recorder) HandleRfbSegment(data *common.RfbSegment) error {
 
 		switch clientMsg.Type() {
 		case common.SetPixelFormatMsgType:
-			clientMsg := data.Message.(*server.SetPixelFormat)
+			clientMsg := data.Message.(*server.MsgSetPixelFormat)
 			logger.Debugf("Recorder.HandleRfbSegment: client message %v", *clientMsg)
 			r.serverInitMessage.PixelFormat = clientMsg.PF
 		default:

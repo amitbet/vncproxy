@@ -6,13 +6,6 @@ import (
 	"vncproxy/common"
 )
 
-// SetPixelFormat holds the wire format message.
-type SetPixelFormat struct {
-	_  [3]byte            // padding
-	PF common.PixelFormat // pixel-format
-	_  [3]byte            // padding after pixel format
-}
-
 // Key represents a VNC key press.
 type Key uint32
 
@@ -21,11 +14,18 @@ type Key uint32
 // Keys is a slice of Key values.
 type Keys []Key
 
-func (*SetPixelFormat) Type() common.ClientMessageType {
+// MsgSetPixelFormat holds the wire format message.
+type MsgSetPixelFormat struct {
+	_  [3]byte            // padding
+	PF common.PixelFormat // pixel-format
+	_  [3]byte            // padding after pixel format
+}
+
+func (*MsgSetPixelFormat) Type() common.ClientMessageType {
 	return common.SetPixelFormatMsgType
 }
 
-func (msg *SetPixelFormat) Write(c io.Writer) error {
+func (msg *MsgSetPixelFormat) Write(c io.Writer) error {
 	if err := binary.Write(c, binary.BigEndian, msg.Type()); err != nil {
 		return err
 	}
@@ -43,27 +43,27 @@ func (msg *SetPixelFormat) Write(c io.Writer) error {
 	return nil
 }
 
-func (*SetPixelFormat) Read(c io.Reader) (common.ClientMessage, error) {
-	msg := SetPixelFormat{}
+func (*MsgSetPixelFormat) Read(c io.Reader) (common.ClientMessage, error) {
+	msg := MsgSetPixelFormat{}
 	if err := binary.Read(c, binary.BigEndian, &msg); err != nil {
 		return nil, err
 	}
 	return &msg, nil
 }
 
-// SetEncodings holds the wire format message, sans encoding-type field.
-type SetEncodings struct {
+// MsgSetEncodings holds the wire format message, sans encoding-type field.
+type MsgSetEncodings struct {
 	_         [1]byte // padding
 	EncNum    uint16  // number-of-encodings
 	Encodings []common.EncodingType
 }
 
-func (*SetEncodings) Type() common.ClientMessageType {
+func (*MsgSetEncodings) Type() common.ClientMessageType {
 	return common.SetEncodingsMsgType
 }
 
-func (*SetEncodings) Read(c io.Reader) (common.ClientMessage, error) {
-	msg := SetEncodings{}
+func (*MsgSetEncodings) Read(c io.Reader) (common.ClientMessage, error) {
+	msg := MsgSetEncodings{}
 	var pad [1]byte
 	if err := binary.Read(c, binary.BigEndian, &pad); err != nil {
 		return nil, err
@@ -79,11 +79,11 @@ func (*SetEncodings) Read(c io.Reader) (common.ClientMessage, error) {
 		}
 		msg.Encodings = append(msg.Encodings, enc)
 	}
-	c.(common.ServerConn).SetEncodings(msg.Encodings)
+	c.(common.IServerConn).SetEncodings(msg.Encodings)
 	return &msg, nil
 }
 
-func (msg *SetEncodings) Write(c io.Writer) error {
+func (msg *MsgSetEncodings) Write(c io.Writer) error {
 	if err := binary.Write(c, binary.BigEndian, msg.Type()); err != nil {
 		return err
 	}
@@ -107,26 +107,26 @@ func (msg *SetEncodings) Write(c io.Writer) error {
 	return nil
 }
 
-// FramebufferUpdateRequest holds the wire format message.
-type FramebufferUpdateRequest struct {
+// MsgFramebufferUpdateRequest holds the wire format message.
+type MsgFramebufferUpdateRequest struct {
 	Inc           uint8  // incremental
 	X, Y          uint16 // x-, y-position
 	Width, Height uint16 // width, height
 }
 
-func (*FramebufferUpdateRequest) Type() common.ClientMessageType {
+func (*MsgFramebufferUpdateRequest) Type() common.ClientMessageType {
 	return common.FramebufferUpdateRequestMsgType
 }
 
-func (*FramebufferUpdateRequest) Read(c io.Reader) (common.ClientMessage, error) {
-	msg := FramebufferUpdateRequest{}
+func (*MsgFramebufferUpdateRequest) Read(c io.Reader) (common.ClientMessage, error) {
+	msg := MsgFramebufferUpdateRequest{}
 	if err := binary.Read(c, binary.BigEndian, &msg); err != nil {
 		return nil, err
 	}
 	return &msg, nil
 }
 
-func (msg *FramebufferUpdateRequest) Write(c io.Writer) error {
+func (msg *MsgFramebufferUpdateRequest) Write(c io.Writer) error {
 	if err := binary.Write(c, binary.BigEndian, msg.Type()); err != nil {
 		return err
 	}
@@ -136,26 +136,26 @@ func (msg *FramebufferUpdateRequest) Write(c io.Writer) error {
 	return nil
 }
 
-// KeyEvent holds the wire format message.
-type KeyEvent struct {
+// MsgKeyEvent holds the wire format message.
+type MsgKeyEvent struct {
 	Down uint8   // down-flag
 	_    [2]byte // padding
 	Key  Key     // key
 }
 
-func (*KeyEvent) Type() common.ClientMessageType {
+func (*MsgKeyEvent) Type() common.ClientMessageType {
 	return common.KeyEventMsgType
 }
 
-func (*KeyEvent) Read(c io.Reader) (common.ClientMessage, error) {
-	msg := KeyEvent{}
+func (*MsgKeyEvent) Read(c io.Reader) (common.ClientMessage, error) {
+	msg := MsgKeyEvent{}
 	if err := binary.Read(c, binary.BigEndian, &msg); err != nil {
 		return nil, err
 	}
 	return &msg, nil
 }
 
-func (msg *KeyEvent) Write(c io.Writer) error {
+func (msg *MsgKeyEvent) Write(c io.Writer) error {
 	if err := binary.Write(c, binary.BigEndian, msg.Type()); err != nil {
 		return err
 	}
@@ -166,24 +166,24 @@ func (msg *KeyEvent) Write(c io.Writer) error {
 }
 
 // PointerEventMessage holds the wire format message.
-type PointerEvent struct {
+type MsgPointerEvent struct {
 	Mask uint8  // button-mask
 	X, Y uint16 // x-, y-position
 }
 
-func (*PointerEvent) Type() common.ClientMessageType {
+func (*MsgPointerEvent) Type() common.ClientMessageType {
 	return common.PointerEventMsgType
 }
 
-func (*PointerEvent) Read(c io.Reader) (common.ClientMessage, error) {
-	msg := PointerEvent{}
+func (*MsgPointerEvent) Read(c io.Reader) (common.ClientMessage, error) {
+	msg := MsgPointerEvent{}
 	if err := binary.Read(c, binary.BigEndian, &msg); err != nil {
 		return nil, err
 	}
 	return &msg, nil
 }
 
-func (msg *PointerEvent) Write(c io.Writer) error {
+func (msg *MsgPointerEvent) Write(c io.Writer) error {
 	if err := binary.Write(c, binary.BigEndian, msg.Type()); err != nil {
 		return err
 	}
@@ -193,14 +193,14 @@ func (msg *PointerEvent) Write(c io.Writer) error {
 	return nil
 }
 
-type ClientFence struct {
+type MsgClientFence struct {
 }
 
-func (*ClientFence) Type() common.ClientMessageType {
+func (*MsgClientFence) Type() common.ClientMessageType {
 	return common.ClientFenceMsgType
 }
 
-func (cf *ClientFence) Read(c io.Reader) (common.ClientMessage, error) {
+func (cf *MsgClientFence) Read(c io.Reader) (common.ClientMessage, error) {
 	bytes := make([]byte, 3)
 	c.Read(bytes)
 	if _, err := c.Read(bytes); err != nil {
@@ -223,23 +223,23 @@ func (cf *ClientFence) Read(c io.Reader) (common.ClientMessage, error) {
 	return cf, nil
 }
 
-func (msg *ClientFence) Write(c io.Writer) error {
+func (msg *MsgClientFence) Write(c io.Writer) error {
 	panic("not implemented!")
 }
 
-// ClientCutText holds the wire format message, sans the text field.
-type ClientCutText struct {
+// MsgClientCutText holds the wire format message, sans the text field.
+type MsgClientCutText struct {
 	_      [3]byte // padding
 	Length uint32  // length
 	Text   []byte
 }
 
-func (*ClientCutText) Type() common.ClientMessageType {
+func (*MsgClientCutText) Type() common.ClientMessageType {
 	return common.ClientCutTextMsgType
 }
 
-func (*ClientCutText) Read(c io.Reader) (common.ClientMessage, error) {
-	msg := ClientCutText{}
+func (*MsgClientCutText) Read(c io.Reader) (common.ClientMessage, error) {
+	msg := MsgClientCutText{}
 	var pad [3]byte
 	if err := binary.Read(c, binary.BigEndian, &pad); err != nil {
 		return nil, err
@@ -256,7 +256,7 @@ func (*ClientCutText) Read(c io.Reader) (common.ClientMessage, error) {
 	return &msg, nil
 }
 
-func (msg *ClientCutText) Write(c io.Writer) error {
+func (msg *MsgClientCutText) Write(c io.Writer) error {
 	if err := binary.Write(c, binary.BigEndian, msg.Type()); err != nil {
 		return err
 	}

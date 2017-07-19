@@ -1,18 +1,18 @@
 package client
 
 import (
-	"testing"
-	"net"
-	"time"
 	"bytes"
+	"net"
+	"testing"
+	"time"
 )
 
 type fakeNetConnection struct {
 	DataToSend []byte
-	Test *testing.T
+	Test       *testing.T
 	ExpectData []byte
-	Finished bool
-	Matched bool
+	Finished   bool
+	Matched    bool
 }
 
 func (fc fakeNetConnection) Read(b []byte) (n int, err error) {
@@ -32,12 +32,12 @@ func (fc *fakeNetConnection) Write(b []byte) (n int, err error) {
 	return len(b), nil
 }
 
-func (fc *fakeNetConnection) Close() error { return nil; }
-func (fc *fakeNetConnection) LocalAddr() net.Addr { return nil; }
-func (fc *fakeNetConnection) RemoteAddr() net.Addr { return nil; }
-func (fc *fakeNetConnection) SetDeadline(t time.Time) error { return nil; }
-func (fc *fakeNetConnection) SetReadDeadline(t time.Time) error { return nil; }
-func (fc *fakeNetConnection) SetWriteDeadline(t time.Time) error { return nil; }
+func (fc *fakeNetConnection) Close() error                       { return nil }
+func (fc *fakeNetConnection) LocalAddr() net.Addr                { return nil }
+func (fc *fakeNetConnection) RemoteAddr() net.Addr               { return nil }
+func (fc *fakeNetConnection) SetDeadline(t time.Time) error      { return nil }
+func (fc *fakeNetConnection) SetReadDeadline(t time.Time) error  { return nil }
+func (fc *fakeNetConnection) SetWriteDeadline(t time.Time) error { return nil }
 
 func TestClientAuthNone_Impl(t *testing.T) {
 	var raw interface{}
@@ -97,7 +97,7 @@ func TestClientAuthPasswordSuccess_Impl(t *testing.T) {
 	conn := &fakeNetConnection{DataToSend: randomValue, ExpectData: expectedResponse, Test: t}
 	err := raw.Handshake(conn)
 
-	if (err != nil) {
+	if err != nil {
 		t.Fatal(err)
 	}
 
@@ -155,7 +155,7 @@ func TestClientAuthPasswordReject_Impl(t *testing.T) {
 	conn := &fakeNetConnection{DataToSend: randomValue, ExpectData: expectedResponse, Test: t}
 	err := raw.Handshake(conn)
 
-	if (err != nil) {
+	if err != nil {
 		t.Fatal(err)
 	}
 

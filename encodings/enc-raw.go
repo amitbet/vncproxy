@@ -17,7 +17,7 @@ func (*RawEncoding) Type() int32 {
 func (z *RawEncoding) WriteTo(w io.Writer) (n int, err error) {
 	return w.Write(z.bytes)
 }
-func (*RawEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.Encoding, error) {
+func (*RawEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.IEncoding, error) {
 
 	bytesPerPixel := int(pixelFmt.BPP / 8)
 

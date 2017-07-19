@@ -36,7 +36,7 @@ func (z *CoRREEncoding) WriteTo(w io.Writer) (n int, err error) {
 	return b, nil
 }
 
-func (z *CoRREEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.Encoding, error) {
+func (z *CoRREEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.IEncoding, error) {
 	bytesPerPixel := int(pixelFmt.BPP / 8)
 	numOfSubrectangles, err := r.ReadUint32()
 	if err != nil {

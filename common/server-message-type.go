@@ -4,12 +4,6 @@ import (
 	"io"
 )
 
-type IClientConn interface {
-	CurrentPixelFormat() *PixelFormat
-	CurrentColorMap() *ColorMap
-	Encodings() []Encoding
-}
-
 type ServerMessage interface {
 	Type() uint8
 	String() string

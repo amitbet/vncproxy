@@ -27,7 +27,7 @@ func (z *CopyRectEncoding) WriteTo(w io.Writer) (n int, err error) {
 	return 4, nil
 }
 
-func (z *CopyRectEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.Encoding, error) {
+func (z *CopyRectEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.IEncoding, error) {
 	z.copyRectSrcX, _ = r.ReadUint16()
 	z.copyRectSrcY, _ = r.ReadUint16()
 	return z, nil

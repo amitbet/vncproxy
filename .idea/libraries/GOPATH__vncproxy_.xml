@@ -1,6 +1,8 @@
 <component name="libraryTable">
   <library name="GOPATH &lt;vncproxy&gt;">
     <CLASSES>
+      <root url="file://$PROJECT_DIR$/../srf.storage" />
+      <root url="file://$USER_HOME$/srf/experience.center.opb/src/sourcegraph.com" />
       <root url="file://$PROJECT_DIR$/../elastictrail" />
       <root url="file://$PROJECT_DIR$/../gopkg.in" />
       <root url="file://$PROJECT_DIR$/../vncproxy1" />
@@ -18,11 +20,11 @@
       <root url="file://$USER_HOME$/srf/experience.center.opb/src/golang.org" />
       <root url="file://$USER_HOME$/srf/experience.center.opb/src/srf" />
       <root url="file://$USER_HOME$/srf/experience.center.opb/src/version" />
-      <root url="file://$PROJECT_DIR$/../srf.storage" />
-      <root url="file://$USER_HOME$/srf/experience.center.opb/src/sourcegraph.com" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
+      <root url="file://$PROJECT_DIR$/../srf.storage" />
+      <root url="file://$USER_HOME$/srf/experience.center.opb/src/sourcegraph.com" />
       <root url="file://$PROJECT_DIR$/../elastictrail" />
       <root url="file://$PROJECT_DIR$/../gopkg.in" />
       <root url="file://$PROJECT_DIR$/../vncproxy1" />
@@ -40,8 +42,6 @@
       <root url="file://$USER_HOME$/srf/experience.center.opb/src/golang.org" />
       <root url="file://$USER_HOME$/srf/experience.center.opb/src/srf" />
       <root url="file://$USER_HOME$/srf/experience.center.opb/src/version" />
-      <root url="file://$PROJECT_DIR$/../srf.storage" />
-      <root url="file://$USER_HOME$/srf/experience.center.opb/src/sourcegraph.com" />
     </SOURCES>
     <excluded>
       <root url="file://$PROJECT_DIR$" />

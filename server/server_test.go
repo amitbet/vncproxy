@@ -20,13 +20,13 @@ func TestServer(t *testing.T) {
 	cfg := &ServerConfig{
 		//SecurityHandlers: []SecurityHandler{&ServerAuthNone{}, &ServerAuthVNC{}},
 		SecurityHandlers: []SecurityHandler{&ServerAuthVNC{"Ch_#!T@8"}},
-		Encodings:        []common.Encoding{&encodings.RawEncoding{}, &encodings.TightEncoding{}, &encodings.CopyRectEncoding{}},
+		Encodings:        []common.IEncoding{&encodings.RawEncoding{}, &encodings.TightEncoding{}, &encodings.CopyRectEncoding{}},
 		PixelFormat:      common.NewPixelFormat(32),
-		ClientMessages:  DefaultClientMessages,
-		DesktopName:     []byte("workDesk"),
-		Height:          uint16(768),
-		Width:           uint16(1024),
-		NewConnHandler:  newServerConnHandler,
+		ClientMessages:   DefaultClientMessages,
+		DesktopName:      []byte("workDesk"),
+		Height:           uint16(768),
+		Width:            uint16(1024),
+		NewConnHandler:   newServerConnHandler,
 	}
 	url := "http://localhost:8091/"
 	go WsServe(url, cfg)

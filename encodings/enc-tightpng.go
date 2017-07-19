@@ -17,7 +17,7 @@ func (z *TightPngEncoding) WriteTo(w io.Writer) (n int, err error) {
 
 func (*TightPngEncoding) Type() int32 { return int32(common.EncTightPng) }
 
-func (t *TightPngEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.Encoding, error) {
+func (t *TightPngEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.IEncoding, error) {
 	bytesPixel := calcTightBytePerPixel(pixelFmt)
 	r.StartByteCollection()
 	defer func() {

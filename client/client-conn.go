@@ -27,7 +27,7 @@ type ClientAuth interface {
 type ClientConn struct {
 	conn io.ReadWriteCloser
 
-	//c      net.ServerConn
+	//c      net.IServerConn
 	config *ClientConfig
 
 	// If the pixel format uses a color map, then this is the color
@@ -37,7 +37,7 @@ type ClientConn struct {
 
 	// Encodings supported by the client. This should not be modified
 	// directly. Instead, SetEncodings should be used.
-	Encs []common.Encoding
+	Encs []common.IEncoding
 
 	// Width of the frame buffer in pixels, sent from the server.
 	FrameBufferWidth uint16
@@ -100,7 +100,7 @@ func (c *ClientConn) Close() error {
 	return c.conn.Close()
 }
 
-func (c *ClientConn) Encodings() []common.Encoding {
+func (c *ClientConn) Encodings() []common.IEncoding {
 	return c.Encs
 }
 
@@ -258,7 +258,7 @@ func (c *ClientConn) PointerEvent(mask ButtonMask, x, y uint16) error {
 // given should not be modified.
 //
 // See RFC 6143 Section 7.5.2
-func (c *ClientConn) SetEncodings(encs []common.Encoding) error {
+func (c *ClientConn) SetEncodings(encs []common.IEncoding) error {
 	data := make([]interface{}, 3+len(encs))
 	data[0] = uint8(2)
 	data[1] = uint8(0)
@@ -470,10 +470,10 @@ func (c *ClientConn) mainLoop() {
 	typeMap := make(map[uint8]common.ServerMessage)
 
 	defaultMessages := []common.ServerMessage{
-		new(FramebufferUpdateMessage),
-		new(SetColorMapEntriesMessage),
-		new(BellMessage),
-		new(ServerCutTextMessage),
+		new(MsgFramebufferUpdate),
+		new(MsgSetColorMapEntries),
+		new(MsgBell),
+		new(MsgServerCutText),
 	}
 
 	for _, msg := range defaultMessages {

@@ -115,7 +115,7 @@ func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server
 		return err
 	}
 
-	encs := []common.Encoding{
+	encs := []common.IEncoding{
 		&encodings.RawEncoding{},
 		&encodings.TightEncoding{},
 		&encodings.EncCursorPseudo{},
@@ -128,7 +128,7 @@ func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server
 		&encodings.HextileEncoding{},
 	}
 	cconn.Encs = encs
-	//err = cconn.SetEncodings(encs)
+	//err = cconn.MsgSetEncodings(encs)
 	if err != nil {
 		logger.Errorf("Proxy.newServerConnHandler error connecting to client: %s", err)
 		return err
@@ -148,7 +148,7 @@ func (vp *VncProxy) StartListening() {
 	}
 	cfg := &server.ServerConfig{
 		SecurityHandlers: secHandlers,
-		Encodings:        []common.Encoding{&encodings.RawEncoding{}, &encodings.TightEncoding{}, &encodings.CopyRectEncoding{}},
+		Encodings:        []common.IEncoding{&encodings.RawEncoding{}, &encodings.TightEncoding{}, &encodings.CopyRectEncoding{}},
 		PixelFormat:      common.NewPixelFormat(32),
 		ClientMessages:   server.DefaultClientMessages,
 		DesktopName:      []byte("workDesk"),

@@ -49,7 +49,7 @@ const (
 type SecurityHandler interface {
 	Type() SecurityType
 	SubType() SecuritySubType
-	Auth(common.ServerConn) error
+	Auth(common.IServerConn) error
 }
 
 // type ClientAuthNone struct{}
@@ -62,7 +62,7 @@ type SecurityHandler interface {
 // 	return SecSubTypeUnknown
 // }
 
-// func (*ClientAuthNone) Auth(conn common.ServerConn) error {
+// func (*ClientAuthNone) Auth(conn common.IServerConn) error {
 // 	return nil
 // }
 
@@ -73,7 +73,7 @@ func (*ServerAuthNone) Type() SecurityType {
 	return SecTypeNone
 }
 
-func (*ServerAuthNone) Auth(c common.ServerConn) error {
+func (*ServerAuthNone) Auth(c common.IServerConn) error {
 	return nil
 }
 
@@ -95,7 +95,7 @@ func (*ServerAuthNone) SubType() SecuritySubType {
 // 	Password []byte
 // }
 
-// func (auth *ClientAuthVeNCrypt02Plain) Auth(c common.ServerConn) error {
+// func (auth *ClientAuthVeNCrypt02Plain) Auth(c common.IServerConn) error {
 // 	if err := binary.Write(c, binary.BigEndian, []uint8{0, 2}); err != nil {
 // 		return err
 // 	}
@@ -198,7 +198,7 @@ func (*ServerAuthVNC) SubType() SecuritySubType {
 
 const AUTH_FAIL = "Authentication Failure"
 
-func (auth *ServerAuthVNC) Auth(c common.ServerConn) error {
+func (auth *ServerAuthVNC) Auth(c common.IServerConn) error {
 	buf := make([]byte, 8+len([]byte(AUTH_FAIL)))
 	rand.Read(buf[:16]) // Random 16 bytes in buf
 	sndsz, err := c.Write(buf[:16])
@@ -290,7 +290,7 @@ func fixDesKey(key string) []byte {
 // 	return SecSubTypeUnknown
 // }
 
-// func (auth *ClientAuthVNC) Auth(c common.ServerConn) error {
+// func (auth *ClientAuthVNC) Auth(c common.IServerConn) error {
 // 	if len(auth.Password) == 0 {
 // 		return fmt.Errorf("Security Handshake failed; no password provided for VNCAuth.")
 // 	}

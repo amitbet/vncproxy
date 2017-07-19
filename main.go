@@ -47,7 +47,7 @@ func main() {
 	// if err != nil {
 	// 	logger.Errorf("error requesting fb update: %s", err)
 	// }
-	encs := []common.Encoding{
+	encs := []common.IEncoding{
 		&encodings.TightEncoding{},
 		//&encodings.TightPngEncoding{},
 		//rre := encodings.RREEncoding{},

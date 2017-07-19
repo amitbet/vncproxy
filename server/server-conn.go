@@ -18,15 +18,14 @@ type ServerConn struct {
 	// If the pixel format uses a color map, then this is the color
 	// map that is used. This should not be modified directly, since
 	// the data comes from the server.
-	// Definition in §5 - Representation of Pixel Data.
 	colorMap *common.ColorMap
 
 	// Name associated with the desktop, sent from the server.
 	desktopName string
 
 	// Encodings supported by the client. This should not be modified
-	// directly. Instead, SetEncodings() should be used.
-	encodings []common.Encoding
+	// directly. Instead, MsgSetEncodings() should be used.
+	encodings []common.IEncoding
 
 	// Height of the frame buffer in pixels, sent to the client.
 	fbHeight uint16
@@ -47,7 +46,7 @@ type ServerConn struct {
 	quit chan struct{}
 }
 
-// func (c *ServerConn) UnreadByte() error {
+// func (c *IServerConn) UnreadByte() error {
 // 	return c.br.UnreadByte()
 // }
 
@@ -79,7 +78,7 @@ func (c *ServerConn) Conn() io.ReadWriter {
 }
 
 func (c *ServerConn) SetEncodings(encs []common.EncodingType) error {
-	encodings := make(map[int32]common.Encoding)
+	encodings := make(map[int32]common.IEncoding)
 	for _, enc := range c.cfg.Encodings {
 		encodings[enc.Type()] = enc
 	}
@@ -129,7 +128,7 @@ func (c *ServerConn) SetPixelFormat(pf *common.PixelFormat) error {
 	c.pixelFormat = pf
 	return nil
 }
-func (c *ServerConn) Encodings() []common.Encoding {
+func (c *ServerConn) Encodings() []common.IEncoding {
 	return c.encodings
 }
 func (c *ServerConn) Width() uint16 {
@@ -169,12 +168,12 @@ func (c *ServerConn) handle() error {
 		default:
 			var messageType common.ClientMessageType
 			if err := binary.Read(c, binary.BigEndian, &messageType); err != nil {
-				logger.Errorf("ServerConn.handle error: %v", err)
+				logger.Errorf("IServerConn.handle error: %v", err)
 				return err
 			}
 			msg, ok := clientMessages[messageType]
 			if !ok {
-				return fmt.Errorf("ServerConn.Handle: unsupported message-type: %v", messageType)
+				return fmt.Errorf("IServerConn.Handle: unsupported message-type: %v", messageType)
 			}
 
 			parsedMsg, err := msg.Read(c)
@@ -184,7 +183,7 @@ func (c *ServerConn) handle() error {
 			case common.SetPixelFormatMsgType:
 				// update pixel format
 				logger.Debugf("ClientUpdater.Consume: updating pixel format")
-				pixFmtMsg := parsedMsg.(*SetPixelFormat)
+				pixFmtMsg := parsedMsg.(*MsgSetPixelFormat)
 				c.SetPixelFormat(&pixFmtMsg.PF)
 				if pixFmtMsg.PF.TrueColor != 0 {
 					c.SetColorMap(&common.ColorMap{})
@@ -197,7 +196,7 @@ func (c *ServerConn) handle() error {
 				return err
 			}
 
-			logger.Infof("ServerConn.Handle got ClientMessage: %s, %v", parsedMsg.Type(), parsedMsg)
+			logger.Infof("IServerConn.Handle got ClientMessage: %s, %v", parsedMsg.Type(), parsedMsg)
 			//TODO: treat set encodings by allowing only supported encoding in proxy configurations
 			//// if parsedMsg.Type() == common.SetEncodingsMsgType{
 			//// 	c.cfg.Encodings
@@ -209,7 +208,7 @@ func (c *ServerConn) handle() error {
 			}
 			err = c.Listeners.Consume(seg)
 			if err != nil {
-				logger.Errorf("ServerConn.Handle: listener consume err %s", err.Error())
+				logger.Errorf("IServerConn.Handle: listener consume err %s", err.Error())
 				return err
 			}
 		}

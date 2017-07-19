@@ -25,7 +25,6 @@ type TightEncoding struct {
 	bytes []byte
 }
 
-
 func (*TightEncoding) Type() int32 { return int32(common.EncTight) }
 
 func calcTightBytePerPixel(pf *common.PixelFormat) int {
@@ -51,7 +50,7 @@ func StoreBytes(bytes *bytes.Buffer, data []byte) {
 	}
 }
 
-func (t *TightEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.Encoding, error) {
+func (t *TightEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.IEncoding, error) {
 	bytesPixel := calcTightBytePerPixel(pixelFmt)
 
 	r.StartByteCollection()

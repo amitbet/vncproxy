@@ -19,7 +19,7 @@ func (z *ZRLEEncoding) WriteTo(w io.Writer) (n int, err error) {
 	return w.Write(z.bytes)
 }
 
-func (z *ZRLEEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.Encoding, error) {
+func (z *ZRLEEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.IEncoding, error) {
 
 	bytes := &bytes.Buffer{}
 	len, err := r.ReadUint32()

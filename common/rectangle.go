@@ -10,7 +10,7 @@ type Rectangle struct {
 	Y      uint16
 	Width  uint16
 	Height uint16
-	Enc    Encoding
+	Enc    IEncoding
 }
 
 func (r *Rectangle) String() string {

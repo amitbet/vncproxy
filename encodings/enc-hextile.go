@@ -25,7 +25,7 @@ func (z *HextileEncoding) Type() int32 {
 func (z *HextileEncoding) WriteTo(w io.Writer) (n int, err error) {
 	return w.Write(z.bytes)
 }
-func (z *HextileEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.Encoding, error) {
+func (z *HextileEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.IEncoding, error) {
 	bytesPerPixel := int(pixelFmt.BPP) / 8
 
 	r.StartByteCollection()
@@ -47,7 +47,7 @@ func (z *HextileEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectan
 
 			//handle Hextile Subrect(tx, ty, tw, th):
 			subencoding, err := r.ReadUint8()
-		
+
 			if err != nil {
 				logger.Errorf("HextileEncoding.Read: error in hextile reader: %v", err)
 				return nil, err

@@ -21,12 +21,12 @@ type FBSPlayListener struct {
 
 func NewFBSPlayListener(conn *server.ServerConn, r *FbsReader) *FBSPlayListener {
 	h := &FBSPlayListener{Conn: conn, Fbs: r}
-	cm := client.BellMessage(0)
+	cm := client.MsgBell(0)
 	h.serverMessageMap = make(map[uint8]common.ServerMessage)
-	h.serverMessageMap[0] = &client.FramebufferUpdateMessage{}
-	h.serverMessageMap[1] = &client.SetColorMapEntriesMessage{}
+	h.serverMessageMap[0] = &client.MsgFramebufferUpdate{}
+	h.serverMessageMap[1] = &client.MsgSetColorMapEntries{}
 	h.serverMessageMap[2] = &cm
-	h.serverMessageMap[3] = &client.ServerCutTextMessage{}
+	h.serverMessageMap[3] = &client.MsgServerCutText{}
 
 	return h
 }
@@ -45,7 +45,7 @@ func (handler *FBSPlayListener) Consume(seg *common.RfbSegment) error {
 			}
 			handler.sendFbsMessage()
 		}
-		// server.FramebufferUpdateRequest:
+		// server.MsgFramebufferUpdateRequest:
 	}
 	return nil
 }

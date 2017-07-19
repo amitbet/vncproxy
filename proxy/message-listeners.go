@@ -24,7 +24,7 @@ func (cc *ClientUpdater) Consume(seg *common.RfbSegment) error {
 		case common.SetPixelFormatMsgType:
 			// update pixel format
 			logger.Debugf("ClientUpdater.Consume: updating pixel format")
-			pixFmtMsg := clientMsg.(*server.SetPixelFormat)
+			pixFmtMsg := clientMsg.(*server.MsgSetPixelFormat)
 			cc.conn.PixelFormat = pixFmtMsg.PF
 		}
 

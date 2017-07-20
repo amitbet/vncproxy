@@ -6,6 +6,7 @@ import (
 	"vncproxy/common"
 
 	"io"
+	"vncproxy/logger"
 )
 
 const ProtoVersionLength = 12
@@ -134,7 +135,7 @@ func ServerServerInitHandler(cfg *ServerConfig, c *ServerConn) error {
 		NameLength:  uint32(len(cfg.DesktopName)),
 		NameText:    []byte(cfg.DesktopName),
 	}
-
+	logger.Infof("Server.ServerServerInitHandler initMessage: %v", srvInit)
 	if err := binary.Write(c, binary.BigEndian, srvInit.FBWidth); err != nil {
 		return err
 	}

@@ -1,47 +1,35 @@
 <component name="libraryTable">
   <library name="GOPATH &lt;vncproxy&gt;">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../srf.storage" />
-      <root url="file://$USER_HOME$/srf/experience.center.opb/src/sourcegraph.com" />
       <root url="file://$PROJECT_DIR$/../elastictrail" />
       <root url="file://$PROJECT_DIR$/../gopkg.in" />
-      <root url="file://$PROJECT_DIR$/../vncproxy1" />
-      <root url="file://$PROJECT_DIR$/../GoProjExample" />
-      <root url="file://$PROJECT_DIR$/../govmomi-fork" />
       <root url="file://$PROJECT_DIR$/../srf.opb" />
-      <root url="file://$PROJECT_DIR$/../vshpere-cli" />
-      <root url="file://$PROJECT_DIR$/../sourcegraph.com" />
-      <root url="file://$USER_HOME$/srf/experience.center.opb/src/github.com" />
+      <root url="file://$PROJECT_DIR$/../GoProjExample" />
       <root url="file://$PROJECT_DIR$/../github.com" />
-      <root url="file://$PROJECT_DIR$/../experience.center.opb" />
-      <root url="file://$USER_HOME$/srf/experience.center.opb/src/gopkg.in" />
       <root url="file://$PROJECT_DIR$/../golang.org" />
+      <root url="file://$PROJECT_DIR$/../sourcegraph.com" />
+      <root url="file://$PROJECT_DIR$/../srf.storage" />
+      <root url="file://$PROJECT_DIR$/../govmomi-fork" />
+      <root url="file://$PROJECT_DIR$/../vncproxy1" />
+      <root url="file://$PROJECT_DIR$/../vshpere-cli" />
+      <root url="file://$PROJECT_DIR$/../experience.center.opb" />
       <root url="file://$PROJECT_DIR$/../srf-test-exporter" />
-      <root url="file://$USER_HOME$/srf/experience.center.opb/src/golang.org" />
-      <root url="file://$USER_HOME$/srf/experience.center.opb/src/srf" />
-      <root url="file://$USER_HOME$/srf/experience.center.opb/src/version" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="file://$PROJECT_DIR$/../srf.storage" />
-      <root url="file://$USER_HOME$/srf/experience.center.opb/src/sourcegraph.com" />
       <root url="file://$PROJECT_DIR$/../elastictrail" />
       <root url="file://$PROJECT_DIR$/../gopkg.in" />
-      <root url="file://$PROJECT_DIR$/../vncproxy1" />
-      <root url="file://$PROJECT_DIR$/../GoProjExample" />
-      <root url="file://$PROJECT_DIR$/../govmomi-fork" />
       <root url="file://$PROJECT_DIR$/../srf.opb" />
-      <root url="file://$PROJECT_DIR$/../vshpere-cli" />
-      <root url="file://$PROJECT_DIR$/../sourcegraph.com" />
-      <root url="file://$USER_HOME$/srf/experience.center.opb/src/github.com" />
+      <root url="file://$PROJECT_DIR$/../GoProjExample" />
       <root url="file://$PROJECT_DIR$/../github.com" />
-      <root url="file://$PROJECT_DIR$/../experience.center.opb" />
-      <root url="file://$USER_HOME$/srf/experience.center.opb/src/gopkg.in" />
       <root url="file://$PROJECT_DIR$/../golang.org" />
+      <root url="file://$PROJECT_DIR$/../sourcegraph.com" />
+      <root url="file://$PROJECT_DIR$/../srf.storage" />
+      <root url="file://$PROJECT_DIR$/../govmomi-fork" />
+      <root url="file://$PROJECT_DIR$/../vncproxy1" />
+      <root url="file://$PROJECT_DIR$/../vshpere-cli" />
+      <root url="file://$PROJECT_DIR$/../experience.center.opb" />
       <root url="file://$PROJECT_DIR$/../srf-test-exporter" />
-      <root url="file://$USER_HOME$/srf/experience.center.opb/src/golang.org" />
-      <root url="file://$USER_HOME$/srf/experience.center.opb/src/srf" />
-      <root url="file://$USER_HOME$/srf/experience.center.opb/src/version" />
     </SOURCES>
     <excluded>
       <root url="file://$PROJECT_DIR$" />

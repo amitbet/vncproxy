@@ -36,3 +36,41 @@ func (cc *ClientUpdater) Consume(seg *common.RfbSegment) error {
 	}
 	return nil
 }
+
+type ServerUpdater struct {
+	conn *server.ServerConn
+}
+
+func (p *ServerUpdater) Consume(seg *common.RfbSegment) error {
+
+	logger.Debugf("WriteTo.Consume (ServerUpdater): got segment type=%s", seg.SegmentType)
+	switch seg.SegmentType {
+	case common.SegmentMessageSeparator:
+	case common.SegmentRectSeparator:
+	case common.SegmentServerInitMessage:
+		serverInitMessage := seg.Message.(*common.ServerInit)
+		p.conn.SetHeight(serverInitMessage.FBHeight)
+		p.conn.SetWidth(serverInitMessage.FBWidth)
+		p.conn.SetDesktopName(string(serverInitMessage.NameText))
+		p.conn.SetPixelFormat(&serverInitMessage.PixelFormat)
+
+	case common.SegmentBytes:
+		_, err := p.conn.Write(seg.Bytes)
+		if err != nil {
+			logger.Errorf("WriteTo.Consume (ServerUpdater SegmentBytes): problem writing to port: %s", err)
+		}
+		return err
+	case common.SegmentFullyParsedClientMessage:
+
+		clientMsg := seg.Message.(common.ClientMessage)
+		logger.Debugf("WriteTo.Consume (ServerUpdater): got ClientMessage type=%s", clientMsg.Type())
+		err := clientMsg.Write(p.conn)
+		if err != nil {
+			logger.Errorf("WriteTo.Consume (ServerUpdater SegmentFullyParsedClientMessage): problem writing to port: %s", err)
+		}
+		return err
+	default:
+		//return errors.New("WriteTo.Consume: undefined RfbSegment type")
+	}
+	return nil
+}

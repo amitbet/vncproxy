@@ -151,6 +151,7 @@ func (r *Recorder) HandleRfbSegment(data *common.RfbSegment) error {
 		logger.Debugf("Recorder.HandleRfbSegment: writing rect")
 		//r.writeToDisk()
 	case common.SegmentBytes:
+		logger.Debug("Recorder.HandleRfbSegment: writing bytes, len:", len(data.Bytes))
 		if r.buffer.Len()+len(data.Bytes) > r.maxWriteSize-4 {
 			r.writeToDisk()
 		}

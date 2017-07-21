@@ -43,7 +43,7 @@ type ServerUpdater struct {
 
 func (p *ServerUpdater) Consume(seg *common.RfbSegment) error {
 
-	logger.Debugf("WriteTo.Consume (ServerUpdater): got segment type=%s", seg.SegmentType)
+	logger.Debugf("WriteTo.Consume (ServerUpdater): got segment type=%s, object type:%d", seg.SegmentType, seg.UpcomingObjectType)
 	switch seg.SegmentType {
 	case common.SegmentMessageSeparator:
 	case common.SegmentRectSeparator:
@@ -55,6 +55,7 @@ func (p *ServerUpdater) Consume(seg *common.RfbSegment) error {
 		p.conn.SetPixelFormat(&serverInitMessage.PixelFormat)
 
 	case common.SegmentBytes:
+		logger.Debugf("WriteTo.Consume (ServerUpdater SegmentBytes): got bytes len=%d", len(seg.Bytes))
 		_, err := p.conn.Write(seg.Bytes)
 		if err != nil {
 			logger.Errorf("WriteTo.Consume (ServerUpdater SegmentBytes): problem writing to port: %s", err)

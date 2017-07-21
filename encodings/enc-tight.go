@@ -61,22 +61,22 @@ func (t *TightEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangl
 	compctl, err := r.ReadUint8()
 
 	if err != nil {
-		logger.Debugf("error in handling tight encoding: %v\n", err)
+		logger.Errorf("error in handling tight encoding: %v", err)
 		return nil, err
 	}
-	logger.Debugf("bytesPixel= %d, subencoding= %d\n", bytesPixel, compctl)
+	logger.Debugf("bytesPixel= %d, subencoding= %d", bytesPixel, compctl)
 
 	//move it to position (remove zlib flush commands)
 	compType := compctl >> 4 & 0x0F
 
-	logger.Debugf("afterSHL:%d\n", compType)
+	logger.Debugf("afterSHL:%d", compType)
 	switch compType {
 	case TightFill:
 		logger.Debugf("reading fill size=%d\n", bytesPixel)
 		//read color
 		_, err := r.ReadBytes(int(bytesPixel))
 		if err != nil {
-			logger.Debugf("error in handling tight encoding: %v\n", err)
+			logger.Errorf("error in handling tight encoding: %v", err)
 			return nil, err
 		}
 
@@ -121,15 +121,15 @@ func handleTightFilters(subencoding uint8, pixelFmt *common.PixelFormat, rect *c
 		filterid, err = r.ReadUint8()
 
 		if err != nil {
-			logger.Debugf("error in handling tight encoding, reading filterid: %v\n", err)
+			logger.Errorf("error in handling tight encoding, reading filterid: %v", err)
 			return
 		}
-		logger.Debugf("read filter: %d\n", filterid)
+		logger.Debugf("handleTightFilters: read filter: %d\n", filterid)
 	}
 
 	bytesPixel := calcTightBytePerPixel(pixelFmt)
 
-	logger.Debugf("filter: %d\n", filterid)
+	logger.Debugf("handleTightFilters: filter: %d\n", filterid)
 
 	lengthCurrentbpp := int(bytesPixel) * int(rect.Width) * int(rect.Height)
 
@@ -137,10 +137,19 @@ func handleTightFilters(subencoding uint8, pixelFmt *common.PixelFormat, rect *c
 	case TightFilterPalette: //PALETTE_FILTER
 
 		colorCount, err := r.ReadUint8()
+		if err != nil {
+			logger.Errorf("handleTightFilters: error in handling tight encoding, reading TightFilterPalette: %v", err)
+			return
+		}
+
 		paletteSize := colorCount + 1 // add one more
-		logger.Debugf("----PALETTE_FILTER: paletteSize=%d bytesPixel=%d\n", paletteSize, bytesPixel)
+		logger.Debugf("handleTightFilters: ----PALETTE_FILTER: paletteSize=%d bytesPixel=%d\n", paletteSize, bytesPixel)
 		//complete palette
 		_, err = r.ReadBytes(int(paletteSize) * bytesPixel)
+		if err != nil {
+			logger.Errorf("handleTightFilters: error in handling tight encoding, reading TightFilterPalette.paletteSize: %v", err)
+			return
+		}
 
 		var dataLength int
 		if paletteSize == 2 {
@@ -150,7 +159,7 @@ func handleTightFilters(subencoding uint8, pixelFmt *common.PixelFormat, rect *c
 		}
 		_, err = r.ReadTightData(dataLength)
 		if err != nil {
-			logger.Debugf("error in handling tight encoding, Reading Palette: %v\n", err)
+			logger.Errorf("handleTightFilters: error in handling tight encoding, Reading Palette: %v", err)
 			return
 		}
 
@@ -159,20 +168,22 @@ func handleTightFilters(subencoding uint8, pixelFmt *common.PixelFormat, rect *c
 		logger.Debugf("usegrad: %d\n", filterid)
 		_, err := r.ReadTightData(lengthCurrentbpp)
 		if err != nil {
-			logger.Debugf("error in handling tight encoding, Reading GRADIENT_FILTER: %v\n", err)
+			logger.Errorf("handleTightFilters: error in handling tight encoding, Reading GRADIENT_FILTER: %v", err)
 			return
 		}
 
 	case TightFilterCopy: //BASIC_FILTER
-		logger.Debugf("----BASIC_FILTER: bytesPixel=%d\n", bytesPixel)
+		//lengthCurrentbpp1 := int(pixelFmt.BPP/8) * int(rect.Width) * int(rect.Height)
+		logger.Debugf("handleTightFilters: ----BASIC_FILTER: bytesPixel=%d", bytesPixel)
+
 		_, err := r.ReadTightData(lengthCurrentbpp)
 		if err != nil {
-			logger.Debugf("error in handling tight encoding, Reading BASIC_FILTER: %v\n", err)
+			logger.Errorf("handleTightFilters: error in handling tight encoding, Reading BASIC_FILTER: %v", err)
 			return
 		}
 
 	default:
-		logger.Debugf("Bad tight filter id: %d\n", filterid)
+		logger.Errorf("handleTightFilters: Bad tight filter id: %d", filterid)
 		return
 	}
 

@@ -30,8 +30,12 @@ type SimpleLogger struct {
 
 func (sl *SimpleLogger) Debug(v ...interface{}) {
 	if sl.level <= LogLevelDebug {
-		fmt.Print("[Debug] ")
-		fmt.Println(v...)
+		arr := []interface{}{"[Debug]"}
+		for _, item := range v {
+			arr = append(arr, item)
+		}
+
+		fmt.Println(arr...)
 	}
 }
 func (sl *SimpleLogger) Debugf(format string, v ...interface{}) {
@@ -41,30 +45,39 @@ func (sl *SimpleLogger) Debugf(format string, v ...interface{}) {
 }
 func (sl *SimpleLogger) Info(v ...interface{}) {
 	if sl.level <= LogLevelInfo {
-		fmt.Print("[Info] ")
-		fmt.Println(v...)
+		arr := []interface{}{"[Info ]"}
+		for _, item := range v {
+			arr = append(arr, item)
+		}
+		fmt.Println(arr...)
 	}
 }
 func (sl *SimpleLogger) Infof(format string, v ...interface{}) {
 	if sl.level <= LogLevelInfo {
-		fmt.Printf("[Info] "+format+"\n", v...)
+		fmt.Printf("[Info ] "+format+"\n", v...)
 	}
 }
 func (sl *SimpleLogger) Warn(v ...interface{}) {
 	if sl.level <= LogLevelWarn {
-		fmt.Print("[Warn] ")
-		fmt.Println(v...)
+		arr := []interface{}{"[Warn ]"}
+		for _, item := range v {
+			arr = append(arr, item)
+		}
+		fmt.Println(arr...)
 	}
 }
 func (sl *SimpleLogger) Warnf(format string, v ...interface{}) {
 	if sl.level <= LogLevelWarn {
-		fmt.Printf("[Warn] "+format+"\n", v...)
+		fmt.Printf("[Warn ] "+format+"\n", v...)
 	}
 }
 func (sl *SimpleLogger) Error(v ...interface{}) {
 	if sl.level <= LogLevelError {
-		fmt.Print("[Error] ")
-		fmt.Println(v...)
+		arr := []interface{}{"[Error]"}
+		for _, item := range v {
+			arr = append(arr, item)
+		}
+		fmt.Println(arr...)
 	}
 }
 func (sl *SimpleLogger) Errorf(format string, v ...interface{}) {
@@ -74,8 +87,12 @@ func (sl *SimpleLogger) Errorf(format string, v ...interface{}) {
 }
 func (sl *SimpleLogger) Fatal(v ...interface{}) {
 	if sl.level <= LogLevelFatal {
-		fmt.Print("[Fatal] ")
-		fmt.Println(v...)
+		arr := []interface{}{"[Fatal]"}
+		for _, item := range v {
+			arr = append(arr, item)
+		}
+		fmt.Println(arr...)
+
 	}
 }
 func (sl *SimpleLogger) Fatalf(format string, v ...interface{}) {

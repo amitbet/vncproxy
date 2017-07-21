@@ -6,8 +6,9 @@ func TestProxy(t *testing.T) {
 	//create default session if required
 
 	proxy := &VncProxy{
-		wsListeningUrl: "http://localhost:7777/", // empty = not listening on ws
-		recordingDir:   "/Users/amitbet/vncRec",  // empty = no recording
+		wsListeningUrl:  "http://localhost:7777/", // empty = not listening on ws
+		recordingDir:    "/Users/amitbet/vncRec",  // empty = no recording
+		tcpListeningUrl: ":5904",
 		//recordingDir:          "C:\\vncRec", // empty = no recording
 		targetServersPassword: "Ch_#!T@8", //empty = no auth
 		SingleSession: &VncSession{

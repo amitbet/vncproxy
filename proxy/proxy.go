@@ -100,11 +100,11 @@ func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server
 
 	// gets the bytes from the actual vnc server on the env (client part of the proxy)
 	// and writes them through the server socket to the vnc-client
-	serverUpdater := &ServerUpdater{sconn}
-	cconn.Listeners.AddListener(serverUpdater)
+	// serverUpdater := &ServerUpdater{sconn}
+	// cconn.Listeners.AddListener(serverUpdater)
 
-	// // serverMsgRepeater := &listeners.WriteTo{sconn, "vnc-client-bound"}
-	// // cconn.Listeners.AddListener(serverMsgRepeater)
+	serverMsgRepeater := &listeners.WriteTo{sconn, "vnc-client-bound"}
+	cconn.Listeners.AddListener(serverMsgRepeater)
 
 	// gets the messages from the server part (from vnc-client),
 	// and write through the client to the actual vnc-server
@@ -165,13 +165,12 @@ func (vp *VncProxy) StartListening() {
 		// },
 	}
 
-	if vp.wsListeningUrl != "" {
-		go server.WsServe(vp.wsListeningUrl, cfg)
-	}
 	if vp.tcpListeningUrl != "" {
 		go server.TcpServe(vp.tcpListeningUrl, cfg)
 	}
-
+	if vp.wsListeningUrl != "" {
+		go server.WsServe(vp.wsListeningUrl, cfg)
+	}
 	// Process messages coming in on the ClientMessage channel.
 	for {
 		msg := <-chClient

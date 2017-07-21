@@ -3,6 +3,7 @@ package common
 import (
 	"bytes"
 	"encoding/binary"
+	"errors"
 	"io"
 	"vncproxy/logger"
 )
@@ -92,6 +93,8 @@ func (r *RfbReadHelper) PublishBytes(p []byte) error {
 	return r.Listeners.Consume(seg)
 }
 
+//var prevlen int
+
 func (r *RfbReadHelper) Read(p []byte) (n int, err error) {
 	readLen, err := r.Reader.Read(p)
 	if err != nil {
@@ -104,6 +107,15 @@ func (r *RfbReadHelper) Read(p []byte) (n int, err error) {
 			logger.Warn("RfbReadHelper.Read: failed to collect bytes in mem buffer:", err)
 		}
 	}
+	/////////
+	// modLen := (prevlen % 10000)
+	// if len(p) == modLen && modLen != prevlen {
+	// 	logger.Warn("RFBReadHelper debug!! plen=", prevlen, " len=", len(p))
+	// }
+	// prevlen = len(p)
+	/////////
+
+	logger.Debugf("RfbReadHelper.Read: publishing bytes, bytes:%v", p)
 
 	//write the bytes to the Listener for further processing
 	seg := &RfbSegment{Bytes: p, SegmentType: SegmentBytes}
@@ -118,11 +130,21 @@ func (r *RfbReadHelper) Read(p []byte) (n int, err error) {
 func (r *RfbReadHelper) ReadBytes(count int) ([]byte, error) {
 	buff := make([]byte, count)
 
-	_, err := io.ReadFull(r, buff)
+	lengthRead, err := io.ReadFull(r, buff)
+
+	//lengthRead, err := r.Read(buff)
+	if lengthRead != count {
+		logger.Errorf("RfbReadHelper.ReadBytes unable to read bytes: lengthRead=%d, countExpected=%d", lengthRead, count)
+		return nil, errors.New("RfbReadHelper.ReadBytes unable to read bytes")
+	}
+
+	//err := binary.Read(r, binary.BigEndian, &buff)
+
 	if err != nil {
 		//if err := binary.Read(d.conn, binary.BigEndian, &buff); err != nil {
 		return nil, err
 	}
+
 	return buff, nil
 }
 
@@ -178,7 +200,7 @@ func (r *RfbReadHelper) ReadTightData(dataSize int) ([]byte, error) {
 		return r.ReadBytes(int(dataSize))
 	}
 	zlibDataLen, err := r.ReadCompactLen()
-	logger.Debugf("compactlen=%d", zlibDataLen)
+	logger.Debugf("RfbReadHelper.ReadTightData: compactlen=%d", zlibDataLen)
 	if err != nil {
 		return nil, err
 	}

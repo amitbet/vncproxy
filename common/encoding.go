@@ -77,6 +77,8 @@ func (enct EncodingType) String() string {
 		return "EncDesktopSizePseudo"
 	case EncLastRectPseudo:
 		return "EncLastRectPseudo"
+	case EncPointerPosPseudo:
+		return "EncPointerPosPseudo"
 	case EncCompressionLevel10:
 		return "EncCompressionLevel10"
 	case EncCompressionLevel9:
@@ -167,6 +169,7 @@ const (
 	EncCursorPseudo                  EncodingType = -239
 	EncDesktopSizePseudo             EncodingType = -223
 	EncLastRectPseudo                EncodingType = -224
+	EncPointerPosPseudo              EncodingType = -232
 	EncCompressionLevel10            EncodingType = -247
 	EncCompressionLevel9             EncodingType = -248
 	EncCompressionLevel8             EncodingType = -249

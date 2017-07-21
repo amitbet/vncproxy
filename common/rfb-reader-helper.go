@@ -115,10 +115,10 @@ func (r *RfbReadHelper) Read(p []byte) (n int, err error) {
 	// prevlen = len(p)
 	/////////
 
-	logger.Debugf("RfbReadHelper.Read: publishing bytes, bytes:%v", p)
+	logger.Debugf("RfbReadHelper.Read: publishing bytes, bytes:%v", p[:readLen])
 
 	//write the bytes to the Listener for further processing
-	seg := &RfbSegment{Bytes: p, SegmentType: SegmentBytes}
+	seg := &RfbSegment{Bytes: p[:readLen], SegmentType: SegmentBytes}
 	err = r.Listeners.Consume(seg)
 	if err != nil {
 		return 0, err
@@ -141,6 +141,7 @@ func (r *RfbReadHelper) ReadBytes(count int) ([]byte, error) {
 	//err := binary.Read(r, binary.BigEndian, &buff)
 
 	if err != nil {
+		logger.Errorf("RfbReadHelper.ReadBytes error while reading bytes: ", err)
 		//if err := binary.Read(d.conn, binary.BigEndian, &buff); err != nil {
 		return nil, err
 	}

@@ -2,6 +2,8 @@ package logger
 
 import "fmt"
 
+var simpleLogger = SimpleLogger{LogLevelInfo}
+
 type Logger interface {
 	Debug(v ...interface{})
 	Debugf(format string, v ...interface{})
@@ -100,8 +102,6 @@ func (sl *SimpleLogger) Fatalf(format string, v ...interface{}) {
 		fmt.Printf("[Fatal] "+format+"\n", v)
 	}
 }
-
-var simpleLogger = SimpleLogger{LogLevelInfo}
 
 func Debug(v ...interface{}) {
 	simpleLogger.Debug(v...)

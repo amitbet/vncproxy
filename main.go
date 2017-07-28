@@ -56,13 +56,9 @@ func main() {
 		//&encodings.CopyRectEncoding{},
 		//coRRE := encodings.CoRREEncoding{},
 		//hextile := encodings.HextileEncoding{},
-		&encodings.PseudoEncoding{int32(common.EncJPEGQualityLevelPseudo9)},
+		&encodings.PseudoEncoding{int32(common.EncJPEGQualityLevelPseudo8)},
 	}
 
-	// file, _ := os.OpenFile("stam.bin", os.O_CREATE|os.O_RDWR, 0755)
-	// defer file.Close()
-
-	//tight.SetOutput(file)
 	clientConn.SetEncodings(encs)
 
 	clientConn.FramebufferUpdateRequest(false, 0, 0, 1280, 800)
@@ -94,16 +90,9 @@ func main() {
 		clientConn.Close()
 	}()
 
-	//go func() {
-	// for msg := range vncSrvMessagesChan {
-	// 	logger.Debugf("message type: %d, content: %v\n", msg.Type(), msg)
-	// }
 	for {
 		time.Sleep(time.Minute)
 	}
-	//}()
-
-	//clientConn.Close()
 }
 func getNowMillisec() int {
 	return int(time.Now().UnixNano() / int64(time.Millisecond))

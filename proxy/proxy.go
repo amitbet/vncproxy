@@ -1,7 +1,6 @@
 package proxy
 
 import (
-	"log"
 	"net"
 	"path"
 	"strconv"
@@ -15,17 +14,16 @@ import (
 )
 
 type VncProxy struct {
-	tcpListeningUrl       string      // empty = not listening on tcp
-	wsListeningUrl        string      // empty = not listening on ws
-	recordingDir          string      // empty = no recording
-	proxyPassword         string      // empty = no auth
-	targetServersPassword string      //empty = no auth
-	SingleSession         *VncSession // to be used when not using sessions
-	UsingSessions         bool        //false = single session - defined in the var above
-	sessionManager        *SessionManager
+	TcpListeningUrl  string      // empty = not listening on tcp
+	WsListeningUrl   string      // empty = not listening on ws
+	RecordingDir     string      // empty = no recording
+	ProxyVncPassword string      //empty = no auth
+	SingleSession    *VncSession // to be used when not using sessions
+	UsingSessions    bool        //false = single session - defined in the var above
+	sessionManager   *SessionManager
 }
 
-func (vp *VncProxy) createClientConnection(targetServerUrl string) (*client.ClientConn, error) {
+func (vp *VncProxy) createClientConnection(targetServerUrl string, vncPass string) (*client.ClientConn, error) {
 	nc, err := net.Dial("tcp", targetServerUrl)
 
 	if err != nil {
@@ -34,7 +32,7 @@ func (vp *VncProxy) createClientConnection(targetServerUrl string) (*client.Clie
 	}
 
 	var noauth client.ClientAuthNone
-	authArr := []client.ClientAuth{&client.PasswordAuth{Password: vp.targetServersPassword}, &noauth}
+	authArr := []client.ClientAuth{&client.PasswordAuth{Password: vncPass}, &noauth}
 
 	//vncSrvMessagesChan := make(chan common.ServerMessage)
 
@@ -68,7 +66,7 @@ func (vp *VncProxy) getTargetServerFromSession(sessionId string) (*VncSession, e
 func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server.ServerConn) error {
 
 	recFile := "recording" + strconv.FormatInt(time.Now().Unix(), 10) + ".rbs"
-	recPath := path.Join(vp.recordingDir, recFile)
+	recPath := path.Join(vp.RecordingDir, recFile)
 	rec, err := listeners.NewRecorder(recPath)
 	if err != nil {
 		logger.Errorf("Proxy.newServerConnHandler can't open recorder save path: %s", recPath)
@@ -88,7 +86,7 @@ func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server
 
 	//clientSplitter := &common.MultiListener{}
 
-	cconn, err := vp.createClientConnection(session.TargetHostname + ":" + session.TargetPort)
+	cconn, err := vp.createClientConnection(session.TargetHostname+":"+session.TargetPort, session.TargetPassword)
 	if err != nil {
 		logger.Errorf("Proxy.newServerConnHandler error creating connection: %s", err)
 		return err
@@ -142,12 +140,12 @@ func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server
 func (vp *VncProxy) StartListening() {
 
 	//chServer := make(chan common.ClientMessage)
-	chClient := make(chan common.ServerMessage)
+	//chClient := make(chan common.ServerMessage)
 
 	secHandlers := []server.SecurityHandler{&server.ServerAuthNone{}}
 
-	if vp.proxyPassword != "" {
-		secHandlers = []server.SecurityHandler{&server.ServerAuthVNC{vp.proxyPassword}}
+	if vp.ProxyVncPassword != "" {
+		secHandlers = []server.SecurityHandler{&server.ServerAuthVNC{vp.ProxyVncPassword}}
 	}
 	cfg := &server.ServerConfig{
 		SecurityHandlers: secHandlers,
@@ -165,18 +163,19 @@ func (vp *VncProxy) StartListening() {
 		// },
 	}
 
-	if vp.tcpListeningUrl != "" {
-		go server.TcpServe(vp.tcpListeningUrl, cfg)
+	if vp.TcpListeningUrl != "" && vp.WsListeningUrl != "" {
+		logger.Infof("running two listeners: tcp port: %s, ws url: %s", vp.TcpListeningUrl, vp.WsListeningUrl)
+
+		go server.WsServe(vp.WsListeningUrl, cfg)
+		server.TcpServe(":"+vp.TcpListeningUrl, cfg)
 	}
-	if vp.wsListeningUrl != "" {
-		go server.WsServe(vp.wsListeningUrl, cfg)
+
+	if vp.WsListeningUrl != "" {
+		logger.Infof("running ws listener url: %s", vp.WsListeningUrl)
+		server.WsServe(vp.WsListeningUrl, cfg)
 	}
-	// Process messages coming in on the ClientMessage channel.
-	for {
-		msg := <-chClient
-		switch msg.Type() {
-		default:
-			log.Printf("Received message type:%v msg:%v\n", msg.Type(), msg)
-		}
+	if vp.TcpListeningUrl != "" {
+		logger.Infof("running tcp listener on port: %s", vp.TcpListeningUrl)
+		server.TcpServe(":"+vp.TcpListeningUrl, cfg)
 	}
 }

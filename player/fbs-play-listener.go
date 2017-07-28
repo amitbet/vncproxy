@@ -19,6 +19,26 @@ type FBSPlayListener struct {
 	startTime        int
 }
 
+func ConnectFbsFile(filename string, conn *server.ServerConn) (*FbsReader, error) {
+	fbs, err := NewFbsReader(filename)
+	if err != nil {
+		logger.Error("failed to open fbs reader:", err)
+		return nil, err
+	}
+	//NewFbsReader("/Users/amitbet/vncRec/recording.rbs")
+	initMsg, err := fbs.ReadStartSession()
+	if err != nil {
+		logger.Error("failed to open read fbs start session:", err)
+		return nil, err
+	}
+	conn.SetPixelFormat(&initMsg.PixelFormat)
+	conn.SetHeight(initMsg.FBHeight)
+	conn.SetWidth(initMsg.FBWidth)
+	conn.SetDesktopName(string(initMsg.NameText))
+
+	return fbs, nil
+}
+
 func NewFBSPlayListener(conn *server.ServerConn, r *FbsReader) *FBSPlayListener {
 	h := &FBSPlayListener{Conn: conn, Fbs: r}
 	cm := client.MsgBell(0)

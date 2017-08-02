@@ -12,12 +12,13 @@ var TightMinToCompress = 12
 
 const (
 	SegmentBytes SegmentType = iota
-	SegmentMessageSeparator
+	SegmentMessageStart
 	SegmentRectSeparator
 	SegmentFullyParsedClientMessage
 	SegmentFullyParsedServerMessage
 	SegmentServerInitMessage
 	SegmentConnectionClosed
+	SegmentMessageEnd
 )
 
 type SegmentType int
@@ -26,8 +27,10 @@ func (seg SegmentType) String() string {
 	switch seg {
 	case SegmentBytes:
 		return "SegmentBytes"
-	case SegmentMessageSeparator:
-		return "SegmentMessageSeparator"
+	case SegmentMessageStart:
+		return "SegmentMessageStart"
+	case SegmentMessageEnd:
+		return "SegmentMessageEnd"
 	case SegmentRectSeparator:
 		return "SegmentRectSeparator"
 	case SegmentFullyParsedClientMessage:
@@ -83,8 +86,13 @@ func (r *RfbReadHelper) SendRectSeparator(upcomingRectType int) error {
 	return r.Listeners.Consume(seg)
 }
 
-func (r *RfbReadHelper) SendMessageSeparator(upcomingMessageType ServerMessageType) error {
-	seg := &RfbSegment{SegmentType: SegmentMessageSeparator, UpcomingObjectType: int(upcomingMessageType)}
+func (r *RfbReadHelper) SendMessageStart(upcomingMessageType ServerMessageType) error {
+	seg := &RfbSegment{SegmentType: SegmentMessageStart, UpcomingObjectType: int(upcomingMessageType)}
+	return r.Listeners.Consume(seg)
+}
+
+func (r *RfbReadHelper) SendMessageEnd(messageType ServerMessageType) error {
+	seg := &RfbSegment{SegmentType: SegmentMessageEnd, UpcomingObjectType: int(messageType)}
 	return r.Listeners.Consume(seg)
 }
 

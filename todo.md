@@ -1,9 +1,8 @@
 
 # TODO:
-* add replay flow to proxy
-* set correct status for each flow in proxy
-* create 2 cmdline apps (recorder & proxy) - proxy will also replay (depending on session type & cmdline flags)
-
+* add replay logics to proxy (depending on session type & cmdline flags)
+* set correct status for each flow in proxy (replay / prox+record / prox / ..)
+* improve recorder so it will save RFB response before sending another RFB update request
 * code stuff:
     * move encodings to be on the framebufferupdate message object
     * clear all messages read functions from updating stuff, move modification logic to another listener

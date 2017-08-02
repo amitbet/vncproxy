@@ -16,7 +16,7 @@ func TestProxy(t *testing.T) {
 			TargetPort:     "5903",
 			TargetPassword: "Ch_#!T@8",
 			ID:             "dummySession",
-			Status:         SessionStatusActive,
+			Status:         SessionStatusInit,
 			Type:           SessionTypeRecordingProxy,
 		}, // to be used when not using sessions
 		UsingSessions: false, //false = single session - defined in the var above

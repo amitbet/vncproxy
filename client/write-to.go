@@ -1,4 +1,4 @@
-package listeners
+package client
 
 import (
 	"io"
@@ -15,7 +15,7 @@ func (p *WriteTo) Consume(seg *common.RfbSegment) error {
 
 	logger.Debugf("WriteTo.Consume ("+p.Name+"): got segment type=%s", seg.SegmentType)
 	switch seg.SegmentType {
-	case common.SegmentMessageSeparator:
+	case common.SegmentMessageStart:
 	case common.SegmentRectSeparator:
 	case common.SegmentBytes:
 		_, err := p.Writer.Write(seg.Bytes)

@@ -48,7 +48,7 @@
             "showLog": true
         },
         {
-            "name": "Launch",
+            "name": "Launch Recorder",
             "type": "go",
             "request": "launch",
             "mode": "debug",

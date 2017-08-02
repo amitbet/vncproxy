@@ -507,7 +507,7 @@ func (c *ClientConn) mainLoop() {
 			break
 		}
 		logger.Infof("ClientConn.MainLoop: got ServerMessage:%s", common.ServerMessageType(messageType))
-		reader.SendMessageSeparator(common.ServerMessageType(messageType))
+		reader.SendMessageStart(common.ServerMessageType(messageType))
 		reader.PublishBytes([]byte{byte(messageType)})
 
 		parsedMsg, err := msg.Read(c, reader)

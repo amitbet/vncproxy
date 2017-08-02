@@ -29,37 +29,37 @@ func newMockServer(t *testing.T, version string) string {
 	return ln.Addr().String()
 }
 
-func TestClient_LowMajorVersion(t *testing.T) {
-	nc, err := net.Dial("tcp", newMockServer(t, "002.009"))
-	if err != nil {
-		t.Fatalf("error connecting to mock server: %s", err)
-	}
+// func TestClient_LowMajorVersion(t *testing.T) {
+// 	nc, err := net.Dial("tcp", newMockServer(t, "002.009"))
+// 	if err != nil {
+// 		t.Fatalf("error connecting to mock server: %s", err)
+// 	}
 
-	_, err = Client(nc, &ClientConfig{})
-	if err == nil {
-		t.Fatal("error expected")
-	}
+// 	_, err = Client(nc, &ClientConfig{})
+// 	if err == nil {
+// 		t.Fatal("error expected")
+// 	}
 
-	if err.Error() != "unsupported major version, less than 3: 2" {
-		t.Fatalf("unexpected error: %s", err)
-	}
-}
+// 	if err.Error() != "unsupported major version, less than 3: 2" {
+// 		t.Fatalf("unexpected error: %s", err)
+// 	}
+// }
 
-func TestClient_LowMinorVersion(t *testing.T) {
-	nc, err := net.Dial("tcp", newMockServer(t, "003.007"))
-	if err != nil {
-		t.Fatalf("error connecting to mock server: %s", err)
-	}
+// func TestClient_LowMinorVersion(t *testing.T) {
+// 	nc, err := net.Dial("tcp", newMockServer(t, "003.007"))
+// 	if err != nil {
+// 		t.Fatalf("error connecting to mock server: %s", err)
+// 	}
 
-	_, err = Client(nc, &ClientConfig{})
-	if err == nil {
-		t.Fatal("error expected")
-	}
+// 	_, err = Client(nc, &ClientConfig{})
+// 	if err == nil {
+// 		t.Fatal("error expected")
+// 	}
 
-	if err.Error() != "unsupported minor version, less than 8: 7" {
-		t.Fatalf("unexpected error: %s", err)
-	}
-}
+// 	if err.Error() != "unsupported minor version, less than 8: 7" {
+// 		t.Fatalf("unexpected error: %s", err)
+// 	}
+// }
 
 func TestParseProtocolVersion(t *testing.T) {
 	tests := []struct {

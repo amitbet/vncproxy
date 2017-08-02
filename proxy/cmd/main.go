@@ -47,8 +47,8 @@ func main() {
 			TargetPort:     *targetVncPort,
 			TargetPassword: *targetVncPass, //"vncPass",
 			ID:             "dummySession",
-			//Status:         SessionStatusActive,
-			//Type:           SessionTypeRecordingProxy,
+			Status:         proxy.SessionStatusInit,
+			Type:           proxy.SessionTypeRecordingProxy,
 		}, // to be used when not using sessions
 		UsingSessions: false, //false = single session - defined in the var above
 	}

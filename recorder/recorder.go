@@ -1,4 +1,4 @@
-package listeners
+package recorder
 
 import (
 	"bytes"
@@ -129,7 +129,7 @@ func (r *Recorder) HandleRfbSegment(data *common.RfbSegment) error {
 	}()
 
 	switch data.SegmentType {
-	case common.SegmentMessageSeparator:
+	case common.SegmentMessageStart:
 		if !r.sessionStartWritten {
 			logger.Debugf("Recorder.HandleRfbSegment: writing start session segment: %v", r.serverInitMessage)
 			r.writeStartSession(r.serverInitMessage)

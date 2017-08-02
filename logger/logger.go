@@ -19,7 +19,8 @@ type Logger interface {
 type LogLevel int
 
 const (
-	LogLevelDebug LogLevel = iota
+	LogLevelTrace LogLevel = iota
+	LogLevelDebug
 	LogLevelInfo
 	LogLevelWarn
 	LogLevelError
@@ -28,6 +29,22 @@ const (
 
 type SimpleLogger struct {
 	level LogLevel
+}
+
+func (sl *SimpleLogger) Trace(v ...interface{}) {
+	if sl.level <= LogLevelTrace {
+		arr := []interface{}{"[Trace]"}
+		for _, item := range v {
+			arr = append(arr, item)
+		}
+
+		fmt.Println(arr...)
+	}
+}
+func (sl *SimpleLogger) Tracef(format string, v ...interface{}) {
+	if sl.level <= LogLevelTrace {
+		fmt.Printf("[Trace] "+format+"\n", v...)
+	}
 }
 
 func (sl *SimpleLogger) Debug(v ...interface{}) {

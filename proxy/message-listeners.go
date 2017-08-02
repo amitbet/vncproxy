@@ -45,7 +45,7 @@ func (p *ServerUpdater) Consume(seg *common.RfbSegment) error {
 
 	logger.Debugf("WriteTo.Consume (ServerUpdater): got segment type=%s, object type:%d", seg.SegmentType, seg.UpcomingObjectType)
 	switch seg.SegmentType {
-	case common.SegmentMessageSeparator:
+	case common.SegmentMessageStart:
 	case common.SegmentRectSeparator:
 	case common.SegmentServerInitMessage:
 		serverInitMessage := seg.Message.(*common.ServerInit)

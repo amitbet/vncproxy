@@ -6,6 +6,7 @@ type SessionType int
 const (
 	SessionStatusInit SessionStatus = iota
 	SessionStatusActive
+	SessionStatusError
 )
 
 const (
@@ -21,4 +22,5 @@ type VncSession struct {
 	ID             string
 	Status         SessionStatus
 	Type           SessionType
+	ReplayFilePath string
 }

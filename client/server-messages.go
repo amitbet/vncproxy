@@ -9,7 +9,6 @@ import (
 	"vncproxy/common"
 	"vncproxy/encodings"
 	"vncproxy/logger"
-	listeners "vncproxy/tee-listeners"
 )
 
 // MsgFramebufferUpdate consists of a sequence of rectangles of
@@ -36,7 +35,7 @@ func (*MsgFramebufferUpdate) Type() uint8 {
 
 func (fbm *MsgFramebufferUpdate) CopyTo(r io.Reader, w io.Writer, c common.IClientConn) error {
 	reader := common.NewRfbReadHelper(r)
-	writeTo := &listeners.WriteTo{w, "MsgFramebufferUpdate.CopyTo"}
+	writeTo := &WriteTo{w, "MsgFramebufferUpdate.CopyTo"}
 	reader.Listeners.AddListener(writeTo)
 	_, err := fbm.Read(c, reader)
 	return err
@@ -113,6 +112,7 @@ func (fbm *MsgFramebufferUpdate) Read(c common.IClientConn, r *common.RfbReadHel
 			}
 		}
 	}
+	r.SendMessageEnd(common.ServerMessageType(fbm.Type()))
 
 	return &MsgFramebufferUpdate{rects}, nil
 }
@@ -130,7 +130,7 @@ type MsgSetColorMapEntries struct {
 
 func (fbm *MsgSetColorMapEntries) CopyTo(r io.Reader, w io.Writer, c common.IClientConn) error {
 	reader := &common.RfbReadHelper{Reader: r}
-	writeTo := &listeners.WriteTo{w, "MsgSetColorMapEntries.CopyTo"}
+	writeTo := &WriteTo{w, "MsgSetColorMapEntries.CopyTo"}
 	reader.Listeners.AddListener(writeTo)
 	_, err := fbm.Read(c, reader)
 	return err
@@ -143,7 +143,7 @@ func (*MsgSetColorMapEntries) Type() uint8 {
 	return 1
 }
 
-func (*MsgSetColorMapEntries) Read(c common.IClientConn, r *common.RfbReadHelper) (common.ServerMessage, error) {
+func (m *MsgSetColorMapEntries) Read(c common.IClientConn, r *common.RfbReadHelper) (common.ServerMessage, error) {
 	// Read off the padding
 	var padding [1]byte
 	if _, err := io.ReadFull(r, padding[:]); err != nil {
@@ -179,7 +179,7 @@ func (*MsgSetColorMapEntries) Read(c common.IClientConn, r *common.RfbReadHelper
 		// Update the connection's color map
 		cmap[result.FirstColor+i] = *color
 	}
-
+	r.SendMessageEnd(common.ServerMessageType(m.Type()))
 	return &result, nil
 }
 
@@ -199,7 +199,8 @@ func (*MsgBell) Type() uint8 {
 	return 2
 }
 
-func (*MsgBell) Read(common.IClientConn, *common.RfbReadHelper) (common.ServerMessage, error) {
+func (m *MsgBell) Read(c common.IClientConn, r *common.RfbReadHelper) (common.ServerMessage, error) {
+	r.SendMessageEnd(common.ServerMessageType(m.Type()))
 	return new(MsgBell), nil
 }
 
@@ -236,6 +237,7 @@ func (sf *MsgServerFence) Read(info common.IClientConn, c *common.RfbReadHelper)
 	if _, err := c.Read(bytes); err != nil {
 		return nil, err
 	}
+	c.SendMessageEnd(common.ServerMessageType(sf.Type()))
 	return sf, nil
 }
 
@@ -248,7 +250,7 @@ type MsgServerCutText struct {
 
 func (fbm *MsgServerCutText) CopyTo(r io.Reader, w io.Writer, c common.IClientConn) error {
 	reader := &common.RfbReadHelper{Reader: r}
-	writeTo := &listeners.WriteTo{w, "MsgServerCutText.CopyTo"}
+	writeTo := &WriteTo{w, "MsgServerCutText.CopyTo"}
 	reader.Listeners.AddListener(writeTo)
 	_, err := fbm.Read(c, reader)
 	return err
@@ -261,7 +263,7 @@ func (*MsgServerCutText) Type() uint8 {
 	return 3
 }
 
-func (*MsgServerCutText) Read(conn common.IClientConn, r *common.RfbReadHelper) (common.ServerMessage, error) {
+func (m *MsgServerCutText) Read(conn common.IClientConn, r *common.RfbReadHelper) (common.ServerMessage, error) {
 	//reader := common.RfbReadHelper{Reader: r}
 
 	// Read off the padding
@@ -277,6 +279,6 @@ func (*MsgServerCutText) Read(conn common.IClientConn, r *common.RfbReadHelper) 
 	if err != nil {
 		return nil, err
 	}
-
+	r.SendMessageEnd(common.ServerMessageType(m.Type()))
 	return &MsgServerCutText{string(textBytes)}, nil
 }

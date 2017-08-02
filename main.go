@@ -7,7 +7,7 @@ import (
 	"vncproxy/common"
 	"vncproxy/encodings"
 	"vncproxy/logger"
-	listeners "vncproxy/tee-listeners"
+	"vncproxy/recorder"
 )
 
 func main() {
@@ -23,8 +23,8 @@ func main() {
 
 	//vncSrvMessagesChan := make(chan common.ServerMessage)
 
-	rec, err := listeners.NewRecorder("c:/Users/betzalel/recording.rbs")
-	//rec, err := listeners.NewRecorder("/Users/amitbet/vncRec/recording.rbs")
+	//rec, err := recorder.NewRecorder("c:/Users/betzalel/recording.rbs")
+	rec, err := recorder.NewRecorder("/Users/amitbet/vncRec/recording.rbs")
 	if err != nil {
 		logger.Errorf("error creating recorder: %s", err)
 		return
@@ -37,6 +37,7 @@ func main() {
 		})
 
 	clientConn.Listeners.AddListener(rec)
+	clientConn.Listeners.AddListener(&recorder.RfbRequester{Conn: clientConn, Name: "Rfb Requester"})
 	clientConn.Connect()
 
 	if err != nil {
@@ -60,35 +61,39 @@ func main() {
 	}
 
 	clientConn.SetEncodings(encs)
+	//width := uint16(1280)
+	//height := uint16(800)
 
-	clientConn.FramebufferUpdateRequest(false, 0, 0, 1280, 800)
-	// clientConn.SetPixelFormat(&common.PixelFormat{
-	// 	BPP:        32,
-	// 	Depth:      24,
-	// 	BigEndian:  0,
-	// 	TrueColor:  1,
-	// 	RedMax:     255,
-	// 	GreenMax:   255,
-	// 	BlueMax:    255,
-	// 	RedShift:   16,
-	// 	GreenShift: 8,
-	// 	BlueShift:  0,
-	// })
-	start := getNowMillisec()
-	go func() {
-		for {
-			if getNowMillisec()-start >= 10000 {
-				break
-			}
+	//clientConn.FramebufferUpdateRequest(false, 0, 0, width, height)
 
-			err = clientConn.FramebufferUpdateRequest(true, 0, 0, 1280, 800)
-			if err != nil {
-				logger.Errorf("error requesting fb update: %s", err)
-			}
-			time.Sleep(250 * time.Millisecond)
-		}
-		clientConn.Close()
-	}()
+	// // clientConn.SetPixelFormat(&common.PixelFormat{
+	// // 	BPP:        32,
+	// // 	Depth:      24,
+	// // 	BigEndian:  0,
+	// // 	TrueColor:  1,
+	// // 	RedMax:     255,
+	// // 	GreenMax:   255,
+	// // 	BlueMax:    255,
+	// // 	RedShift:   16,
+	// // 	GreenShift: 8,
+	// // 	BlueShift:  0,
+	// // })
+
+	// start := getNowMillisec()
+	// go func() {
+	// 	for {
+	// 		if getNowMillisec()-start >= 10000 {
+	// 			break
+	// 		}
+
+	// 		err = clientConn.FramebufferUpdateRequest(true, 0, 0, 1280, 800)
+	// 		if err != nil {
+	// 			logger.Errorf("error requesting fb update: %s", err)
+	// 		}
+	// 		time.Sleep(250 * time.Millisecond)
+	// 	}
+	// 	clientConn.Close()
+	// }()
 
 	for {
 		time.Sleep(time.Minute)

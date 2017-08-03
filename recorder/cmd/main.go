@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"net"
 	"time"
 	"vncproxy/client"
@@ -11,20 +12,28 @@ import (
 )
 
 func main() {
+	// var tcpPort = flag.String("tcpPort", "", "tcp port")
+	// var wsPort = flag.String("wsPort", "", "websocket port")
+	// var vncPass = flag.String("vncPass", "", "password on incoming vnc connections to the proxy, defaults to no password")
+	var recordDir = flag.String("recDir", "", "path to save FBS recordings WILL NOT RECORD IF EMPTY.")
+	var targetVncPort = flag.String("targPort", "", "target vnc server port")
+	var targetVncPass = flag.String("targPass", "", "target vnc password")
+
+	flag.Parse()
 
 	//nc, err := net.Dial("tcp", "192.168.1.101:5903")
-	nc, err := net.Dial("tcp", "localhost:5903")
+	nc, err := net.Dial("tcp", "localhost:"+*targetVncPort)
 
 	if err != nil {
 		logger.Errorf("error connecting to vnc server: %s", err)
 	}
 	var noauth client.ClientAuthNone
-	authArr := []client.ClientAuth{&client.PasswordAuth{Password: "Ch_#!T@8"}, &noauth}
+	authArr := []client.ClientAuth{&client.PasswordAuth{Password: *targetVncPass}, &noauth}
 
 	//vncSrvMessagesChan := make(chan common.ServerMessage)
 
 	//rec, err := recorder.NewRecorder("c:/Users/betzalel/recording.rbs")
-	rec, err := recorder.NewRecorder("/Users/amitbet/vncRec/recording.rbs")
+	rec, err := recorder.NewRecorder(*recordDir) //"/Users/amitbet/vncRec/recording.rbs")
 	if err != nil {
 		logger.Errorf("error creating recorder: %s", err)
 		return

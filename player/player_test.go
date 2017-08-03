@@ -41,7 +41,7 @@ func TestServer(t *testing.T) {
 	cfg.NewConnHandler = func(cfg *server.ServerConfig, conn *server.ServerConn) error {
 		//fbs, err := loadFbsFile("/Users/amitbet/Dropbox/recording.rbs", conn)
 		//fbs, err := loadFbsFile("/Users/amitbet/vncRec/recording.rbs", conn)
-		fbs, err := ConnectFbsFile("/Users/amitbet/vncRec/recording1500554806.rbs", conn)
+		fbs, err := ConnectFbsFile("/Users/amitbet/vncRec/recording.rbs", conn)
 
 		if err != nil {
 			logger.Error("TestServer.NewConnHandler: Error in loading FBS: ", err)

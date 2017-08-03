@@ -2,12 +2,10 @@ package main
 
 import "vncproxy/proxy"
 import "flag"
-import "fmt"
 import "vncproxy/logger"
 import "os"
 
 func main() {
-	fmt.Println("running!")
 	//create default session if required
 	var tcpPort = flag.String("tcpPort", "", "tcp port")
 	var wsPort = flag.String("wsPort", "", "websocket port")

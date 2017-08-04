@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"net"
+	"os"
 	"time"
 	"vncproxy/client"
 	"vncproxy/common"
@@ -20,6 +21,19 @@ func main() {
 	var targetVncPass = flag.String("targPass", "", "target vnc password")
 
 	flag.Parse()
+
+	if *targetVncPort == "" {
+		logger.Error("no target vnc server port defined")
+		flag.Usage()
+		os.Exit(1)
+	}
+
+	if *targetVncPass == "" {
+		logger.Warn("no password defined, trying to connect with null authentication")
+	}
+	if *recordDir == "" {
+		logger.Warn("FBS recording is turned off")
+	}
 
 	//nc, err := net.Dial("tcp", "192.168.1.101:5903")
 	nc, err := net.Dial("tcp", "localhost:"+*targetVncPort)

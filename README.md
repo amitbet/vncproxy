@@ -19,7 +19,7 @@ but the code is already working (see main, proxy_test & player_test)**
     - TigerVnc(client)
 
 ## Usage
-**Some very usable cmdline executables are Coming Soon...**
+**download cmdline executables from the release section**
 
 Code samples can be found by looking at:
 * main.go (fbs recording vnc client) 

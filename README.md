@@ -1,14 +1,14 @@
 # VncProxy
 An RFB proxy, written in go that can save and replay FBS files
-* supports all modern encodings & most useful pseudo-encodings
-* supports multiple VNC client connections & multi servers (chosen by sessionId)
-* supports being a "websockify" proxy (for web clients like NoVnc)
-* produces FBS files compatible with tightvnc player (while using tight's default 3Byte color format)
-* can also be used as:
-    * a screen recorder vnc-client
-    * a replay server to show fbs recordings to connecting clients 
+* Supports all modern encodings & most useful pseudo-encodings
+* Supports multiple VNC client connections & multi servers (chosen by sessionId)
+* Supports being a "websockify" proxy (for web clients like NoVnc)
+* Produces FBS files compatible with tightvnc player (while using tight's default 3Byte color format)
+* Can also be used as:
+    * A screen recorder vnc-client
+    * A replay server to show fbs recordings to connecting clients 
     
-- tested on tight encoding with:
+- Tested on tight encoding with:
     - Tightvnc (client + java client + server)
     - FBS player (tightVnc Java player)
     - NoVnc(web client)
@@ -16,10 +16,14 @@ An RFB proxy, written in go that can save and replay FBS files
     - VineVnc(server)
     - TigerVnc(client)
 
-## Usage
-**download cmdline executables from the release section**
+## Usage:
 
-Code samples can be found by looking at:
+### Executables (see releases)
+* proxy - the actual recording proxy, supports opening tcp & ws ports and recording traffic to fbs files
+* recorder - connects to a vnc server as a client and records the screen
+* player - a toy player that will replay a given fbs file to all incoming connections
+
+### Code usage examples
 * player/main.go (fbs recording vnc client) 
     * Connects as client, records to FBS file
 * proxy/proxy_test.go (vnc proxy with recording)

@@ -19,7 +19,7 @@ An RFB proxy, written in go that can save and replay FBS files
 ## Usage:
 
 ### Executables (see releases)
-* proxy - the actual recording proxy, supports opening tcp & ws ports and recording traffic to fbs files
+* proxy - the actual recording proxy, supports listening to tcp & ws ports and recording traffic to fbs files
 * recorder - connects to a vnc server as a client and records the screen
 * player - a toy player that will replay a given fbs file to all incoming connections
 

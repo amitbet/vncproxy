@@ -22,9 +22,8 @@ but the code is already working (see main, proxy_test & player_test)**
 **download cmdline executables from the release section**
 
 Code samples can be found by looking at:
-* main.go (fbs recording vnc client) 
-    * Connects, records to FBS file
-    * Programmed to quit after 10 seconds
+* player/main.go (fbs recording vnc client) 
+    * Connects as client, records to FBS file
 * proxy/proxy_test.go (vnc proxy with recording)
     * Listens to both Tcp and WS ports
     * Proxies connections to a hard-coded localhost vnc server

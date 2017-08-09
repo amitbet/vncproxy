@@ -1,16 +1,14 @@
 # VncProxy
 An RFB proxy, written in go that can save and replay FBS files
-* supports all modern encodings & most useful pseudo-encodings
-* supports multiple VNC client connections & multi servers (chosen by sessionId)
-* supports being a "websockify" proxy (for web clients like NoVnc)
-* produces FBS files compatible with tightvnc player (while using tight's default 3Byte color format)
-* can also be used as:
-    * a screen recorder vnc-client
-    * a replay server to show fbs recordings to connecting clients 
-
-**This is still a work in progress, and requires some error handling and general tidying up, 
-but the code is already working (see main, proxy_test & player_test)**
-- tested on tight encoding with:
+* Supports all modern encodings & most useful pseudo-encodings
+* Supports multiple VNC client connections & multi servers (chosen by sessionId)
+* Supports being a "websockify" proxy (for web clients like NoVnc)
+* Produces FBS files compatible with tightvnc player (while using tight's default 3Byte color format)
+* Can also be used as:
+    * A screen recorder vnc-client
+    * A replay server to show fbs recordings to connecting clients 
+    
+- Tested on tight encoding with:
     - Tightvnc (client + java client + server)
     - FBS player (tightVnc Java player)
     - NoVnc(web client)
@@ -18,13 +16,16 @@ but the code is already working (see main, proxy_test & player_test)**
     - VineVnc(server)
     - TigerVnc(client)
 
-## Usage
-**Some very usable cmdline executables are Coming Soon...**
+## Usage:
 
-Code samples can be found by looking at:
-* main.go (fbs recording vnc client) 
-    * Connects, records to FBS file
-    * Programmed to quit after 10 seconds
+### Executables (see releases)
+* proxy - the actual recording proxy, supports listening to tcp & ws ports and recording traffic to fbs files
+* recorder - connects to a vnc server as a client and records the screen
+* player - a toy player that will replay a given fbs file to all incoming connections
+
+### Code usage examples
+* player/main.go (fbs recording vnc client) 
+    * Connects as client, records to FBS file
 * proxy/proxy_test.go (vnc proxy with recording)
     * Listens to both Tcp and WS ports
     * Proxies connections to a hard-coded localhost vnc server
@@ -56,4 +57,4 @@ The Recorder uses channels and runs in parallel to avoid hampering the communica
 
 ![Image of Arch](https://github.com/amitbet/vncproxy/blob/master/architecture/player-arch.png?raw=true)
 
-The code is based on several implementations of go-vnc including the original one by *Mitchell Hashimoto*, and the recentely active fork which belongs to *Vasiliy Tolstov*.
+The code is based on several implementations of go-vnc including the original one by *Mitchell Hashimoto*, and the recentely active fork by *Vasiliy Tolstov*.

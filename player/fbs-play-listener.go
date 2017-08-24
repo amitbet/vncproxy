@@ -3,17 +3,25 @@ package player
 import (
 	"encoding/binary"
 
+	"io"
 	"time"
 	"vncproxy/client"
 	"vncproxy/common"
-
 	"vncproxy/logger"
 	"vncproxy/server"
 )
 
+type VncStreamFileReader interface {
+	io.Reader
+	CurrentTimestamp() int
+	ReadStartSession() (*common.ServerInit, error)
+	CurrentPixelFormat() *common.PixelFormat
+	Encodings() []common.IEncoding
+}
+
 type FBSPlayListener struct {
 	Conn             *server.ServerConn
-	Fbs              *FbsReader
+	Fbs              VncStreamFileReader
 	serverMessageMap map[uint8]common.ServerMessage
 	firstSegDone     bool
 	startTime        int
@@ -88,7 +96,7 @@ func (h *FBSPlayListener) sendFbsMessage() {
 		return
 	}
 	timeSinceStart := int(time.Now().UnixNano()/int64(time.Millisecond)) - h.startTime
-	timeToSleep := fbs.currentTimestamp - timeSinceStart
+	timeToSleep := fbs.CurrentTimestamp() - timeSinceStart
 	if timeToSleep > 0 {
 		time.Sleep(time.Duration(timeToSleep) * time.Millisecond)
 	}

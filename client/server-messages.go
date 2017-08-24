@@ -175,9 +175,9 @@ func (m *MsgSetColorMapEntries) Read(c common.IClientConn, r *common.RfbReadHelp
 				return nil, err
 			}
 		}
-		cmap := c.CurrentColorMap()
-		// Update the connection's color map
-		cmap[result.FirstColor+i] = *color
+		// cmap := c.CurrentColorMap()
+		// // Update the connection's color map
+		// cmap[result.FirstColor+i] = *color
 	}
 	r.SendMessageEnd(common.ServerMessageType(m.Type()))
 	return &result, nil

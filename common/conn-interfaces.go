@@ -25,6 +25,6 @@ type IServerConn interface {
 
 type IClientConn interface {
 	CurrentPixelFormat() *PixelFormat
-	CurrentColorMap() *ColorMap
+	//CurrentColorMap() *ColorMap
 	Encodings() []IEncoding
 }

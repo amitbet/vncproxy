@@ -116,9 +116,9 @@ func (c *ClientConn) Read(bytes []byte) (n int, err error) {
 	return c.conn.Read(bytes)
 }
 
-func (c *ClientConn) CurrentColorMap() *common.ColorMap {
-	return &c.ColorMap
-}
+// func (c *ClientConn) CurrentColorMap() *common.ColorMap {
+// 	return &c.ColorMap
+// }
 
 // CutText tells the server that the client has new text in its cut buffer.
 // The text string MUST only contain Latin-1 characters. This encoding

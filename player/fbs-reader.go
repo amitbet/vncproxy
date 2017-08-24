@@ -18,6 +18,10 @@ type FbsReader struct {
 	encodings        []common.IEncoding
 }
 
+func (fbs *FbsReader) CurrentTimestamp() int {
+	return fbs.currentTimestamp
+}
+
 func (fbs *FbsReader) Read(p []byte) (n int, err error) {
 	if fbs.buffer.Len() < len(p) {
 		seg, err := fbs.ReadSegment()
@@ -33,8 +37,9 @@ func (fbs *FbsReader) Read(p []byte) (n int, err error) {
 }
 
 func (fbs *FbsReader) CurrentPixelFormat() *common.PixelFormat { return fbs.pixelFormat }
-func (fbs *FbsReader) CurrentColorMap() *common.ColorMap       { return &common.ColorMap{} }
-func (fbs *FbsReader) Encodings() []common.IEncoding           { return fbs.encodings }
+
+//func (fbs *FbsReader) CurrentColorMap() *common.ColorMap       { return &common.ColorMap{} }
+func (fbs *FbsReader) Encodings() []common.IEncoding { return fbs.encodings }
 
 func NewFbsReader(fbsFile string) (*FbsReader, error) {
 

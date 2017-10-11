@@ -2,3 +2,8 @@
 *.debug
 *.test
 debug
+/dist
+vncproxy
+prox
+cmd
+aa

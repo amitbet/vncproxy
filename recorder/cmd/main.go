@@ -19,8 +19,15 @@ func main() {
 	var recordDir = flag.String("recDir", "", "path to save FBS recordings WILL NOT RECORD IF EMPTY.")
 	var targetVncPort = flag.String("targPort", "", "target vnc server port")
 	var targetVncPass = flag.String("targPass", "", "target vnc password")
+	var targetVncHost = flag.String("targHost", "localhost", "target vnc hostname")
 
 	flag.Parse()
+
+	if *targetVncHost == "" {
+		logger.Error("no target vnc server host defined")
+		flag.Usage()
+		os.Exit(1)
+	}
 
 	if *targetVncPort == "" {
 		logger.Error("no target vnc server port defined")
@@ -36,7 +43,7 @@ func main() {
 	}
 
 	//nc, err := net.Dial("tcp", "192.168.1.101:5903")
-	nc, err := net.Dial("tcp", "localhost:"+*targetVncPort)
+	nc, err := net.Dial("tcp", *targetVncHost+":"+*targetVncPort)
 
 	if err != nil {
 		logger.Errorf("error connecting to vnc server: %s", err)

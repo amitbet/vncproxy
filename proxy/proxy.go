@@ -62,7 +62,7 @@ func (vp *VncProxy) getProxySession(sessionId string) (*VncSession, error) {
 }
 
 func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server.ServerConn) error {
-
+	var err error
 	session, err := vp.getProxySession(sconn.SessionId)
 	if err != nil {
 		logger.Errorf("Proxy.newServerConnHandler can't get session: %d", sconn.SessionId)
@@ -70,10 +70,11 @@ func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server
 	}
 
 	var rec *listeners.Recorder
+
 	if session.Type == SessionTypeRecordingProxy {
 		recFile := "recording" + strconv.FormatInt(time.Now().Unix(), 10) + ".rbs"
 		recPath := path.Join(vp.RecordingDir, recFile)
-		rec, err := listeners.NewRecorder(recPath)
+		rec, err = listeners.NewRecorder(recPath)
 		if err != nil {
 			logger.Errorf("Proxy.newServerConnHandler can't open recorder save path: %s", recPath)
 			return err
@@ -173,7 +174,7 @@ func (vp *VncProxy) StartListening() {
 		logger.Infof("running two listeners: tcp port: %s, ws url: %s", vp.TcpListeningUrl, vp.WsListeningUrl)
 
 		go server.WsServe(vp.WsListeningUrl, cfg)
-		server.TcpServe(":"+vp.TcpListeningUrl, cfg)
+		server.TcpServe(vp.TcpListeningUrl, cfg)
 	}
 
 	if vp.WsListeningUrl != "" {

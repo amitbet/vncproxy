@@ -182,13 +182,59 @@ func (c *ServerConn) handle() error {
 			switch parsedMsg.Type() {
 			case common.SetPixelFormatMsgType:
 				// update pixel format
-				logger.Debugf("ClientUpdater.Consume: updating pixel format")
+				logger.Debugf("IServerConn.Handle: updating pixel format")
 				pixFmtMsg := parsedMsg.(*MsgSetPixelFormat)
 				c.SetPixelFormat(&pixFmtMsg.PF)
 				if pixFmtMsg.PF.TrueColor != 0 {
 					c.SetColorMap(&common.ColorMap{})
 				}
+
+			case common.FramebufferUpdateRequestMsgType:
+				//logger.Infof("IServerConn.Handle:  msgBuff update request")
+				//updMsg := parsedMsg.(*MsgFramebufferUpdateRequest)
+				//updMsg.Inc = 1
+			case common.SetEncodingsMsgType:
+				encMsg := parsedMsg.(*MsgSetEncodings)
+				// for i, enc := range encMsg.Encodings {
+				// 	if enc > common.EncJPEGQualityLevelPseudo1 && enc < common.EncJPEGQualityLevelPseudo10 { //common.EncCursorPseudo
+				// 		//encMsg.EncNum--
+				// 		//encMsg.Encodings = append(encMsg.Encodings[:i], encMsg.Encodings[i+1:]...)
+				// 		encMsg.Encodings[i] = encMsg.Encodings[len(encMsg.Encodings)-1]
+				// 		encMsg.Encodings[len(encMsg.Encodings)-1] = common.EncJPEGQualityLevelPseudo9
+				// 		break
+				// 	}
+				// 	// if enc == common.EncCompressionLevel3 {
+				// 	// 	encMsg.Encodings[i] = common.EncJPEGQualityLevelPseudo9
+				// 	// }
+				// 	// if enc == common.EncJPEGQualityLevelPseudo7 {
+				// 	// 	encMsg.Encodings[i] = common.EncJPEGQualityLevelPseudo9
+				// 	// }
+				// }
+
+				encMsg.Encodings = []common.EncodingType{
+					common.EncDesktopSizePseudo,
+					common.EncExtendedDesktopSizePseudo,
+					common.EncLastRectPseudo,
+					common.EncContinuousUpdatesPseudo,
+					common.EncCursorPseudo,
+					common.EncFencePseudo,
+					common.EncHextile,
+					common.EncCopyRect,
+					common.EncTight,
+					common.EncZRLE,
+					common.EncRRE,
+					common.EncRaw,
+					common.EncCompressionLevel2,
+					common.EncJPEGQualityLevelPseudo1,
+					common.EncQEMUExtendedKeyEventPseudo,
+					common.EncTightPng,
+					common.EncXvpPseudo,
+				}
+				encMsg.EncNum = uint16(len(encMsg.Encodings))
+
+				//bad: EncCopyRect EncTight EncTightPng EncHextile EncRRE EncRaw EncJPEGQualityLevelPseudo7 EncCompressionLevel3 EncDesktopSizePseudo EncLastRectPseudo EncCursorPseudo EncQEMUExtendedKeyEventPseudo EncExtendedDesktopSizePseudo EncXvpPseudo EncFencePseudo EncContinuousUpdatesPseudo
 			}
+
 			////////
 
 			if err != nil {

@@ -4,6 +4,7 @@ import (
 	"io"
 	"math"
 	"vncproxy/common"
+	"vncproxy/logger"
 )
 
 type EncCursorPseudo struct {
@@ -21,6 +22,8 @@ func (pe *EncCursorPseudo) Read(pf *common.PixelFormat, rect *common.Rectangle, 
 	}
 
 	bytesPixel := int(pf.BPP / 8) //calcTightBytePerPixel(pf)
+	logger.Infof("EncCursorPseudo bytesPerPixel= %d", bytesPixel)
+
 	r.ReadBytes(int(rect.Width*rect.Height) * bytesPixel)
 	mask := ((rect.Width + 7) / 8) * rect.Height
 	r.ReadBytes(int(math.Floor(float64(mask))))

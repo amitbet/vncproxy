@@ -155,7 +155,7 @@ func handleTightFilters(subencoding uint8, pixelFmt *common.PixelFormat, rect *c
 		if paletteSize == 2 {
 			dataLength = int(rect.Height) * ((int(rect.Width) + 7) / 8)
 		} else {
-			dataLength = int(rect.Width * rect.Height)
+			dataLength = int(rect.Width) * int(rect.Height)
 		}
 		_, err = r.ReadTightData(dataLength)
 		if err != nil {

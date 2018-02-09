@@ -81,9 +81,9 @@ func main() {
 	encs := []common.IEncoding{
 		&encodings.TightEncoding{},
 		//&encodings.TightPngEncoding{},
-		//rre := encodings.RREEncoding{},
-		//zlib := encodings.ZLibEncoding{},
-		//zrle := encodings.ZRLEEncoding{},
+		//&encodings.RREEncoding{},
+		//&encodings.ZLibEncoding{},
+		//&encodings.ZRLEEncoding{},
 		//&encodings.CopyRectEncoding{},
 		//coRRE := encodings.CoRREEncoding{},
 		//hextile := encodings.HextileEncoding{},

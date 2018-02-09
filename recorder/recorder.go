@@ -38,7 +38,7 @@ func NewRecorder(saveFilePath string) (*Recorder, error) {
 
 	rec.maxWriteSize = 65535
 
-	rec.writer, err = os.OpenFile(saveFilePath, os.O_RDWR|os.O_CREATE, 0755)
+	rec.writer, err = os.OpenFile(saveFilePath, os.O_RDWR|os.O_CREATE, 0644)
 	if err != nil {
 		logger.Errorf("unable to open file: %s, error: %v", saveFilePath, err)
 		return nil, err

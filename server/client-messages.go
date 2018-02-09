@@ -165,6 +165,36 @@ func (msg *MsgKeyEvent) Write(c io.Writer) error {
 	return nil
 }
 
+// MsgKeyEvent holds the wire format message.
+type MsgQEMUExtKeyEvent struct {
+	SubmessageType uint8  // submessage type
+	DownFlag       uint16 // down-flag
+	KeySym         Key    // key symbol
+	KeyCode        uint32 // scan code
+}
+
+func (*MsgQEMUExtKeyEvent) Type() common.ClientMessageType {
+	return common.QEMUExtendedKeyEventMsgType
+}
+
+func (*MsgQEMUExtKeyEvent) Read(c io.Reader) (common.ClientMessage, error) {
+	msg := MsgKeyEvent{}
+	if err := binary.Read(c, binary.BigEndian, &msg); err != nil {
+		return nil, err
+	}
+	return &msg, nil
+}
+
+func (msg *MsgQEMUExtKeyEvent) Write(c io.Writer) error {
+	if err := binary.Write(c, binary.BigEndian, msg.Type()); err != nil {
+		return err
+	}
+	if err := binary.Write(c, binary.BigEndian, msg); err != nil {
+		return err
+	}
+	return nil
+}
+
 // PointerEventMessage holds the wire format message.
 type MsgPointerEvent struct {
 	Mask uint8  // button-mask

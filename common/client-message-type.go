@@ -17,7 +17,8 @@ const (
 	KeyEventMsgType
 	PointerEventMsgType
 	ClientCutTextMsgType
-	ClientFenceMsgType = 248
+	ClientFenceMsgType          = 248
+	QEMUExtendedKeyEventMsgType = 255
 )
 
 // Color represents a single color in a color map.
@@ -47,6 +48,8 @@ func (cmt ClientMessageType) String() string {
 		return "FramebufferUpdateRequest"
 	case KeyEventMsgType:
 		return "KeyEvent"
+	case QEMUExtendedKeyEventMsgType:
+		return "QEMUExtendedKeyEvent"
 	case PointerEventMsgType:
 		return "PointerEvent"
 	case ClientCutTextMsgType:

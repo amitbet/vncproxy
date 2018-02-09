@@ -2,7 +2,7 @@
 sum="sha1sum"
 
 # VERSION=`date -u +%Y%m%d`
-VERSION="v1.0"
+VERSION="v1.01"
 LDFLAGS="-X main.VERSION=$VERSION -s -w"
 GCFLAGS=""
 
@@ -24,8 +24,8 @@ fi
 
 
 
-OSES=(linux darwin windows freebsd)
-ARCHS=(amd64 386)
+OSES=( linux darwin windows )
+ARCHS=(amd64 386 )
 for os in ${OSES[@]}; do
 	for arch in ${ARCHS[@]}; do
 		suffix=""

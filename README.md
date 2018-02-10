@@ -16,12 +16,16 @@ An RFB proxy, written in go that can save and replay FBS files
     - VineVnc(server)
     - TigerVnc(client)
 
-## Usage:
 
 ### Executables (see releases)
 * proxy - the actual recording proxy, supports listening to tcp & ws ports and recording traffic to fbs files
 * recorder - connects to a vnc server as a client and records the screen
 * player - a toy player that will replay a given fbs file to all incoming connections
+
+## Usage:
+    recorder -recDir=./recording.rbs -targHost=192.168.0.100 -targPort=5903 -targPass=@@@@@
+    player -fbsFile=./myrec.fbs -tcpPort=5905
+    proxy -recDir=./recordings/ -targHost=192.168.0.100 -targPort=5903 -targPass=@@@@@ -tcpPort=5903 -vncPass=@!@!@!
 
 ### Code usage examples
 * player/main.go (fbs recording vnc client) 

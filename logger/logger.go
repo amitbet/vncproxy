@@ -2,7 +2,7 @@ package logger
 
 import "fmt"
 
-var simpleLogger = SimpleLogger{LogLevelDebug}
+var simpleLogger = SimpleLogger{LogLevelWarn}
 
 type Logger interface {
 	Debug(v ...interface{})

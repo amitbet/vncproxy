@@ -189,6 +189,11 @@ func (r *Recorder) writeToDisk() error {
 	paddedSize := (bytesLen + 3) & 0x7FFFFFFC
 	paddingSize := paddedSize - bytesLen
 
+	/// KeyFramePos, _ := r.writer.Seek(0, os.SEEK_CUR)
+	/// fi, err := r.writer.Stat()
+	/// KeyFramePos := fi.Size() + KeyFramePosInBuffer
+	// now save the KF pos in some file
+
 	//logger.Debugf("paddedSize=%d paddingSize=%d bytesLen=%d", paddedSize, paddingSize, bytesLen)
 	//write buffer padded to 32bit
 	_, err := r.buffer.WriteTo(r.writer)

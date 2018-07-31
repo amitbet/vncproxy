@@ -67,7 +67,11 @@ func main() {
 		})
 
 	clientConn.Listeners.AddListener(rec)
-	clientConn.Listeners.AddListener(&recorder.RfbRequester{Conn: clientConn, Name: "Rfb Requester"})
+	clientConn.Listeners.AddListener(&recorder.RfbRequester{
+		Conn: clientConn,
+		Name: "Rfb Requester",
+		FullScreenRefreshInSec: 30, //create a full refresh key frame every 30sec for seeking
+	})
 	clientConn.Connect()
 
 	if err != nil {

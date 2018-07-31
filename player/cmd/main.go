@@ -80,7 +80,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	url := "http://localhost:" + *wsPort + "/"
+	url := "http://0.0.0.0:" + *wsPort + "/"
 
 	if *tcpPort != "" && *wsPort != "" {
 		logger.Infof("running two listeners: tcp port: %s, ws url: %s", *tcpPort, url)

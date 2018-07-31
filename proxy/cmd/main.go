@@ -35,15 +35,15 @@ func main() {
 	if *recordDir == "" {
 		logger.Warn("FBS recording is turned off")
 	}
-	
+
 	tcpUrl := ""
 	if *tcpPort != "" {
 		tcpUrl = ":" + string(*tcpPort)
 	}
 
 	proxy := &proxy.VncProxy{
-		WsListeningUrl:   "http://localhost:" + string(*wsPort) + "/", // empty = not listening on ws
-		RecordingDir:     *recordDir,                                  //"/Users/amitbet/vncRec",                     // empty = no recording
+		WsListeningUrl:   "http://0.0.0.0:" + string(*wsPort) + "/", // empty = not listening on ws
+		RecordingDir:     *recordDir,                                //"/Users/amitbet/vncRec",                     // empty = no recording
 		TcpListeningUrl:  tcpUrl,
 		ProxyVncPassword: *vncPass, //empty = no auth
 		SingleSession: &proxy.VncSession{

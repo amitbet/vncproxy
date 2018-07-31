@@ -2,7 +2,7 @@
 sum="sha1sum"
 
 # VERSION=`date -u +%Y%m%d`
-VERSION="v1.01"
+VERSION="v1.02"
 LDFLAGS="-X main.VERSION=$VERSION -s -w"
 GCFLAGS=""
 

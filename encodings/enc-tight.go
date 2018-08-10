@@ -142,7 +142,7 @@ func handleTightFilters(subencoding uint8, pixelFmt *common.PixelFormat, rect *c
 			return
 		}
 
-		paletteSize := colorCount + 1 // add one more
+		paletteSize := int(colorCount) + 1 // add one more
 		logger.Debugf("handleTightFilters: ----PALETTE_FILTER: paletteSize=%d bytesPixel=%d\n", paletteSize, bytesPixel)
 		//complete palette
 		_, err = r.ReadBytes(int(paletteSize) * bytesPixel)

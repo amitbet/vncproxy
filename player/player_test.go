@@ -18,6 +18,7 @@ func TestServer(t *testing.T) {
 		&encodings.RawEncoding{},
 		&encodings.TightEncoding{},
 		&encodings.EncCursorPseudo{},
+		&encodings.EncLedStatePseudo{},
 		//encodings.TightPngEncoding{},
 		&encodings.RREEncoding{},
 		&encodings.ZLibEncoding{},

@@ -73,6 +73,8 @@ func (enct EncodingType) String() string {
 		return "EncJPEGQualityLevelPseudo1"
 	case EncCursorPseudo:
 		return "EncCursorPseudo"
+	case EncLedStatePseudo:
+		return "EncLedStatePseudo"
 	case EncDesktopSizePseudo:
 		return "EncDesktopSizePseudo"
 	case EncLastRectPseudo:
@@ -183,6 +185,7 @@ const (
 	EncQEMUPointerMotionChangePseudo EncodingType = -257
 	EncQEMUExtendedKeyEventPseudo    EncodingType = -258
 	EncTightPng                      EncodingType = -260
+	EncLedStatePseudo                EncodingType = -261
 	EncExtendedDesktopSizePseudo     EncodingType = -308
 	EncXvpPseudo                     EncodingType = -309
 	EncFencePseudo                   EncodingType = -312

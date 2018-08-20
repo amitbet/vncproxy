@@ -118,6 +118,7 @@ func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server
 			&encodings.RawEncoding{},
 			&encodings.TightEncoding{},
 			&encodings.EncCursorPseudo{},
+			&encodings.EncLedStatePseudo{},
 			&encodings.TightPngEncoding{},
 			&encodings.RREEncoding{},
 			&encodings.ZLibEncoding{},

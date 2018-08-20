@@ -58,6 +58,7 @@ func NewFbsReader(fbsFile string) (*FbsReader, error) {
 			&encodings.TightEncoding{},
 			&encodings.TightPngEncoding{},
 			&encodings.EncCursorPseudo{},
+			&encodings.EncLedStatePseudo{},
 			&encodings.RawEncoding{},
 			&encodings.RREEncoding{},
 		},

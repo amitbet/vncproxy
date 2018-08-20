@@ -11,7 +11,7 @@ An RFB proxy, written in go that can save and replay FBS files
 - Tested on tight encoding with:
     - Tightvnc (client + java client + server)
     - FBS player (tightVnc Java player)
-    - NoVnc(web client)
+    - NoVnc(web client) => use -wsPort to open a websocket
     - ChickenOfTheVnc(client)
     - VineVnc(server)
     - TigerVnc(client)
@@ -25,7 +25,7 @@ An RFB proxy, written in go that can save and replay FBS files
 ## Usage:
     recorder -recDir=./recording.rbs -targHost=192.168.0.100 -targPort=5903 -targPass=@@@@@
     player -fbsFile=./myrec.fbs -tcpPort=5905
-    proxy -recDir=./recordings/ -targHost=192.168.0.100 -targPort=5903 -targPass=@@@@@ -tcpPort=5903 -vncPass=@!@!@!
+    proxy -recDir=./recordings/ -targHost=192.168.0.100 -targPort=5903 -targPass=@@@@@ -tcpPort=5903 -wsPort=5905 -vncPass=@!@!@!
 
 ### Code usage examples
 * player/main.go (fbs recording vnc client) 

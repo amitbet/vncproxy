@@ -7,16 +7,22 @@ import (
 	"vncproxy/common"
 )
 
+// ZLibEncoding ..
 type ZLibEncoding struct {
 	bytes []byte
 }
 
+// Type ..
 func (z *ZLibEncoding) Type() int32 {
 	return 6
 }
+
+// WriteTo ...
 func (z *ZLibEncoding) WriteTo(w io.Writer) (n int, err error) {
 	return w.Write(z.bytes)
 }
+
+//Read ...
 func (z *ZLibEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.IEncoding, error) {
 	//conn := common.RfbReadHelper{Reader:r}
 	//conn := &DataSource{conn: conn.c, PixelFormat: conn.PixelFormat}

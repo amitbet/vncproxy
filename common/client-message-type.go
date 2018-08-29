@@ -4,6 +4,7 @@ import (
 	"io"
 )
 
+// ClientMessageType ...
 type ClientMessageType uint8
 
 //go:generate stringer -type=ClientMessageType
@@ -29,6 +30,7 @@ type Color struct {
 	R, G, B uint16
 }
 
+// ColorMap ...
 type ColorMap [256]Color
 
 // ClientMessage is the interface
@@ -38,6 +40,7 @@ type ClientMessage interface {
 	Write(io.Writer) error
 }
 
+// String ...
 func (cmt ClientMessageType) String() string {
 	switch cmt {
 	case SetPixelFormatMsgType:

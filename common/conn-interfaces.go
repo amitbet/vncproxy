@@ -2,6 +2,7 @@ package common
 
 import "io"
 
+//IServerConn ...
 type IServerConn interface {
 	io.ReadWriter
 	//IServerConn() io.ReadWriter
@@ -23,6 +24,7 @@ type IServerConn interface {
 	// Write([]byte) (int, error)
 }
 
+//IClientConn ...
 type IClientConn interface {
 	CurrentPixelFormat() *PixelFormat
 	//CurrentColorMap() *ColorMap

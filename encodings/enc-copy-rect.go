@@ -6,16 +6,20 @@ import (
 	"vncproxy/common"
 )
 
+//CopyRectEncoding ..
 type CopyRectEncoding struct {
 	//Colors       []Color
 	copyRectSrcX uint16
 	copyRectSrcY uint16
 }
 
+//Type ..
 func (z *CopyRectEncoding) Type() int32 {
 	return 1
 }
-func (z *CopyRectEncoding) WriteTo(w io.Writer) (n int, err error) {
+
+//WriteTo ..
+func (z *CopyRectEncoding) WriteTo(w io.Writer) (n int64, err error) {
 	binary.Write(w, binary.BigEndian, z.copyRectSrcX)
 	if err != nil {
 		return 0, err

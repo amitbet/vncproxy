@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/binary"
+	"fmt"
 	"io"
 	"vncproxy/common"
 )
@@ -21,10 +22,12 @@ type MsgSetPixelFormat struct {
 	_  [3]byte            // padding after pixel format
 }
 
-func (*MsgSetPixelFormat) Type() common.ClientMessageType {
+//Type ...
+func (msg *MsgSetPixelFormat) Type() common.ClientMessageType {
 	return common.SetPixelFormatMsgType
 }
 
+//Write ...
 func (msg *MsgSetPixelFormat) Write(c io.Writer) error {
 	if err := binary.Write(c, binary.BigEndian, msg.Type()); err != nil {
 		return err
@@ -58,6 +61,7 @@ type MsgSetEncodings struct {
 	Encodings []common.EncodingType
 }
 
+//Type ...
 func (*MsgSetEncodings) Type() common.ClientMessageType {
 	return common.SetEncodingsMsgType
 }
@@ -114,10 +118,12 @@ type MsgFramebufferUpdateRequest struct {
 	Width, Height uint16 // width, height
 }
 
+//Type ...
 func (*MsgFramebufferUpdateRequest) Type() common.ClientMessageType {
 	return common.FramebufferUpdateRequestMsgType
 }
 
+//Read ...
 func (*MsgFramebufferUpdateRequest) Read(c io.Reader) (common.ClientMessage, error) {
 	msg := MsgFramebufferUpdateRequest{}
 	if err := binary.Read(c, binary.BigEndian, &msg); err != nil {
@@ -126,6 +132,7 @@ func (*MsgFramebufferUpdateRequest) Read(c io.Reader) (common.ClientMessage, err
 	return &msg, nil
 }
 
+//Write ...
 func (msg *MsgFramebufferUpdateRequest) Write(c io.Writer) error {
 	if err := binary.Write(c, binary.BigEndian, msg.Type()); err != nil {
 		return err
@@ -143,6 +150,7 @@ type MsgKeyEvent struct {
 	Key  Key     // key
 }
 
+//Type ...
 func (*MsgKeyEvent) Type() common.ClientMessageType {
 	return common.KeyEventMsgType
 }
@@ -165,7 +173,7 @@ func (msg *MsgKeyEvent) Write(c io.Writer) error {
 	return nil
 }
 
-// MsgKeyEvent holds the wire format message.
+// MsgQEMUExtKeyEvent holds the wire format message.
 type MsgQEMUExtKeyEvent struct {
 	SubmessageType uint8  // submessage type
 	DownFlag       uint16 // down-flag
@@ -173,10 +181,12 @@ type MsgQEMUExtKeyEvent struct {
 	KeyCode        uint32 // scan code
 }
 
+//Type ...
 func (*MsgQEMUExtKeyEvent) Type() common.ClientMessageType {
 	return common.QEMUExtendedKeyEventMsgType
 }
 
+//Read ...
 func (*MsgQEMUExtKeyEvent) Read(c io.Reader) (common.ClientMessage, error) {
 	msg := MsgKeyEvent{}
 	if err := binary.Read(c, binary.BigEndian, &msg); err != nil {
@@ -185,6 +195,7 @@ func (*MsgQEMUExtKeyEvent) Read(c io.Reader) (common.ClientMessage, error) {
 	return &msg, nil
 }
 
+//Write ...
 func (msg *MsgQEMUExtKeyEvent) Write(c io.Writer) error {
 	if err := binary.Write(c, binary.BigEndian, msg.Type()); err != nil {
 		return err
@@ -195,16 +206,18 @@ func (msg *MsgQEMUExtKeyEvent) Write(c io.Writer) error {
 	return nil
 }
 
-// PointerEventMessage holds the wire format message.
+// MsgPointerEvent holds the wire format message.
 type MsgPointerEvent struct {
 	Mask uint8  // button-mask
 	X, Y uint16 // x-, y-position
 }
 
+//Type ...
 func (*MsgPointerEvent) Type() common.ClientMessageType {
 	return common.PointerEventMsgType
 }
 
+//Read ...
 func (*MsgPointerEvent) Read(c io.Reader) (common.ClientMessage, error) {
 	msg := MsgPointerEvent{}
 	if err := binary.Read(c, binary.BigEndian, &msg); err != nil {
@@ -223,13 +236,16 @@ func (msg *MsgPointerEvent) Write(c io.Writer) error {
 	return nil
 }
 
+//MsgClientFence ...
 type MsgClientFence struct {
 }
 
+//Type ...
 func (*MsgClientFence) Type() common.ClientMessageType {
 	return common.ClientFenceMsgType
 }
 
+//Read ...
 func (cf *MsgClientFence) Read(c io.Reader) (common.ClientMessage, error) {
 	bytes := make([]byte, 3)
 	c.Read(bytes)
@@ -253,8 +269,9 @@ func (cf *MsgClientFence) Read(c io.Reader) (common.ClientMessage, error) {
 	return cf, nil
 }
 
-func (msg *MsgClientFence) Write(c io.Writer) error {
-	panic("not implemented!")
+//Write ...
+func (cf *MsgClientFence) Write(c io.Writer) error {
+	return fmt.Errorf("not implemented")
 }
 
 // MsgClientCutText holds the wire format message, sans the text field.
@@ -264,10 +281,12 @@ type MsgClientCutText struct {
 	Text   []byte
 }
 
+//Type ...
 func (*MsgClientCutText) Type() common.ClientMessageType {
 	return common.ClientCutTextMsgType
 }
 
+//Read ...
 func (*MsgClientCutText) Read(c io.Reader) (common.ClientMessage, error) {
 	msg := MsgClientCutText{}
 	var pad [3]byte

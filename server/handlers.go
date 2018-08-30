@@ -9,14 +9,17 @@ import (
 	"vncproxy/logger"
 )
 
+//ProtoVersionLength ...
 const ProtoVersionLength = 12
 
+//ProtoVersion ...
 const (
 	ProtoVersionUnknown = ""
 	ProtoVersion33      = "RFB 003.003\n"
 	ProtoVersion38      = "RFB 003.008\n"
 )
 
+//ParseProtoVersion ...
 func ParseProtoVersion(pv []byte) (uint, uint, error) {
 	var major, minor uint
 
@@ -26,7 +29,7 @@ func ParseProtoVersion(pv []byte) (uint, uint, error) {
 
 	l, err := fmt.Sscanf(string(pv), "RFB %d.%d\n", &major, &minor)
 	if l != 2 {
-		return 0, 0, fmt.Errorf("error parsing ProtocolVersion.")
+		return 0, 0, fmt.Errorf("error parsing ProtocolVersion")
 	}
 	if err != nil {
 		return 0, 0, err
@@ -35,6 +38,7 @@ func ParseProtoVersion(pv []byte) (uint, uint, error) {
 	return major, minor, nil
 }
 
+//ServerVersionHandler ...
 func ServerVersionHandler(cfg *ServerConfig, c *ServerConn) error {
 	var version [ProtoVersionLength]byte
 	if err := binary.Write(c, binary.BigEndian, []byte(ProtoVersion38)); err != nil {
@@ -143,7 +147,7 @@ func ServerServerInitHandler(cfg *ServerConfig, c *ServerConn) error {
 		return err
 	}
 
-	if err := srvInit.PixelFormat.WriteTo(c); err != nil {
+	if _, err := srvInit.PixelFormat.WriteTo(c); err != nil {
 		return err
 	}
 	if err := binary.Write(c, binary.BigEndian, srvInit.NameLength); err != nil {

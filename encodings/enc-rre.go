@@ -6,6 +6,7 @@ import (
 	"vncproxy/common"
 )
 
+//RREEncoding ...
 type RREEncoding struct {
 	//Colors []Color
 	numSubRects     uint32
@@ -13,6 +14,7 @@ type RREEncoding struct {
 	subRectData     []byte
 }
 
+//WriteTo ...
 func (z *RREEncoding) WriteTo(w io.Writer) (n int, err error) {
 	binary.Write(w, binary.BigEndian, z.numSubRects)
 	if err != nil {
@@ -33,9 +35,12 @@ func (z *RREEncoding) WriteTo(w io.Writer) (n int, err error) {
 	return b, nil
 }
 
+//Type ...
 func (z *RREEncoding) Type() int32 {
 	return 2
 }
+
+//Read ...
 func (z *RREEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.IEncoding, error) {
 	bytesPerPixel := int(pixelFmt.BPP / 8)
 	numOfSubrectangles, err := r.ReadUint32()

@@ -6,6 +6,7 @@ import (
 	"vncproxy/logger"
 )
 
+//Hextile ...
 const (
 	HextileRaw                 = 1
 	HextileBackgroundSpecified = 2
@@ -14,17 +15,23 @@ const (
 	HextileSubrectsColoured    = 16
 )
 
+//HextileEncoding ...
 type HextileEncoding struct {
 	//Colors []Color
 	bytes []byte
 }
 
+//Type ...
 func (z *HextileEncoding) Type() int32 {
 	return 5
 }
+
+//WriteTo ...
 func (z *HextileEncoding) WriteTo(w io.Writer) (n int, err error) {
 	return w.Write(z.bytes)
 }
+
+//Read ...
 func (z *HextileEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.IEncoding, error) {
 	bytesPerPixel := int(pixelFmt.BPP) / 8
 

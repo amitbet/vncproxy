@@ -11,13 +11,18 @@ type RawEncoding struct {
 	bytes []byte
 }
 
-func (*RawEncoding) Type() int32 {
+//Type ...
+func (z *RawEncoding) Type() int32 {
 	return 0
 }
+
+//WriteTo ...
 func (z *RawEncoding) WriteTo(w io.Writer) (n int, err error) {
 	return w.Write(z.bytes)
 }
-func (*RawEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.IEncoding, error) {
+
+//Read ...
+func (z *RawEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.IEncoding, error) {
 
 	bytesPerPixel := int(pixelFmt.BPP / 8)
 

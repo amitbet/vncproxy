@@ -19,7 +19,7 @@ func (z *CopyRectEncoding) Type() int32 {
 }
 
 //WriteTo ..
-func (z *CopyRectEncoding) WriteTo(w io.Writer) (n int64, err error) {
+func (z *CopyRectEncoding) WriteTo(w io.Writer) (n int, err error) {
 	binary.Write(w, binary.BigEndian, z.copyRectSrcX)
 	if err != nil {
 		return 0, err
@@ -31,6 +31,7 @@ func (z *CopyRectEncoding) WriteTo(w io.Writer) (n int64, err error) {
 	return 4, nil
 }
 
+//Read ...
 func (z *CopyRectEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.IEncoding, error) {
 	z.copyRectSrcX, _ = r.ReadUint16()
 	z.copyRectSrcY, _ = r.ReadUint16()

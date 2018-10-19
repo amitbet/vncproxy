@@ -16,10 +16,11 @@ func main() {
 	// var tcpPort = flag.String("tcpPort", "", "tcp port")
 	// var wsPort = flag.String("wsPort", "", "websocket port")
 	// var vncPass = flag.String("vncPass", "", "password on incoming vnc connections to the proxy, defaults to no password")
-	var recordDir = flag.String("recDir", "", "path to save FBS recordings WILL NOT RECORD IF EMPTY.")
+	var recordDir = flag.String("recFile", "", "FBS file to create, recordings WILL NOT RECORD IF EMPTY.")
 	var targetVncPort = flag.String("targPort", "", "target vnc server port")
 	var targetVncPass = flag.String("targPass", "", "target vnc password")
 	var targetVncHost = flag.String("targHost", "localhost", "target vnc hostname")
+	var logLevel = flag.String("logLevel", "info", "change logging level")
 
 	flag.Parse()
 	logger.SetLogLevel(*logLevel)
@@ -41,6 +42,8 @@ func main() {
 	}
 	if *recordDir == "" {
 		logger.Warn("FBS recording is turned off")
+	} else {
+		logger.Infof("Recording rfb stream into file: '%s'", *recordDir)
 	}
 
 	//nc, err := net.Dial("tcp", "192.168.1.101:5903")

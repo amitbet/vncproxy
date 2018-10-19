@@ -151,6 +151,13 @@ func Debugf(format string, v ...interface{}) {
 	simpleLogger.Debugf(format, v...)
 }
 
+func Trace(v ...interface{}) {
+	simpleLogger.Trace(v...)
+}
+func Tracef(format string, v ...interface{}) {
+	simpleLogger.Tracef(format, v...)
+}
+
 func Info(v ...interface{}) {
 	simpleLogger.Info(v...)
 }

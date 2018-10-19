@@ -13,7 +13,7 @@ type ClientUpdater struct {
 
 // Consume recieves vnc-server-bound messages (Client messages) and updates the server part of the proxy
 func (cc *ClientUpdater) Consume(seg *common.RfbSegment) error {
-	//logger.Debugf("ClientUpdater.Consume (vnc-server-bound): got segment type=%s bytes: %v", seg.SegmentType, seg.Bytes)
+	logger.Tracef("ClientUpdater.Consume (vnc-server-bound): got segment type=%s bytes: %v", seg.SegmentType, seg.Bytes)
 	switch seg.SegmentType {
 
 	case common.SegmentFullyParsedClientMessage:

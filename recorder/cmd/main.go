@@ -22,6 +22,7 @@ func main() {
 	var targetVncHost = flag.String("targHost", "localhost", "target vnc hostname")
 
 	flag.Parse()
+	logger.SetLogLevel(*logLevel)
 
 	if *targetVncHost == "" {
 		logger.Error("no target vnc server host defined")

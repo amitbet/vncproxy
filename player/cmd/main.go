@@ -15,8 +15,10 @@ func main() {
 	wsPort := flag.String("wsPort", "", "websocket port for player to listen to client connections")
 	tcpPort := flag.String("tcpPort", "", "tcp port for player to listen to client connections")
 	fbsFile := flag.String("fbsFile", "", "fbs file to serve to all connecting clients")
+	logLevel := flag.String("logLevel", "info", "change logging level")
 
 	flag.Parse()
+	logger.SetLogLevel(*logLevel)
 
 	fmt.Println("**************************************************************************")
 	fmt.Println("*** This is a toy server that replays a single FBS file to all clients ***")

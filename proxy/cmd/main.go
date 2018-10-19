@@ -14,8 +14,10 @@ func main() {
 	var targetVncPort = flag.String("targPort", "", "target vnc server port")
 	var targetVncHost = flag.String("targHost", "", "target vnc server host")
 	var targetVncPass = flag.String("targPass", "", "target vnc password")
+	var logLevel = flag.String("logLevel", "info", "change logging level")
 
 	flag.Parse()
+	logger.SetLogLevel(*logLevel)
 
 	if *tcpPort == "" && *wsPort == "" {
 		logger.Error("no listening port defined")

@@ -2,7 +2,31 @@ package logger
 
 import "fmt"
 
-var simpleLogger = SimpleLogger{LogLevelWarn}
+var simpleLogger = SimpleLogger{LogLevelInfo}
+
+func SetLogLevel(logLevel string) {
+	level := GetLogLevel(logLevel)
+	fmt.Println("Log level set to: ", logLevel)
+	simpleLogger = SimpleLogger{level}
+}
+
+func GetLogLevel(logLevel string) LogLevel {
+	switch logLevel {
+	case "trace":
+		return LogLevelTrace
+	case "debug":
+		return LogLevelDebug
+	case "info":
+		return LogLevelInfo
+	case "warn":
+		return LogLevelWarn
+	case "error":
+		return LogLevelError
+	case "fatal":
+		return LogLevelFatal
+	}
+	return LogLevelInfo
+}
 
 type Logger interface {
 	Debug(v ...interface{})

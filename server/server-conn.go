@@ -196,7 +196,7 @@ func (c *ServerConn) handle() error {
 				return err
 			}
 
-			logger.Infof("IServerConn.Handle got ClientMessage: %s, %v", parsedMsg.Type(), parsedMsg)
+			logger.Debugf("IServerConn.Handle got ClientMessage: %s, %v", parsedMsg.Type(), parsedMsg)
 			//TODO: treat set encodings by allowing only supported encoding in proxy configurations
 			//// if parsedMsg.Type() == common.SetEncodingsMsgType{
 			//// 	c.cfg.Encodings

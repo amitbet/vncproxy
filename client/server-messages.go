@@ -63,7 +63,7 @@ func (fbm *MsgFramebufferUpdate) Read(c common.IClientConn, r *common.RfbReadHel
 	// We must always support the raw encoding
 	rawEnc := new(encodings.RawEncoding)
 	encMap[rawEnc.Type()] = rawEnc
-	logger.Infof("MsgFramebufferUpdate.Read: numrects= %d", numRects)
+	logger.Debugf("MsgFramebufferUpdate.Read: numrects= %d", numRects)
 
 	rects := make([]common.Rectangle, numRects)
 	for i := uint16(0); i < numRects; i++ {
@@ -90,7 +90,7 @@ func (fbm *MsgFramebufferUpdate) Read(c common.IClientConn, r *common.RfbReadHel
 
 		encType := common.EncodingType(encodingTypeInt)
 
-		logger.Infof("MsgFramebufferUpdate.Read: rect# %d, rect hdr data: enctype=%s, data: %s", i, encType, string(jBytes))
+		logger.Debugf("MsgFramebufferUpdate.Read: rect# %d, rect hdr data: enctype=%s, data: %s", i, encType, string(jBytes))
 		enc, supported := encMap[encodingTypeInt]
 		if supported {
 			var err error

@@ -15,6 +15,7 @@ var DefaultClientMessages = []common.ClientMessage{
 	&MsgKeyEvent{},
 	&MsgPointerEvent{},
 	&MsgClientCutText{},
+	&MsgClientQemuExtendedKey{},
 }
 
 // FramebufferUpdate holds a FramebufferUpdate wire format message.

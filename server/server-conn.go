@@ -168,16 +168,17 @@ func (c *ServerConn) handle() error {
 		default:
 			var messageType common.ClientMessageType
 			if err := binary.Read(c, binary.BigEndian, &messageType); err != nil {
-				logger.Errorf("IServerConn.handle error: %v", err)
+				logger.Errorf("ServerConn.handle error: %v", err)
 				return err
 			}
+			logger.Debugf("ServerConn.handle: got messagetype, %d", messageType)
 			msg, ok := clientMessages[messageType]
+			logger.Debugf("ServerConn.handle: found message type, %v", ok)
 			if !ok {
-				return fmt.Errorf("IServerConn.Handle: unsupported message-type: %v", messageType)
+				logger.Errorf("ServerConn.handle: unsupported message-type: %v", messageType)
 			}
-
 			parsedMsg, err := msg.Read(c)
-
+			logger.Debugf("ServerConn.handle: got parsed messagetype, %v", parsedMsg)
 			//update connection for pixel format / color map changes
 			switch parsedMsg.Type() {
 			case common.SetPixelFormatMsgType:

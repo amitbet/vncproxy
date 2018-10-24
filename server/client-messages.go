@@ -310,3 +310,34 @@ func (msg *MsgClientCutText) Write(c io.Writer) error {
 
 	return nil
 }
+
+// MsgClientQemuExtendedKey holds the wire format message, for qemu keys
+type MsgClientQemuExtendedKey struct {
+	SubType  uint8   // sub type
+	IsDown   uint16 // button down indicator
+	KeySym   uint32 // key symbol
+	KeyCode  uint32 // key code
+}
+
+func (*MsgClientQemuExtendedKey) Type() common.ClientMessageType {
+	return common.QEMUExtendedKeyEventMsgType
+}
+
+func (*MsgClientQemuExtendedKey) Read(c io.Reader) (common.ClientMessage, error) {
+	msg := MsgClientQemuExtendedKey{}
+
+	if err := binary.Read(c, binary.BigEndian, &msg); err != nil {
+		return nil, err
+	}
+	return &msg, nil
+}
+
+func (msg *MsgClientQemuExtendedKey) Write(c io.Writer) error {
+	if err := binary.Write(c, binary.BigEndian, msg.Type()); err != nil {
+		return err
+	}
+	if err := binary.Write(c, binary.BigEndian, msg); err != nil {
+		return err
+	}
+	return nil
+}

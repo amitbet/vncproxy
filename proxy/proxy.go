@@ -24,8 +24,17 @@ type VncProxy struct {
 	sessionManager   *SessionManager
 }
 
-func (vp *VncProxy) createClientConnection(targetServerUrl string, vncPass string) (*client.ClientConn, error) {
-	nc, err := net.Dial("tcp", targetServerUrl)
+func (vp *VncProxy) createClientConnection(target string, vncPass string) (*client.ClientConn, error) {
+	var (
+		nc  net.Conn
+		err error
+	)
+
+	if target[0] == '/' {
+		nc, err = net.Dial("unix", target)
+	} else {
+		nc, err = net.Dial("tcp", target)
+	}
 
 	if err != nil {
 		logger.Errorf("error connecting to vnc server: %s", err)
@@ -85,7 +94,12 @@ func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server
 
 	session.Status = SessionStatusInit
 	if session.Type == SessionTypeProxyPass || session.Type == SessionTypeRecordingProxy {
-		cconn, err := vp.createClientConnection(session.TargetHostname+":"+session.TargetPort, session.TargetPassword)
+		target := session.Target
+		if session.TargetHostname != "" && session.TargetPort != "" {
+			target = session.TargetHostname + ":" + session.TargetPort
+		}
+
+		cconn, err := vp.createClientConnection(target, session.TargetPassword)
 		if err != nil {
 			session.Status = SessionStatusError
 			logger.Errorf("Proxy.newServerConnHandler error creating connection: %s", err)

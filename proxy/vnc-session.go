@@ -16,6 +16,7 @@ const (
 )
 
 type VncSession struct {
+	Target         string
 	TargetHostname string
 	TargetPort     string
 	TargetPassword string

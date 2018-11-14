@@ -14,8 +14,9 @@ func main() {
 	var wsPort = flag.String("wsPort", "", "websocket port")
 	var vncPass = flag.String("vncPass", "", "password on incoming vnc connections to the proxy, defaults to no password")
 	var recordDir = flag.String("recDir", "", "path to save FBS recordings WILL NOT RECORD if not defined.")
-	var targetVncPort = flag.String("targPort", "", "target vnc server port")
-	var targetVncHost = flag.String("targHost", "", "target vnc server host")
+	var targetVnc = flag.String("target", "", "target vnc server (host:port or /path/to/unix.socket)")
+	var targetVncPort = flag.String("targPort", "", "target vnc server port (deprecated, use -target)")
+	var targetVncHost = flag.String("targHost", "", "target vnc server host (deprecated, use -target)")
 	var targetVncPass = flag.String("targPass", "", "target vnc password")
 	var logLevel = flag.String("logLevel", "info", "change logging level")
 
@@ -28,8 +29,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	if *targetVncPort == "" {
-		logger.Error("no target vnc server port defined")
+	if *targetVnc == "" && *targetVncPort == "" {
+		logger.Error("no target vnc server host/port or socket defined")
 		flag.Usage()
 		os.Exit(1)
 	}
@@ -48,6 +49,7 @@ func main() {
 		TcpListeningUrl:  tcpUrl,
 		ProxyVncPassword: *vncPass, //empty = no auth
 		SingleSession: &vncproxy.VncSession{
+			Target:         *targetVnc,
 			TargetHostname: *targetVncHost,
 			TargetPort:     *targetVncPort,
 			TargetPassword: *targetVncPass, //"vncPass",

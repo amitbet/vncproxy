@@ -3,7 +3,7 @@ package encodings
 import (
 	"io"
 	"math"
-	"vncproxy/common"
+	"github.com/amitbet/vncproxy/common"
 )
 
 type EncCursorPseudo struct {

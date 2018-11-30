@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"io"
 	"strings"
-	"vncproxy/common"
-	"vncproxy/encodings"
-	"vncproxy/logger"
+	"github.com/amitbet/vncproxy/common"
+	"github.com/amitbet/vncproxy/encodings"
+	"github.com/amitbet/vncproxy/logger"
 )
 
 // MsgFramebufferUpdate consists of a sequence of rectangles of

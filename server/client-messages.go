@@ -3,7 +3,7 @@ package server
 import (
 	"encoding/binary"
 	"io"
-	"vncproxy/common"
+	"github.com/amitbet/vncproxy/common"
 )
 
 // Key represents a VNC key press.

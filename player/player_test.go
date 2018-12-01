@@ -3,10 +3,10 @@ package player
 import (
 	"testing"
 	"time"
-	"vncproxy/common"
-	"vncproxy/encodings"
-	"vncproxy/logger"
-	"vncproxy/server"
+	"github.com/amitbet/vncproxy/common"
+	"github.com/amitbet/vncproxy/encodings"
+	"github.com/amitbet/vncproxy/logger"
+	"github.com/amitbet/vncproxy/server"
 )
 
 func TestServer(t *testing.T) {

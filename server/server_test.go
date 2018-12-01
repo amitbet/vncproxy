@@ -3,8 +3,8 @@ package server
 import (
 	"log"
 	"testing"
-	"vncproxy/common"
-	"vncproxy/encodings"
+	"github.com/amitbet/vncproxy/common"
+	"github.com/amitbet/vncproxy/encodings"
 )
 
 func newServerConnHandler(cfg *ServerConfig, conn *ServerConn) error {

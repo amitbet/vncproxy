@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"io"
 	"sync"
-	"vncproxy/common"
-	"vncproxy/logger"
+	"github.com/amitbet/vncproxy/common"
+	"github.com/amitbet/vncproxy/logger"
 )
 
 type ServerConn struct {

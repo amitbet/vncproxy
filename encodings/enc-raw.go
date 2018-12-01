@@ -3,7 +3,7 @@ package encodings
 import (
 	"bytes"
 	"io"
-	"vncproxy/common"
+	"github.com/amitbet/vncproxy/common"
 )
 
 // RawEncoding is raw pixel data sent by the server.

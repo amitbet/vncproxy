@@ -5,13 +5,13 @@ import (
 	"path"
 	"strconv"
 	"time"
-	"vncproxy/client"
-	"vncproxy/common"
-	"vncproxy/encodings"
-	"vncproxy/logger"
-	"vncproxy/player"
-	listeners "vncproxy/recorder"
-	"vncproxy/server"
+	"github.com/amitbet/vncproxy/client"
+	"github.com/amitbet/vncproxy/common"
+	"github.com/amitbet/vncproxy/encodings"
+	"github.com/amitbet/vncproxy/logger"
+	"github.com/amitbet/vncproxy/player"
+	listeners "github.com/amitbet/vncproxy/recorder"
+	"github.com/amitbet/vncproxy/server"
 )
 
 type VncProxy struct {

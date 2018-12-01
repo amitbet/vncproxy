@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"os"
+	"path/filepath"
 
 	"github.com/amitbet/vncproxy/logger"
 	vncproxy "github.com/amitbet/vncproxy/proxy"
@@ -39,14 +40,17 @@ func main() {
 		logger.Warn("proxy will have no password")
 	}
 
-	tcpUrl := ""
+	tcpURL := ""
 	if *tcpPort != "" {
-		tcpUrl = ":" + string(*tcpPort)
+		tcpURL = ":" + string(*tcpPort)
 	}
-
+	wsURL := ""
+	if *wsPort != "" {
+		wsURL = "http://0.0.0.0:" + string(*wsPort) + "/"
+	}
 	proxy := &vncproxy.VncProxy{
-		WsListeningUrl:   "http://0.0.0.0:" + string(*wsPort) + "/", // empty = not listening on ws
-		TcpListeningUrl:  tcpUrl,
+		WsListeningURL:   wsURL, // empty = not listening on ws
+		TCPListeningURL:  tcpURL,
 		ProxyVncPassword: *vncPass, //empty = no auth
 		SingleSession: &vncproxy.VncSession{
 			Target:         *targetVnc,
@@ -61,9 +65,15 @@ func main() {
 	}
 
 	if *recordDir != "" {
-		logger.Warn("FBS recording is turned on")
-		proxy.RecordingDir = *recordDir
+		fullPath, err := filepath.Abs(*recordDir)
+		if err != nil {
+			logger.Error("bad recording path: ", err)
+		}
+		logger.Info("FBS recording is turned on, writing to dir: ", fullPath)
+		proxy.RecordingDir = fullPath
 		proxy.SingleSession.Type = vncproxy.SessionTypeRecordingProxy
+	} else {
+		logger.Info("FBS recording is turned off")
 	}
 
 	proxy.StartListening()

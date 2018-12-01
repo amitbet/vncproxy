@@ -5,6 +5,7 @@ import (
 	"path"
 	"strconv"
 	"time"
+
 	"github.com/amitbet/vncproxy/client"
 	"github.com/amitbet/vncproxy/common"
 	"github.com/amitbet/vncproxy/encodings"
@@ -15,8 +16,8 @@ import (
 )
 
 type VncProxy struct {
-	TcpListeningUrl  string      // empty = not listening on tcp
-	WsListeningUrl   string      // empty = not listening on ws
+	TCPListeningURL  string      // empty = not listening on tcp
+	WsListeningURL   string      // empty = not listening on ws
 	RecordingDir     string      // empty = no recording
 	ProxyVncPassword string      //empty = no auth
 	SingleSession    *VncSession // to be used when not using sessions
@@ -185,19 +186,19 @@ func (vp *VncProxy) StartListening() {
 		UseDummySession:  !vp.UsingSessions,
 	}
 
-	if vp.TcpListeningUrl != "" && vp.WsListeningUrl != "" {
-		logger.Infof("running two listeners: tcp port: %s, ws url: %s", vp.TcpListeningUrl, vp.WsListeningUrl)
+	if vp.TCPListeningURL != "" && vp.WsListeningURL != "" {
+		logger.Infof("running two listeners: tcp port: %s, ws url: %s", vp.TCPListeningURL, vp.WsListeningURL)
 
-		go server.WsServe(vp.WsListeningUrl, cfg)
-		server.TcpServe(vp.TcpListeningUrl, cfg)
+		go server.WsServe(vp.WsListeningURL, cfg)
+		server.TcpServe(vp.TCPListeningURL, cfg)
 	}
 
-	if vp.WsListeningUrl != "" {
-		logger.Infof("running ws listener url: %s", vp.WsListeningUrl)
-		server.WsServe(vp.WsListeningUrl, cfg)
+	if vp.WsListeningURL != "" {
+		logger.Infof("running ws listener url: %s", vp.WsListeningURL)
+		server.WsServe(vp.WsListeningURL, cfg)
 	}
-	if vp.TcpListeningUrl != "" {
-		logger.Infof("running tcp listener on port: %s", vp.TcpListeningUrl)
-		server.TcpServe(":"+vp.TcpListeningUrl, cfg)
+	if vp.TCPListeningURL != "" {
+		logger.Infof("running tcp listener on port: %s", vp.TCPListeningURL)
+		server.TcpServe(vp.TCPListeningURL, cfg)
 	}
 }

@@ -15,6 +15,7 @@ An RFB proxy, written in go that can save and replay FBS files
     - ChickenOfTheVnc(client)
     - VineVnc(server)
     - TigerVnc(client)
+    - Qemu vnc(server) 
 
 
 ### Executables (see releases)

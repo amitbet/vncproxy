@@ -3,6 +3,7 @@ package server
 import (
 	"log"
 	"testing"
+
 	"github.com/amitbet/vncproxy/common"
 	"github.com/amitbet/vncproxy/encodings"
 )
@@ -13,6 +14,7 @@ func newServerConnHandler(cfg *ServerConfig, conn *ServerConn) error {
 }
 
 func TestServer(t *testing.T) {
+	t.Skip("this isn't an automated test, just an entrypoint for debugging")
 
 	//chServer := make(chan common.ClientMessage)
 	chClient := make(chan common.ServerMessage)

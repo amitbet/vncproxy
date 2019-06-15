@@ -4,11 +4,12 @@ import "testing"
 
 func TestProxy(t *testing.T) {
 	//create default session if required
+	t.Skip("this isn't an automated test, just an entrypoint for debugging")
 
 	proxy := &VncProxy{
-		WsListeningUrl:  "http://0.0.0.0:7778/", // empty = not listening on ws
+		WsListeningURL:  "http://0.0.0.0:7778/", // empty = not listening on ws
 		RecordingDir:    "d:\\",                 // empty = no recording
-		TcpListeningUrl: ":5904",
+		TCPListeningURL: ":5904",
 		//RecordingDir:          "C:\\vncRec", // empty = no recording
 		ProxyVncPassword: "1234", //empty = no auth
 		SingleSession: &VncSession{

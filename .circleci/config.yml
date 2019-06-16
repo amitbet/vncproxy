@@ -86,6 +86,7 @@ jobs: # basic units of work in a run
                       zip -D -q -r ../vncproxy-${os}-${arch}-$VERSION.zip proxy${suffix} player${suffix} recorder${suffix}
                       cd ../..
                     $sum ./dist/vncproxy-${os}-${arch}-$VERSION.zip
+                    rm -rf ./dist/${os}_${arch}/
                 done
               done
 

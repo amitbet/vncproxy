@@ -81,11 +81,12 @@ jobs: # basic units of work in a run
                   env CGO_ENABLED=0 GOOS=$os GOARCH=$arch go build -ldflags "$LDFLAGS" -gcflags "$GCFLAGS" -o ./dist/${os}_${arch}/proxy${suffix} ./proxy/cmd
                 
                     if $UPX; then upx -9 client_${os}_${arch}${suffix} server_${os}_${arch}${suffix};fi
-                  # tar -zcf ./dist/vncproxy-${os}-${arch}-$VERSION.tar.gz ./dist/${os}_${arch}/proxy${suffix} ./dist/${os}_${arch}/player${suffix} ./dist/${os}_${arch}/recorder${suffix}
+                  # tar -zcf ./dist/${CIRCLE_PROJECT_REPONAME}-${os}-${arch}-$VERSION.tar.gz ./dist/${os}_${arch}/proxy${suffix} ./dist/${os}_${arch}/player${suffix} ./dist/${os}_${arch}/recorder${suffix}
                       cd dist/${os}_${arch}/
-                      zip -D -q -r ../vncproxy-${os}-${arch}-$VERSION.zip proxy${suffix} player${suffix} recorder${suffix}
+                      zip -D -q -r ../${CIRCLE_PROJECT_REPONAME}-${os}-${arch}-$VERSION.zip proxy${suffix} player${suffix} recorder${suffix}
                       cd ../..
-                    $sum ./dist/vncproxy-${os}-${arch}-$VERSION.zip
+                      export
+                    $sum ./dist/${CIRCLE_PROJECT_REPONAME}-${os}-${arch}-$VERSION.zip
                     rm -rf ./dist/${os}_${arch}/
                 done
               done

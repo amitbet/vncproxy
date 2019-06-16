@@ -1,4 +1,4 @@
-# VncProxy
+# VncProxy [![CircleCI](https://circleci.com/gh/amitbet/vncproxy/tree/master.svg?style=svg)](https://circleci.com/gh/amitbet/vncproxy/tree/master)
 An RFB proxy, written in go that can save and replay FBS files
 * Supports all modern encodings & most useful pseudo-encodings
 * Supports multiple VNC client connections & multi servers (chosen by sessionId)

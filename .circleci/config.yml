@@ -90,7 +90,7 @@ jobs: # basic units of work in a run
               done
 
       - store_artifacts: # upload test summary for display in Artifacts
-          path: /dist
+          path: ./dist
           destination: release-artifacts
 
       # - run: make # pull and build dependencies for the project

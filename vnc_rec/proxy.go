@@ -78,18 +78,30 @@ func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server
 		return err
 	}
 
-	var rec *Recorder
+	var rec_s *ServerRecorder
+	var rec_c *ClientRecorder
 
 	if session.Type == SessionTypeRecordingProxy {
-		recFile := "recording" + strconv.FormatInt(time.Now().Unix(), 10) + ".rbs"
-		recPath := path.Join(vp.RecordingDir, recFile)
-		rec, err = NewRecorder(recPath)
+		timeCurrent := strconv.FormatInt(time.Now().Unix(), 10)
+		recServerFile := "recording_server_" + timeCurrent + ".rbs"
+		recServerPath := path.Join(vp.RecordingDir, recServerFile)
+		rec_s, err = NewServerRecorder(recServerPath)
 		if err != nil {
-			logger.Errorf("Proxy.newServerConnHandler can't open recorder save path: %s", recPath)
+			logger.Errorf("Proxy.newServerConnHandler can't open ServerRecorder save path: %s", recServerPath)
 			return err
 		}
 
-		sconn.Listeners.AddListener(rec)
+		sconn.Listeners.AddListener(rec_s)
+
+		recClientFile := "recording_client_" + timeCurrent + ".rbs"
+		recClientPath := path.Join(vp.RecordingDir, recClientFile)
+		rec_c, err = NewClientRecorder(recClientPath)
+		if err != nil {
+			logger.Errorf("Proxy.newServerConnHandler can't open ClientRecorder save path: %s", recClientPath)
+			return err
+		}
+
+		sconn.Listeners.AddListener(rec_c)
 	}
 
 	session.Status = SessionStatusInit
@@ -106,7 +118,8 @@ func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server
 			return err
 		}
 		if session.Type == SessionTypeRecordingProxy {
-			cconn.Listeners.AddListener(rec)
+			cconn.Listeners.AddListener(rec_s)
+			cconn.Listeners.AddListener(rec_c)
 		}
 
 		//creating cross-listeners between server and client parts to pass messages through the proxy:

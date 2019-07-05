@@ -2,6 +2,7 @@ package vnc_rec
 
 import (
 	"net"
+	"os"
 	"path"
 	"strconv"
 	"time"
@@ -83,8 +84,10 @@ func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server
 
 	if session.Type == SessionTypeRecordingProxy {
 		timeCurrent := strconv.FormatInt(time.Now().Unix(), 10)
-		recServerFile := "recording_server_" + timeCurrent + ".rbs"
-		recServerPath := path.Join(vp.RecordingDir, recServerFile)
+		recFolder := path.Join(vp.RecordingDir, "recording_"+timeCurrent)
+		os.MkdirAll(recFolder, os.ModePerm)
+		recServerFile := "server.rbs"
+		recServerPath := path.Join(recFolder, recServerFile)
 		rec_s, err = NewServerRecorder(recServerPath)
 		if err != nil {
 			logger.Errorf("Proxy.newServerConnHandler can't open ServerRecorder save path: %s", recServerPath)
@@ -93,8 +96,8 @@ func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server
 
 		sconn.Listeners.AddListener(rec_s)
 
-		recClientFile := "recording_client_" + timeCurrent + ".rbs"
-		recClientPath := path.Join(vp.RecordingDir, recClientFile)
+		recClientFile := "client.rbs"
+		recClientPath := path.Join(recFolder, recClientFile)
 		rec_c, err = NewClientRecorder(recClientPath)
 		if err != nil {
 			logger.Errorf("Proxy.newServerConnHandler can't open ClientRecorder save path: %s", recClientPath)

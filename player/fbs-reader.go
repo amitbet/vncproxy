@@ -5,6 +5,7 @@ import (
 	"encoding/binary"
 	"io"
 	"os"
+
 	"github.com/amitbet/vncproxy/common"
 	"github.com/amitbet/vncproxy/encodings"
 	"github.com/amitbet/vncproxy/logger"
@@ -182,6 +183,40 @@ func (fbs *FbsReader) ReadSegment() (*FbsSegment, error) {
 	//timeStamp := time.Unix(timeSinceStart, 0)
 	seg := &FbsSegment{bytes: actualBytes, timestamp: timeSinceStart}
 	return seg, nil
+}
+
+func (fbs *FbsReader) ReadSegmentTest() (*FbsSegment, uint32, uint32, []byte, uint32, error) {
+	reader := fbs.reader
+	var bytesLen uint32
+
+	//read length
+	err := binary.Read(reader, binary.BigEndian, &bytesLen)
+	if err != nil {
+		logger.Error("FbsReader.ReadStartSession: read len, error reading rbs file: ", err)
+	}
+
+	paddedSize := (bytesLen + 3) & 0x7FFFFFFC
+
+	//read bytes
+	bytes := make([]byte, paddedSize)
+	_, err = reader.Read(bytes)
+	if err != nil {
+		logger.Error("FbsReader.ReadSegment: read bytes, error reading rbs file: ", err)
+	}
+
+	//remove padding
+	actualBytes := bytes[:bytesLen]
+
+	//read timestamp
+	var timeSinceStart uint32
+	binary.Read(reader, binary.BigEndian, &timeSinceStart)
+	if err != nil {
+		logger.Error("FbsReader.ReadSegment: read timestamp, error reading rbs file: ", err)
+	}
+
+	//timeStamp := time.Unix(timeSinceStart, 0)
+	seg := &FbsSegment{bytes: actualBytes, timestamp: timeSinceStart}
+	return seg, bytesLen, paddedSize, bytes, timeSinceStart, nil
 }
 
 type FbsSegment struct {

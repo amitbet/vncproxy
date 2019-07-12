@@ -1,0 +1,38 @@
+syntax = "proto3";
+package proto;
+
+message InitMsg {
+    string RfbHeader = 1;
+    string RfbVersion = 2;
+    uint32 FBHeight = 3;
+    uint32 FBWidth = 4;
+    uint32 SecType = 5;
+    uint32 StartTime = 6;
+    string DesktopName = 7;
+}
+
+message PointerEvent {
+    uint32 Mask = 1;
+    uint32 X = 2;
+    uint32 Y = 3;
+    uint32 timestamp = 4;
+
+}
+
+message KeyEvent {
+    uint32 Down = 1;
+    uint32 Key = 2;
+    uint32 timestamp = 3;
+}
+
+message FbsSegment{
+    bytes bytes = 1;
+    uint32 timestamp = 2;
+}
+
+message Demonstration {
+    InitMsg initmsg = 1;
+    repeated FbsSegment segments = 2;
+    repeated PointerEvent pointerevents = 3;
+    repeated KeyEvent keyevents = 4;
+}

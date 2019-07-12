@@ -81,6 +81,7 @@ func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server
 
 	var rec_s *ServerRecorder
 	var rec_c *ClientRecorder
+	var rec_p *ProtoRecorder
 
 	if session.Type == SessionTypeRecordingProxy {
 		timeCurrent := strconv.FormatInt(time.Now().Unix(), 10)
@@ -105,6 +106,16 @@ func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server
 		}
 
 		sconn.Listeners.AddListener(rec_c)
+
+		recProtoFile := "proto.rbs"
+		recProtoPath := path.Join(recFolder, recProtoFile)
+		rec_p, err = NewProtoRecorder(recProtoPath)
+		if err != nil {
+			logger.Errorf("Proxy.newServerConnHandler can't open ProtoRecorder save path: %s", recProtoPath)
+			return err
+		}
+
+		sconn.Listeners.AddListener(rec_p)
 	}
 
 	session.Status = SessionStatusInit
@@ -123,6 +134,7 @@ func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server
 		if session.Type == SessionTypeRecordingProxy {
 			cconn.Listeners.AddListener(rec_s)
 			cconn.Listeners.AddListener(rec_c)
+			cconn.Listeners.AddListener(rec_p)
 		}
 
 		//creating cross-listeners between server and client parts to pass messages through the proxy:

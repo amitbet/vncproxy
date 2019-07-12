@@ -130,6 +130,7 @@ func (r *ClientRecorder) HandleRfbSegment(data *common.RfbSegment) error {
 			logger.Warn("ClientRecorder.HandleRfbSegment: unknown message type:" + string(data.UpcomingObjectType))
 		}
 	case common.SegmentConnectionClosed:
+		logger.Debugf("Segment Connection closed")
 		r.writeToDisk()
 	case common.SegmentRectSeparator:
 		logger.Debugf("ClientRecorder.HandleRfbSegment: not writing rect")
@@ -192,6 +193,8 @@ func (r *ClientRecorder) writeToDisk() error {
 	//write timestamp
 	binary.Write(r.writer, binary.BigEndian, uint32(timeSinceStart))
 	r.buffer.Reset()
+
+	logger.Debugf("writeToDisk() Triggered Now")
 	return err
 }
 

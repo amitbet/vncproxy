@@ -9,7 +9,7 @@ message InitMsg {
     uint32 SecType = 5;
     uint32 StartTime = 6;
     string DesktopName = 7;
-    string PixelFormat = 8;
+    PixelFormat PixelFormat = 8;
 }
 
 message PointerEvent {

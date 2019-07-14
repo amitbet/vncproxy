@@ -108,6 +108,19 @@ func (r *ProtoRecorder) writeStartSession(initMsg *common.ServerInit) error {
 
 	// r.buffer.WriteString(desktopName)
 
+	pixel_format := &pb.PixelFormat{
+		BPP:        uint32(initMsg.PixelFormat.BPP),
+		Depth:      uint32(initMsg.PixelFormat.Depth),
+		BigEndian:  uint32(initMsg.PixelFormat.BigEndian),
+		TrueColor:  uint32(initMsg.PixelFormat.TrueColor),
+		RedMax:     uint32(initMsg.PixelFormat.RedMax),
+		GreenMax:   uint32(initMsg.PixelFormat.GreenMax),
+		BlueMax:    uint32(initMsg.PixelFormat.BlueMax),
+		RedShift:   uint32(initMsg.PixelFormat.RedShift),
+		GreenShift: uint32(initMsg.PixelFormat.GreenShift),
+		BlueShift:  uint32(initMsg.PixelFormat.BlueShift),
+	}
+
 	initMsgProto := &pb.InitMsg{
 		RfbHeader:   "FBS 001.000",
 		RfbVersion:  versionMsg_3_3,
@@ -116,6 +129,7 @@ func (r *ProtoRecorder) writeStartSession(initMsg *common.ServerInit) error {
 		SecType:     uint32(SecTypeNone),
 		StartTime:   uint32(r.startTime),
 		DesktopName: desktopName,
+		PixelFormat: pixel_format,
 	}
 	r.demonstration.Initmsg = initMsgProto
 	//binary.Write(&r.buffer, binary.BigEndian, byte(0)) // add null termination for desktop string

@@ -41,6 +41,7 @@ func listPeople(w io.Writer, demo *pb.Demonstration) {
 	fmt.Printf("SecType: %v \n", demo.Initmsg.GetSecType())
 	fmt.Printf("StartTime: %v \n", demo.Initmsg.GetStartTime())
 	fmt.Printf("DesktopName: %v \n", demo.Initmsg.GetDesktopName())
+	fmt.Printf("PixelFormat: %v \n", demo.Initmsg.GetPixelFormat())
 
 	// for _, p := range demo.Segments {
 	// 	writeSegment(w, p)

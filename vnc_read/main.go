@@ -43,11 +43,45 @@ func listPeople(w io.Writer, demo *pb.Demonstration) {
 	fmt.Printf("DesktopName: %v \n", demo.Initmsg.GetDesktopName())
 
 	// for _, p := range demo.Segments {
-	// 	writePerson(w, p)
+	// 	writeSegment(w, p)
 	// }
+
+	// for _, k := range demo.Keyevents {
+	// 	writeKeyEvent(w, k)
+	// }
+
+	// for _, p := range demo.Pointerevents {
+	// 	writePointerEvent(w, p)
+	// }
+
+	for _, p := range demo.Fbupdates {
+		fmt.Print(p)
+	}
+
 }
 
-func writePerson(w io.Writer, p *pb.FbsSegment) {
+func writeSegment(w io.Writer, p *pb.FbsSegment) {
 	fmt.Printf("Length: %v Timestamp: %v \n", len(p.GetBytes()), p.GetTimestamp())
+
+}
+
+func writeFbupdate(w io.Writer, p *pb.FramebufferUpdate) {
+
+	for _, r := range p.Rectangles {
+		fmt.Printf("(%d,%d) (width: %d, height: %d), Enc= %d \n", r.X, r.Y, r.Width, r.Height, r.Enc)
+
+	}
+
+}
+
+func writeKeyEvent(w io.Writer, p *pb.KeyEvent) {
+
+	fmt.Printf(" KeyEvent : Down : %v, Key: %v) \n", p.GetDown(), p.GetKey())
+
+}
+
+func writePointerEvent(w io.Writer, p *pb.PointerEvent) {
+
+	fmt.Printf(" PointerEvent : X : %v, Y: %v , Mask: %v \n", p.GetX(), p.GetY(), p.GetMask())
 
 }

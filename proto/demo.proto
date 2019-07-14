@@ -9,6 +9,7 @@ message InitMsg {
     uint32 SecType = 5;
     uint32 StartTime = 6;
     string DesktopName = 7;
+    string PixelFormat = 8;
 }
 
 message PointerEvent {
@@ -30,9 +31,37 @@ message FbsSegment{
     uint32 timestamp = 2;
 }
 
+message PixelFormat{
+    uint32 BPP = 1;
+	uint32 Depth = 2;
+	uint32 BigEndian = 3;
+	uint32 TrueColor = 4;
+	uint32 RedMax = 5;
+	uint32 GreenMax = 6;
+    uint32 BlueMax = 7;
+	uint32 RedShift = 8;
+	uint32 GreenShift = 9;
+	uint32 BlueShift = 10; 
+}
+
+message Rectangle {
+    uint32 X = 1;
+    uint32 Y = 2;
+    uint32 Width = 3;
+    uint32 Height = 4;
+    uint32 Enc = 5;
+    bytes Bytes = 6;
+}
+
+message FramebufferUpdate{
+    repeated Rectangle rectangles = 1;
+    uint32 timestamp = 2;
+}
+
 message Demonstration {
     InitMsg initmsg = 1;
-    repeated FbsSegment segments = 2;
-    repeated PointerEvent pointerevents = 3;
-    repeated KeyEvent keyevents = 4;
+    repeated FramebufferUpdate fbupdates = 2;
+    repeated FbsSegment segments = 3;
+    repeated PointerEvent pointerevents = 4;
+    repeated KeyEvent keyevents = 5;
 }

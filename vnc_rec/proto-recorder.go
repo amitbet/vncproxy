@@ -2,6 +2,7 @@ package vnc_rec
 
 import (
 	"bytes"
+	"encoding/binary"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -20,6 +21,9 @@ type ProtoRecorder struct {
 	writer        *os.File
 	demonstration *pb.Demonstration
 	//logger              common.Logger
+	Rectbuffer          bytes.Buffer
+	FramebufferUpdate   *pb.FramebufferUpdate
+	Rect                *pb.Rectangle
 	startTime           int
 	buffer              bytes.Buffer
 	serverInitMessage   *common.ServerInit
@@ -149,6 +153,39 @@ func (r *ProtoRecorder) HandleRfbSegment(data *common.RfbSegment) error {
 		switch common.ServerMessageType(data.UpcomingObjectType) {
 		case common.FramebufferUpdate:
 			logger.Debugf("ProtoRecorder.HandleRfbSegment: saving FramebufferUpdate segment")
+			//FBUpdate := data.Message.(*server.FramebufferUpdate)
+			if len(r.FramebufferUpdate.GetRectangles()) != 0 {
+				logger.Debugf("[IMP STUFF] Nil not found, now appending")
+				r.demonstration.Fbupdates = append(r.demonstration.Fbupdates, r.FramebufferUpdate)
+
+			}
+			logger.Debugf("[IMPORTANT] This FrameBufferUpdate is: %v", data.Bytes)
+
+			logger.Debugf("The FrameBuffer is: %v", r.FramebufferUpdate)
+
+			//r.FramebufferUpdate.Reset()
+
+			r.FramebufferUpdate = &pb.FramebufferUpdate{
+				Timestamp: timeSinceStart,
+			}
+
+			// FBUpdateProto := &pb.FramebufferUpdate{}
+
+			// for _, rect := range FBUpdate.Rects {
+
+			// 	RectProto := &pb.Rectangle{
+			// 		X:      uint32(rect.X),
+			// 		Y:      uint32(rect.Y),
+			// 		Width:  uint32(rect.Width),
+			// 		Height: uint32(rect.Height),
+			// 		Enc:    uint32(rect.Enc.Type()),
+			// 	}
+
+			// 	FBUpdateProto.Rectangles = append(FBUpdateProto.Rectangles, RectProto)
+			// }
+
+			// r.demonstration.Fbupdates = append(r.demonstration.Fbupdates, FBUpdateProto)
+
 			//r.writeToDisk()
 		case common.SetColourMapEntries:
 		case common.Bell:
@@ -160,18 +197,45 @@ func (r *ProtoRecorder) HandleRfbSegment(data *common.RfbSegment) error {
 		r.writeToDisk()
 	case common.SegmentRectSeparator:
 		logger.Debugf("ProtoRecorder.HandleRfbSegment: writing rect")
+		//r.Rect.Reset()
 		//r.writeToDisk()
 	case common.SegmentBytes:
 		logger.Debug("ProtoRecorder.HandleRfbSegment: writing bytes, len:", len(data.Bytes))
 		// if r.buffer.Len()+len(data.Bytes) > r.maxWriteSize-4 {
 		// 	r.writeToDisk()
 		// }
-		segment := &pb.FbsSegment{
-			Bytes:     data.Bytes,
-			Timestamp: timeSinceStart,
+
+		if len(data.Bytes) > 4 {
+
+			idx := r.Rectbuffer.Len() - 16
+			p := make([]byte, idx)
+			r.Rectbuffer.Read(p)
+			main := make([]byte, 16)
+			r.Rectbuffer.Read(main)
+			r.Rect = &pb.Rectangle{
+				X:      uint32(binary.BigEndian.Uint16(main[:2])),
+				Y:      uint32(binary.BigEndian.Uint16(main[2:4])),
+				Width:  uint32(binary.BigEndian.Uint16(main[4:6])),
+				Height: uint32(binary.BigEndian.Uint16(main[6:8])),
+				Enc:    binary.BigEndian.Uint32(main[8:12]),
+				Bytes:  data.Bytes,
+			}
+			logger.Debugf("Received Main Pixel Buffer Content %v \n", r.Rect)
+			r.FramebufferUpdate.Rectangles = append(r.FramebufferUpdate.Rectangles, r.Rect)
+			r.Rectbuffer.Reset()
+		} else if len(data.Bytes) <= 4 {
+			logger.Debugf("Received Extra Short byte content %v , %v \n", len(data.Bytes), data.Bytes)
+			r.Rectbuffer.Write(data.Bytes)
+			// r.Rectbuffer = append(r.Rectbuffer, data.Bytes...)
+			//logger.Debugf("Rectbuffer currently is, %v", r.Rectbuffer)
 		}
 
-		r.demonstration.Segments = append(r.demonstration.Segments, segment)
+		// segment := &pb.FbsSegment{
+		// 	Bytes:     data.Bytes,
+		// 	Timestamp: timeSinceStart,
+		// }
+
+		// r.demonstration.Segments = append(r.demonstration.Segments, segment)
 		//_, err := r.buffer.Write(data.Bytes)
 		//return err
 	case common.SegmentServerInitMessage:
@@ -186,17 +250,18 @@ func (r *ProtoRecorder) HandleRfbSegment(data *common.RfbSegment) error {
 			r.serverInitMessage.PixelFormat = clientMsg.PF
 		case common.KeyEventMsgType:
 			clientMsg := data.Message.(*server.MsgKeyEvent)
-			logger.Debug("Recorder.HandleRfbSegment: writing bytes for KeyEventMsgType, len:", *clientMsg)
 			//clientMsg.Write(r.writer)
 			keyevent := &pb.KeyEvent{
 				Down:      uint32(clientMsg.Down),
 				Key:       uint32(clientMsg.Key),
 				Timestamp: timeSinceStart,
 			}
+			logger.Debug("ProtoRecorder.HandleRfbSegment: writing bytes for KeyEventMsgType, len:", *keyevent)
+
 			r.demonstration.Keyevents = append(r.demonstration.Keyevents, keyevent)
 		case common.PointerEventMsgType:
 			clientMsg := data.Message.(*server.MsgPointerEvent)
-			logger.Debug("Recorder.HandleRfbSegment: writing bytes for PointerEventMsgType, len:", *clientMsg)
+
 			//clientMsg.Write(r.writer)
 			pointerevent := &pb.PointerEvent{
 				Mask:      uint32(clientMsg.Mask),
@@ -204,6 +269,7 @@ func (r *ProtoRecorder) HandleRfbSegment(data *common.RfbSegment) error {
 				Y:         uint32(clientMsg.Y),
 				Timestamp: timeSinceStart,
 			}
+			logger.Debug("ProtoRecorder.HandleRfbSegment: writing bytes for PointerEventMsgType, len:", *pointerevent)
 			r.demonstration.Pointerevents = append(r.demonstration.Pointerevents, pointerevent)
 
 		default:

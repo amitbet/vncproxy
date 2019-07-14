@@ -6,3 +6,4 @@ run_rec:
 
 clear:
 	rm -rf bin/recordings/*
+	rm -rf output.txt

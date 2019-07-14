@@ -54,9 +54,13 @@ func listPeople(w io.Writer, demo *pb.Demonstration) {
 	// 	writePointerEvent(w, p)
 	// }
 
+	i := 0
+
 	for _, p := range demo.Fbupdates {
-		fmt.Print(p)
+		writeFbupdate(w, p, &i)
 	}
+
+	fmt.Println(i)
 
 }
 
@@ -65,11 +69,12 @@ func writeSegment(w io.Writer, p *pb.FbsSegment) {
 
 }
 
-func writeFbupdate(w io.Writer, p *pb.FramebufferUpdate) {
+func writeFbupdate(w io.Writer, p *pb.FramebufferUpdate, i *int) {
 
+	*i++
+	fmt.Printf("----------FRAMEBUFFERUPDATE NUMBER %v -------------- \n", *i)
 	for _, r := range p.Rectangles {
-		fmt.Printf("(%d,%d) (width: %d, height: %d), Enc= %d \n", r.X, r.Y, r.Width, r.Height, r.Enc)
-
+		fmt.Printf("(%d,%d) (width: %d, height: %d), Enc= %d , Bytes: %v \n", r.X, r.Y, r.Width, r.Height, r.Enc, len(r.Bytes))
 	}
 
 }

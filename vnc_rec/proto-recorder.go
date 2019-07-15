@@ -173,9 +173,9 @@ func (r *ProtoRecorder) HandleRfbSegment(data *common.RfbSegment) error {
 				r.demonstration.Fbupdates = append(r.demonstration.Fbupdates, r.FramebufferUpdate)
 
 			}
-			logger.Debugf("[IMPORTANT] This FrameBufferUpdate is: %v", data.Bytes)
+			// logger.Debugf("[IMPORTANT] This FrameBufferUpdate is: %v", data.Bytes)
 
-			logger.Debugf("The FrameBuffer is: %v", r.FramebufferUpdate)
+			// logger.Debugf("The FrameBuffer is: %v", r.FramebufferUpdate)
 
 			//r.FramebufferUpdate.Reset()
 
@@ -234,11 +234,11 @@ func (r *ProtoRecorder) HandleRfbSegment(data *common.RfbSegment) error {
 				Enc:    binary.BigEndian.Uint32(main[8:12]),
 				Bytes:  data.Bytes,
 			}
-			logger.Debugf("Received Main Pixel Buffer Content %v \n", r.Rect)
+			//logger.Debugf("Received Main Pixel Buffer Content %v \n", r.Rect)
 			r.FramebufferUpdate.Rectangles = append(r.FramebufferUpdate.Rectangles, r.Rect)
 			r.Rectbuffer.Reset()
 		} else if len(data.Bytes) <= 4 {
-			logger.Debugf("Received Extra Short byte content %v , %v \n", len(data.Bytes), data.Bytes)
+			//logger.Debugf("Received Extra Short byte content %v , %v \n", len(data.Bytes), data.Bytes)
 			r.Rectbuffer.Write(data.Bytes)
 			// r.Rectbuffer = append(r.Rectbuffer, data.Bytes...)
 			//logger.Debugf("Rectbuffer currently is, %v", r.Rectbuffer)

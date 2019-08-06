@@ -139,7 +139,6 @@ func (r *ServerRecorder) HandleRfbSegment(data *common.RfbSegment) error {
 		switch common.ServerMessageType(data.UpcomingObjectType) {
 		case common.FramebufferUpdate:
 			logger.Debugf("ServerRecorder.HandleRfbSegment: saving FramebufferUpdate segment")
-			//r.writeToDisk()
 		case common.SetColourMapEntries:
 		case common.Bell:
 		case common.ServerCutText:
@@ -168,6 +167,10 @@ func (r *ServerRecorder) HandleRfbSegment(data *common.RfbSegment) error {
 			clientMsg := data.Message.(*server.MsgSetPixelFormat)
 			logger.Debugf("ServerRecorder.HandleRfbSegment: client message %v", *clientMsg)
 			r.serverInitMessage.PixelFormat = clientMsg.PF
+		case common.KeyEventMsgType:
+			r.writeToDisk()
+		case common.PointerEventMsgType:
+			r.writeToDisk()
 		default:
 			//return errors.New("unknown client message type:" + string(data.UpcomingObjectType))
 		}

@@ -44,6 +44,10 @@ message PixelFormat{
 	uint32 BlueShift = 10; 
 }
 
+message MessageType{
+    uint32 type = 1;
+}
+
 message Rectangle {
     uint32 X = 1;
     uint32 Y = 2;

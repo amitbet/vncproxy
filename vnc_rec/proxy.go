@@ -79,43 +79,54 @@ func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server
 		return err
 	}
 
-	var rec_s *ServerRecorder
-	var rec_c *ClientRecorder
-	//var rec_p *ProtoRecorder
+	// var rec_s *ServerRecorder
+	// var rec_c *ClientRecorder
+	var rec_c *CustomClientRecorder
+	var rec_s *CustomServerRecorder
 
 	if session.Type == SessionTypeRecordingProxy {
 		timeCurrent := strconv.FormatInt(time.Now().Unix(), 10)
 		recFolder := path.Join(vp.RecordingDir, "recording_"+timeCurrent)
 		os.MkdirAll(recFolder, os.ModePerm)
-		recServerFile := "server.rbs"
-		recServerPath := path.Join(recFolder, recServerFile)
-		rec_s, err = NewServerRecorder(recServerPath)
+		// recServerFile := "server.rbs"
+		// recServerPath := path.Join(recFolder, recServerFile)
+		// rec_s, err = NewServerRecorder(recServerPath)
+		// if err != nil {
+		// 	logger.Errorf("Proxy.newServerConnHandler can't open ServerRecorder save path: %s", recServerPath)
+		// 	return err
+		// }
+
+		// sconn.Listeners.AddListener(rec_s)
+
+		// recClientFile := "client.rbs"
+		// recClientPath := path.Join(recFolder, recClientFile)
+		// rec_c, err = NewClientRecorder(recClientPath)
+		// if err != nil {
+		// 	logger.Errorf("Proxy.newServerConnHandler can't open ServerRecorder save path: %s", recClientPath)
+		// 	return err
+		// }
+
+		// sconn.Listeners.AddListener(rec_c)
+
+		recCustomServerFile := "server.rbs"
+		recCustomServerPath := path.Join(recFolder, recCustomServerFile)
+		rec_s, err = NewCustomServerRecorder(recCustomServerPath)
 		if err != nil {
-			logger.Errorf("Proxy.newServerConnHandler can't open ServerRecorder save path: %s", recServerPath)
+			logger.Errorf("Proxy.newServerConnHandler can't open CustomRecorder save path: %s", recCustomServerPath)
 			return err
 		}
 
 		sconn.Listeners.AddListener(rec_s)
 
-		recClientFile := "client.rbs"
-		recClientPath := path.Join(recFolder, recClientFile)
-		rec_c, err = NewClientRecorder(recClientPath)
+		recCustomClientFile := "client.rbs"
+		recCustomClientPath := path.Join(recFolder, recCustomClientFile)
+		rec_c, err = NewCustomClientRecorder(recCustomClientPath)
 		if err != nil {
-			logger.Errorf("Proxy.newServerConnHandler can't open ServerRecorder save path: %s", recClientPath)
+			logger.Errorf("Proxy.newServerConnHandler can't open CustomRecorder save path: %s", recCustomClientPath)
 			return err
 		}
 
 		sconn.Listeners.AddListener(rec_c)
-
-		// recProtoFile := "proto.rbs"
-		// recProtoPath := path.Join(recFolder, recProtoFile)
-		// rec_p, err = NewProtoRecorder(recProtoPath)
-		// if err != nil {
-		// 	logger.Errorf("Proxy.newServerConnHandler can't open ProtoRecorder save path: %s", recProtoPath)
-		// 	return err
-		// }
-
-		// sconn.Listeners.AddListener(rec_p)
 	}
 
 	session.Status = SessionStatusInit
@@ -132,7 +143,10 @@ func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server
 			return err
 		}
 		if session.Type == SessionTypeRecordingProxy {
+			//cconn.Listeners.AddListener(rec_c)
 			cconn.Listeners.AddListener(rec_c)
+			cconn.Listeners.AddListener(rec_s)
+			//cconn.Listeners.AddListener(rec_s)
 		}
 
 		//creating cross-listeners between server and client parts to pass messages through the proxy:

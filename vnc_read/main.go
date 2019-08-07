@@ -3,11 +3,12 @@ package main
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
+	"time"
 
-	"github.com/golang/protobuf/proto"
+	"github.com/matttproud/golang_protobuf_extensions/pbutil"
+	"github.com/sibeshkar/vncproxy/logger"
 	pb "github.com/sibeshkar/vncproxy/proto"
 )
 
@@ -18,18 +19,64 @@ func main() {
 	}
 	fname := os.Args[1]
 
-	// [START unmarshal_proto]
-	// Read the existing address book.
-	in, err := ioutil.ReadFile(fname)
+	reader, err := os.OpenFile(fname, os.O_RDWR, 0644)
 	if err != nil {
-		log.Fatalln("Error reading file:", err)
-	}
-	demonstration := &pb.Demonstration{}
-	if err := proto.Unmarshal(in, demonstration); err != nil {
-		log.Fatalln("Failed to parse demonstration file:", err)
+		logger.Errorf("unable to open file: %s, error: %v", fname, err)
+
 	}
 
-	listPeople(os.Stdout, demonstration)
+	// [START unmarshal_proto]
+	// Read the existing address book.
+	// in, err := ioutil.ReadFile(fname)
+	// if err != nil {
+	// 	log.Fatalln("Error reading file:", err)
+	// }
+	// demonstration := &pb.Demonstration{}
+	// if err := proto.Unmarshal(in, demonstration); err != nil {
+	// 	log.Fatalln("Failed to parse demonstration file:", err)
+	// }
+
+	// pf := &pb.PixelFormat{}
+	// pbutil.ReadDelimited(reader, pf)
+
+	// fmt.Println(pf)
+
+	initMsg := &pb.InitMsg{}
+	pbutil.ReadDelimited(reader, initMsg)
+
+	fmt.Printf("FBHeight: %v \n", initMsg.GetFBHeight())
+	fmt.Printf("FBWidth: %v \n", initMsg.GetFBWidth())
+	fmt.Printf("RfbHeader: %v \n", initMsg.GetRfbHeader())
+	fmt.Printf("RfbVersion: %v \n", initMsg.GetRfbVersion())
+	fmt.Printf("SecType: %v \n", initMsg.GetSecType())
+	fmt.Printf("StartTime: %v \n", initMsg.GetStartTime())
+	fmt.Printf("DesktopName: %v \n", initMsg.GetDesktopName())
+	fmt.Printf("PixelFormat: %v \n", initMsg.GetPixelFormat())
+
+	i := 0
+
+	for {
+
+		// msgType := &pb.MessageType{}
+		// pbutil.ReadDelimited(reader, msgType)
+		// if msgType.GetType() == uint32(4) {
+		// 	keyEvent := &pb.KeyEvent{}
+		// 	pbutil.ReadDelimited(reader, keyEvent)
+		// 	fmt.Printf("Key event is %v", keyEvent)
+
+		// } else if msgType.GetType() == uint32(5) {
+		// 	pointerEvent := &pb.PointerEvent{}
+		// 	pbutil.ReadDelimited(reader, pointerEvent)
+		// 	fmt.Println("Pointer event is ", pointerEvent)
+
+		// }
+		fbupdate := &pb.FramebufferUpdate{}
+		pbutil.ReadDelimited(reader, fbupdate)
+		writeFbupdate(fbupdate, &i)
+		time.Sleep(1 * time.Second)
+	}
+
+	//listPeople(os.Stdout, demonstration)
 
 }
 
@@ -55,13 +102,13 @@ func listPeople(w io.Writer, demo *pb.Demonstration) {
 	// 	writePointerEvent(w, p)
 	// }
 
-	i := 0
+	// i := 0
 
-	for _, p := range demo.Fbupdates {
-		writeFbupdate(w, p, &i)
-	}
+	// for _, p := range demo.Fbupdates {
+	// 	writeFbupdate(w, p, &i)
+	// }
 
-	fmt.Println(i)
+	// fmt.Println(i)
 
 }
 
@@ -70,7 +117,7 @@ func writeSegment(w io.Writer, p *pb.FbsSegment) {
 
 }
 
-func writeFbupdate(w io.Writer, p *pb.FramebufferUpdate, i *int) {
+func writeFbupdate(p *pb.FramebufferUpdate, i *int) {
 
 	*i++
 	fmt.Printf("----------FRAMEBUFFERUPDATE NUMBER %v -------------- \n", *i)

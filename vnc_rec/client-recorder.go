@@ -134,7 +134,6 @@ func (r *ClientRecorder) HandleRfbSegment(data *common.RfbSegment) error {
 		r.writeToDisk()
 	case common.SegmentRectSeparator:
 		logger.Debugf("ClientRecorder.HandleRfbSegment: not writing rect")
-		//r.writeToDisk()
 	case common.SegmentBytes:
 		logger.Debug("ClientRecorder.HandleRfbSegment: not writing bytes, len:", len(data.Bytes))
 		if r.buffer.Len()+len(data.Bytes) > r.maxWriteSize-4 {
@@ -146,20 +145,20 @@ func (r *ClientRecorder) HandleRfbSegment(data *common.RfbSegment) error {
 		r.serverInitMessage = data.Message.(*common.ServerInit)
 	case common.SegmentFullyParsedClientMessage:
 		clientMsg := data.Message.(common.ClientMessage)
-
 		switch clientMsg.Type() {
 		case common.SetPixelFormatMsgType:
 			clientMsg := data.Message.(*server.MsgSetPixelFormat)
 			logger.Debugf("ClientRecorder.HandleRfbSegment: client message %v", *clientMsg)
 			r.serverInitMessage.PixelFormat = clientMsg.PF
 		case common.KeyEventMsgType:
-			clientMsg := data.Message.(*server.MsgKeyEvent)
-			logger.Debug("Recorder.HandleRfbSegment: writing bytes for KeyEventMsgType, len:", *clientMsg)
-			clientMsg.Write(r.writer)
+			clientMsg := data.Message.(common.ClientMessage)
+			logger.Debug("Recorder.HandleRfbSegment: writing bytes for KeyEventMsgType, len:", clientMsg)
+			binary.Write(r.writer, binary.BigEndian, clientMsg)
+
 		case common.PointerEventMsgType:
-			clientMsg := data.Message.(*server.MsgPointerEvent)
-			logger.Debug("Recorder.HandleRfbSegment: writing bytes for PointerEventMsgType, len:", *clientMsg)
-			clientMsg.Write(r.writer)
+			clientMsg := data.Message.(common.ClientMessage)
+			logger.Debug("Recorder.HandleRfbSegment: writing bytes for PointerEventMsgType, len:", clientMsg)
+			binary.Write(r.writer, binary.BigEndian, clientMsg)
 		default:
 			//return errors.New("unknown client message type:" + string(data.UpcomingObjectType))
 		}

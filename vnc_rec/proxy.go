@@ -132,7 +132,6 @@ func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server
 			return err
 		}
 		if session.Type == SessionTypeRecordingProxy {
-			cconn.Listeners.AddListener(rec_s)
 			cconn.Listeners.AddListener(rec_c)
 		}
 

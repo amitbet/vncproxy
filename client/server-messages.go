@@ -129,7 +129,7 @@ type MsgSetColorMapEntries struct {
 }
 
 func (fbm *MsgSetColorMapEntries) CopyTo(r io.Reader, w io.Writer, c common.IClientConn) error {
-	reader := &common.RfbReadHelper{Reader: r}
+	reader := common.NewRfbReadHelper(r)
 	writeTo := &WriteTo{w, "MsgSetColorMapEntries.CopyTo"}
 	reader.Listeners.AddListener(writeTo)
 	_, err := fbm.Read(c, reader)

@@ -6,16 +6,19 @@ import (
 	"github.com/amitbet/vncproxy/common"
 )
 
+//CoRREEncoding ..
 type CoRREEncoding struct {
 	numSubRects     uint32
 	backgroundColor []byte
 	subRectData     []byte
 }
 
+//Type ...
 func (z *CoRREEncoding) Type() int32 {
 	return 4
 }
 
+//WriteTo ...
 func (z *CoRREEncoding) WriteTo(w io.Writer) (n int, err error) {
 	binary.Write(w, binary.BigEndian, z.numSubRects)
 	if err != nil {

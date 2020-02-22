@@ -7,18 +7,22 @@ import (
 	"github.com/amitbet/vncproxy/common"
 )
 
+//ZRLEEncoding ...
 type ZRLEEncoding struct {
 	bytes []byte
 }
 
+//Type ...
 func (z *ZRLEEncoding) Type() int32 {
 	return 16
 }
 
+//WriteTo ...
 func (z *ZRLEEncoding) WriteTo(w io.Writer) (n int, err error) {
 	return w.Write(z.bytes)
 }
 
+//Read ...
 func (z *ZRLEEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.IEncoding, error) {
 
 	bytes := &bytes.Buffer{}

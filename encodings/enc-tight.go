@@ -8,8 +8,10 @@ import (
 	"github.com/amitbet/vncproxy/logger"
 )
 
+//TightMinToCompress ....
 var TightMinToCompress int = 12
 
+//Tight ...
 const (
 	TightExplicitFilter = 0x04
 	TightFill           = 0x08
@@ -21,11 +23,13 @@ const (
 	TightFilterGradient = 0x02
 )
 
+//TightEncoding ...
 type TightEncoding struct {
 	bytes []byte
 }
 
-func (*TightEncoding) Type() int32 { return int32(common.EncTight) }
+//Type ...
+func (z *TightEncoding) Type() int32 { return int32(common.EncTight) }
 
 func calcTightBytePerPixel(pf *common.PixelFormat) int {
 	bytesPerPixel := int(pf.BPP / 8)
@@ -39,10 +43,12 @@ func calcTightBytePerPixel(pf *common.PixelFormat) int {
 	return bytesPerPixelTight
 }
 
+//WriteTo ...
 func (z *TightEncoding) WriteTo(w io.Writer) (n int, err error) {
 	return w.Write(z.bytes)
 }
 
+//StoreBytes ...
 func StoreBytes(bytes *bytes.Buffer, data []byte) {
 	_, err := bytes.Write(data)
 	if err != nil {
@@ -50,12 +56,12 @@ func StoreBytes(bytes *bytes.Buffer, data []byte) {
 	}
 }
 
-func (t *TightEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.IEncoding, error) {
+func (z *TightEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.IEncoding, error) {
 	bytesPixel := calcTightBytePerPixel(pixelFmt)
 
 	r.StartByteCollection()
 	defer func() {
-		t.bytes = r.EndByteCollection()
+		z.bytes = r.EndByteCollection()
 	}()
 
 	compctl, err := r.ReadUint8()
@@ -80,7 +86,7 @@ func (t *TightEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangl
 			return nil, err
 		}
 
-		return t, nil
+		return z, nil
 	case TightJpeg:
 		if pixelFmt.BPP == 8 {
 			return nil, errors.New("Tight encoding: JPEG is not supported in 8 bpp mode")
@@ -97,7 +103,7 @@ func (t *TightEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangl
 			return nil, err
 		}
 
-		return t, nil
+		return z, nil
 	default:
 
 		if compType > TightJpeg {
@@ -106,18 +112,18 @@ func (t *TightEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangl
 
 		handleTightFilters(compctl, pixelFmt, rect, r)
 
-		return t, nil
+		return z, nil
 	}
 }
 
 func handleTightFilters(subencoding uint8, pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) {
 
-	var FILTER_ID_MASK uint8 = 0x40
+	var FilterIDMask uint8 = 0x40
 
 	var filterid uint8
 	var err error
 
-	if (subencoding & FILTER_ID_MASK) > 0 { // filter byte presence
+	if (subencoding & FilterIDMask) > 0 { // filter byte presence
 		filterid, err = r.ReadUint8()
 
 		if err != nil {

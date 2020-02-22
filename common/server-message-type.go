@@ -4,14 +4,18 @@ import (
 	"io"
 )
 
+//ServerMessage ...
 type ServerMessage interface {
 	Type() uint8
 	String() string
 	CopyTo(r io.Reader, w io.Writer, c IClientConn) error
 	Read(IClientConn, *RfbReadHelper) (ServerMessage, error)
 }
+
+//ServerMessageType ...
 type ServerMessageType int8
 
+//ServerMessageType ...
 const (
 	FramebufferUpdate ServerMessageType = iota
 	SetColourMapEntries
@@ -34,6 +38,7 @@ func (typ ServerMessageType) String() string {
 	return ""
 }
 
+//ServerInit ...
 type ServerInit struct {
 	FBWidth, FBHeight uint16
 	PixelFormat       PixelFormat

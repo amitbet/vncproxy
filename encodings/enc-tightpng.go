@@ -7,21 +7,25 @@ import (
 	"github.com/amitbet/vncproxy/logger"
 )
 
+//TightPngEncoding ...
 type TightPngEncoding struct {
 	bytes []byte
 }
 
+//WriteTo ...
 func (z *TightPngEncoding) WriteTo(w io.Writer) (n int, err error) {
 	return w.Write(z.bytes)
 }
 
-func (*TightPngEncoding) Type() int32 { return int32(common.EncTightPng) }
+//Type ...
+func (z *TightPngEncoding) Type() int32 { return int32(common.EncTightPng) }
 
-func (t *TightPngEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.IEncoding, error) {
+//Read ...
+func (z *TightPngEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Rectangle, r *common.RfbReadHelper) (common.IEncoding, error) {
 	bytesPixel := calcTightBytePerPixel(pixelFmt)
 	r.StartByteCollection()
 	defer func() {
-		t.bytes = r.EndByteCollection()
+		z.bytes = r.EndByteCollection()
 	}()
 
 	//var subencoding uint8
@@ -42,7 +46,7 @@ func (t *TightPngEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Recta
 		_, err = r.ReadBytes(len)
 
 		if err != nil {
-			return t, err
+			return z, err
 		}
 
 	case TightFill:
@@ -50,5 +54,5 @@ func (t *TightPngEncoding) Read(pixelFmt *common.PixelFormat, rect *common.Recta
 	default:
 		return nil, fmt.Errorf("unknown tight compression %d", compType)
 	}
-	return t, nil
+	return z, nil
 }

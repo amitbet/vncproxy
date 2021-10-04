@@ -1,9 +1,13 @@
 package client
 
 import (
+	"bytes"
 	"crypto/des"
+	"crypto/sha256"
 	"encoding/binary"
 	"io"
+
+	"github.com/amitbet/vncproxy/logger"
 )
 
 // ClientAuthNone is the "none" authentication. See 7.2.1
@@ -109,4 +113,47 @@ func (p *PasswordAuth) encrypt(key string, bytes []byte) ([]byte, error) {
 	crypted := append(result1, result2...)
 
 	return crypted, nil
+}
+
+// RemarkableAuth is the authentication method used by reMarkable tablet's
+// Screen Sharing feature
+type RemarkableAuth struct {
+	RemarkableTimestamp uint64
+	RemarkableDeviceId  string
+}
+
+func (p *RemarkableAuth) SecurityType() uint8 {
+	return 100
+}
+
+func (p *RemarkableAuth) Handshake(c io.ReadWriteCloser) error {
+	userIdHash := sha256.Sum256([]byte(p.RemarkableDeviceId))
+
+	var tsBuf []byte
+	pb := bytes.NewBuffer(tsBuf)
+	err := binary.Write(pb, binary.BigEndian, p.RemarkableTimestamp)
+	if err != nil {
+		return err
+	}
+	logger.Debugf("Hash with timestamp: %x", pb.Bytes())
+	userIdAndTs := append(pb.Bytes(), userIdHash[:]...)
+	logger.Debugf("Hash with timestamp and user ID hash: %x", userIdAndTs)
+
+	challenge := sha256.Sum256(userIdAndTs)
+	var challengeLength uint32 = uint32(len(challenge))
+	logger.Debugf("Writing challenge length: %v", challengeLength)
+	if err := binary.Write(c, binary.BigEndian, challengeLength); err != nil {
+		return err
+	}
+	logger.Debugf("Writing challenge: %x", challenge)
+	if err := binary.Write(c, binary.BigEndian, challenge); err != nil {
+		return err
+	}
+
+	// Some reason there is another security result... we're just gonna ignore this.
+	var securityResult uint8
+	if err = binary.Read(c, binary.BigEndian, &securityResult); err != nil {
+		return err
+	}
+	return nil
 }

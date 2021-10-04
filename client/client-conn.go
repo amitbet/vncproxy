@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"encoding/binary"
 	"fmt"
-	"github.com/amitbet/vncproxy/common"
-	"github.com/amitbet/vncproxy/logger"
 	"io"
 	"net"
 	"unicode"
+
+	"github.com/amitbet/vncproxy/common"
+	"github.com/amitbet/vncproxy/logger"
 )
 
 // A ServerMessage implements a message sent from the server to the client.

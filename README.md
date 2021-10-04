@@ -7,8 +7,9 @@ An RFB proxy, written in go that can save and replay FBS files
 * Produces FBS files compatible with [tightvnc's rfb player](https://www.tightvnc.com/rfbplayer.php) (while using tight's default 3Byte color format)
 * Can also be used as:
     * A screen recorder vnc-client
-    * A replay server to show fbs recordings to connecting clients 
-    
+    * A replay server to show fbs recordings to connecting clients
+    * Authentication proxy for reMarkable tablet (2.10+)
+
 - Tested on tight encoding with:
     - Tightvnc (client + java client + server)
     - FBS player (tightVnc Java player)
@@ -16,7 +17,7 @@ An RFB proxy, written in go that can save and replay FBS files
     - ChickenOfTheVnc(client)
     - VineVnc(server)
     - TigerVnc(client)
-    - Qemu vnc(server) 
+    - Qemu vnc(server)
 
 
 ### Executables (see releases)
@@ -30,7 +31,7 @@ An RFB proxy, written in go that can save and replay FBS files
     proxy -recDir=./recordings/ -targHost=192.168.0.100 -targPort=5903 -targPass=@@@@@ -tcpPort=5903 -wsPort=5905 -vncPass=@!@!@!
 
 ### Code usage examples
-* player/main.go (fbs recording vnc client) 
+* player/main.go (fbs recording vnc client)
     * Connects as client, records to FBS file
 * proxy/proxy_test.go (vnc proxy with recording)
     * Listens to both Tcp and WS ports
@@ -39,6 +40,21 @@ An RFB proxy, written in go that can save and replay FBS files
 * player/player_test.go (vnc replay server)
     * Listens to Tcp & WS ports
     * Replays a hard-coded FBS file in normal speed to all connecting vnc clients
+
+### Examples of using with reMarkable
+* Simply run the proxy with the `-reMarkable DEVICE_ID` flag
+* To get the `DEVICE_ID`:
+    * Log into reMarkable via SSH
+    * Extract the `devicetoken` string (exclude the `@ByteArray` wrapper) the string from `/etc/remarkable.conf`
+    * Run the following Python snippet to decrypt the `devicetoken`:
+      ```
+      pip3 install --user PyJWT
+      python3 -c 'import sys,jwt;t=jwt.decode(sys.argv[1],options={"verify_signature":False});print(t)' '(DEVICE TOKEN HERE)'
+      ```
+    * In output, you should get a string starting with `auth0|`. The whole string is your device ID which should 
+      be passed to be `-reMarkable` flag.
+* After you should be able to connect to the reMarkable via the proxy with a normal
+  VNC client (tested with TightVNC)
 
 ## **Architecture**
 

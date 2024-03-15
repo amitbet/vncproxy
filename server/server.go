@@ -1,10 +1,10 @@
 package server
 
 import (
-	"fmt"
 	"io"
 	"log"
 	"net"
+
 	"github.com/amitbet/vncproxy/common"
 )
 
@@ -61,6 +61,10 @@ func TcpServe(url string, cfg *ServerConfig) error {
 	if err != nil {
 		log.Fatalf("Error listen. %v", err)
 	}
+	return NetListenerServe(ln, cfg)
+}
+
+func NetListenerServe(ln net.Listener, cfg *ServerConfig) error {
 	for {
 		c, err := ln.Accept()
 		if err != nil {
@@ -68,7 +72,6 @@ func TcpServe(url string, cfg *ServerConfig) error {
 		}
 		go attachNewServerConn(c, cfg, "dummySession")
 	}
-	return nil
 }
 
 func attachNewServerConn(c io.ReadWriter, cfg *ServerConfig, sessionId string) error {
@@ -79,7 +82,6 @@ func attachNewServerConn(c io.ReadWriter, cfg *ServerConfig, sessionId string) e
 	}
 
 	if err := ServerVersionHandler(cfg, conn); err != nil {
-		fmt.Errorf("err: %v\n", err)
 		conn.Close()
 		return err
 	}
